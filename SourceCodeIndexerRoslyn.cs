@@ -1,3 +1,5 @@
+namespace SunamoRoslyn;
+
 using static CsFileFilter;
 
 public partial class SourceCodeIndexerRoslyn
@@ -250,7 +252,7 @@ public partial class SourceCodeIndexerRoslyn
 
             if (inComments.HasValue)
             {
-                //var lines = SH.GetLines
+                //var lines = SHGetLines.GetLines
                 for (int i = founded.Count - 1; i >= 0; i--)
                 {
                     var line = item.Value[i].Trim();

@@ -1,4 +1,4 @@
-namespace Roslyn
+namespace SunamoRoslyn;
 {
     class Method
     {

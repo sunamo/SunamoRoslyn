@@ -32,3 +32,5 @@ global using System.Threading.Tasks;
 global using System.Threading;
 global using System.Web;
 global using System;
+global using SunamoRoslyn;
+global using SunamoRoslyn.Data;

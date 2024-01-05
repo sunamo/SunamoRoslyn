@@ -1,3 +1,5 @@
+namespace SunamoRoslyn.Roslyns;
+
 public class ProcessFileBoolResult
 {
     public ProcessFileBoolResult()

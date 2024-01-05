@@ -1,3 +1,5 @@
+namespace SunamoRoslyn.Data;
+
     public class ClassCodeElement : CodeElement<ClassCodeElementsType>
     {
     public override string ToString()

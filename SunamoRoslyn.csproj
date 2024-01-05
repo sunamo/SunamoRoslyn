@@ -27,48 +27,31 @@
     <DefineConstants>$(DefineConstants)TRACE;ASYNC</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Method.cs">
-    </Compile>
+    <Compile Remove="Method.cs"></Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="17.7.2" ExcludeAssets="runtime">
-    </PackageReference>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.7.2" />
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" ExcludeAssets="runtime">
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.7.0">
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.7.0">
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0">
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.7.0">
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.7.0">
-    </PackageReference>
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0">
-    </PackageReference>
-    <PackageReference Include="System.Reflection.Metadata" Version="7.0.2">
-    </PackageReference>
-    <PackageReference Update="NETStandard.Library">
-    </PackageReference>
+    <PackageReference Include="Microsoft.Build" Version="17.8.3" ExcludeAssets="runtime"></PackageReference>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.8.3" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" ExcludeAssets="runtime"></PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0"></PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0"></PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0"></PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0"></PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0"></PackageReference>
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0"></PackageReference>
+    <PackageReference Include="System.Reflection.Metadata" Version="8.0.0"></PackageReference>
+    <PackageReference Update="NETStandard.Library"></PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx">
-    </Compile>
-    <EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs">
-    </EmbeddedResource>
+    <Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx"></Compile>
+    <EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs"></EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="">
-    </None>
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false">
-    </None>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath=""></None>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"></None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SunamoCode\SunamoCode.csproj">
-    </ProjectReference>
-    <ProjectReference Include="..\sunamo\sunamo.csproj">
-    </ProjectReference>
+    <ProjectReference Include="..\SunamoCode\SunamoCode.csproj"></ProjectReference>
+    <PackageReference Include="SunamoShared" Version="23.12.17.2" />
   </ItemGroup>
 </Project>

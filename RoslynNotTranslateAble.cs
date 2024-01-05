@@ -1,3 +1,5 @@
+namespace SunamoRoslyn;
+
 public class RoslynNotTranslateAble
 {
     public const string CsCs = "Cs cs";

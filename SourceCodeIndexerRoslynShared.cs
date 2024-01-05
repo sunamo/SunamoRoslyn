@@ -1,3 +1,5 @@
+namespace SunamoRoslyn;
+
 using static CsFileFilter;
 
 public partial class SourceCodeIndexerRoslyn
@@ -18,7 +20,7 @@ public partial class SourceCodeIndexerRoslyn
             (string file, bool fromFileSystemWatcher)
     {
 #if ASYNC
-        await         
+        await
 #endif
                 ProcessFile(file, NamespaceCodeElementsType.All, ClassCodeElementsType.All, false, fromFileSystemWatcher);
     }
@@ -166,14 +168,14 @@ public partial class SourceCodeIndexerRoslyn
                 }
             }
 
-            fileContent = SH.JoinNL(lines);
+            fileContent = SHJoin.JoinNL(lines);
             if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
             {
                 var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
                 TF.WriteAllText(gf, fileContent);
             }
 
-            List<string> linesAll = lines; // SH.GetLines(fileContent);
+            List<string> linesAll = lines; // SHGetLines.GetLines(fileContent);
             // nechápu proč to obaluji mezerou ale nevadí
             linesAll = CA.WrapWith(linesAll, AllStrings.space).ToList();
             List<int> FullFileIndex = new List<int>();

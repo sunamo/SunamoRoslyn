@@ -1,3 +1,5 @@
+namespace SunamoRoslyn;
+
 /// <summary>
 /// RoslynParser - use roslyn classes
 /// RoslynParserText - no use roslyn classes, only text or indexer

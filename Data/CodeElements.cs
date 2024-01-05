@@ -1,3 +1,5 @@
+namespace SunamoRoslyn.Data;
+
     public class CodeElements
     {
     /// <summary>

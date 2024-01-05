@@ -1,3 +1,5 @@
+namespace SunamoRoslyn.Enums;
+
     public enum ClassCodeElementsType
     {
     Nope = 0,

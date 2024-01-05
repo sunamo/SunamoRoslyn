@@ -1,4 +1,6 @@
-    public class CodeElement<T>
+namespace SunamoRoslyn.Data;
+
+public class CodeElement<T>
     {
     public string NameWithoutGeneric;
     string name;
