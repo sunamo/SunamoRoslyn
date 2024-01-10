@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <Platforms>AnyCPU</Platforms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Version>24.1.7.1</Version>
+	  <Description>Work with Roslyn platform</Description>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Roslyn</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>n</Authors>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Roslyn</Description>
+    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
+    <Copyright>Copyright</Copyright>
+    <PackageTags>Roslyn, analyzers</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <DisableMSBuildAssemblyCopyCheck>true</DisableMSBuildAssemblyCopyCheck>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Method.cs">
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="17.8.3" ExcludeAssets="runtime">
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.8.3" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" ExcludeAssets="runtime">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="SunamoDevCode" Version="24.1.9.1" />
+    <PackageReference Include="SunamoI18N" Version="24.1.9.1" />
+    <PackageReference Include="SunamoValues" Version="24.1.9.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0">
+    </PackageReference>
+    <PackageReference Include="System.Reflection.Metadata" Version="8.0.0">
+    </PackageReference>
+    <PackageReference Update="NETStandard.Library">
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx">
+    </Compile>
+    <EmbeddedResource Update="Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs">
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="">
+    </None>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false">
+    </None>
+  </ItemGroup>
+</Project>
