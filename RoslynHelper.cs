@@ -57,7 +57,7 @@ public class RoslynHelper
 
             foreach (var item in ls.Item2)
             {
-                DictionaryHelperSE.AddOrCreate(dict, item, methodName);
+                DictionaryHelper.AddOrCreate(dict, item, methodName);
             }
 
             #region MyRegion
