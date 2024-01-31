@@ -1,7 +1,3 @@
-using SunamoClipboard;
-using SunamoCSharp.Values;
-using SunamoShared.Helpers.Text;
-
 namespace SunamoRoslyn;
 
 //using Microsoft.CodeAnalysis.CSharp;
@@ -841,6 +837,6 @@ public class RoslynHelper
     public static string NameWithoutGeneric(string name)
     {
 
-        return SH.RemoveAfterFirst(name, AllStringsSE.lt);
+        return SHParts.RemoveAfterFirst(name, AllStringsSE.lt);
     }
 }

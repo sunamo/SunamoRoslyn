@@ -99,7 +99,7 @@ TF.ReadAllText(file));
 
             var d = sn.SyntaxTree.ToString();
             var fileTo = SHReplace.Replace(file, folderFrom, folderTo);
-            TF.WriteAllText(fileTo, d);
+            await TF.WriteAllText(fileTo, d);
         }
 
         return null;

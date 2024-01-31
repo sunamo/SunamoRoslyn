@@ -25,7 +25,7 @@ public class WebToStandaloneAssembly
                 cs.CreateTitle();
             ]";
 
-        return SH.Format(template, AllStringsSE.lsqb, AllStringsSE.rsqb, csClass, ctorArgs);
+        return SHFormat.Format(template, AllStringsSE.lsqb, AllStringsSE.rsqb, csClass, ctorArgs);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class WebToStandaloneAssembly
     /// <param name="code"></param>
     public string GetContentOfPageCsFile(string nsX, string className, string variables, string usings, string ctorArgs, string ctorInner, string baseClassCs, string nsBaseClassCs, string code)
     {
-        string template = SH.Format(@"{3}
+        string template = SHFormat.Format(@"{3}
 [
     public partial class {1}Cs : {6}
     [
@@ -59,7 +59,7 @@ public class WebToStandaloneAssembly
     ]
 ]", AllStringsSE.lsqb, AllStringsSE.rsqb,
 nsX, className, variables, usings, ctorArgs, ctorInner, baseClassCs, nsBaseClassCs);
-        template = SH.Format3(template, code);
+        template = SHFormat.Format3(template, code);
         return template;
     }
 
@@ -204,9 +204,9 @@ TF.ReadAllText(fileAspxCs);
                 content = SHReplace.ReplaceAll(content, string.Empty, "CreateEmpty();");
 
                 // save .cs file
-                TF.WriteAllLines(fileAspxCs, contentFileNew);
+                await TF.WriteAllLines(fileAspxCs, contentFileNew);
                 // save new file
-                TF.WriteAllText(fullPathTo, content);
+                await TF.WriteAllText(fullPathTo, content);
 
 
 

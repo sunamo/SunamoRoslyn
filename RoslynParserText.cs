@@ -1,7 +1,3 @@
-using SunamoClipboard;
-using SunamoFileExtensions;
-using SunamoI18N.Values;
-
 namespace SunamoRoslyn;
 
 /// <summary>

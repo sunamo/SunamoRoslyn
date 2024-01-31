@@ -103,7 +103,7 @@ public partial class SourceCodeIndexerRoslyn
         CompilationUnitSyntax root = null;
 
         // A2 must be false otherwise read file twice
-        if (!FS.ExistsFile(pathFile))
+        if (!File.Exists(pathFile))
         {
             return new ProcessFileBoolResult();
         }
@@ -172,7 +172,7 @@ public partial class SourceCodeIndexerRoslyn
             if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
             {
                 var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
-                TF.WriteAllText(gf, fileContent);
+                await TF.WriteAllText(gf, fileContent);
             }
 
             List<string> linesAll = lines; // SHGetLines.GetLines(fileContent);
