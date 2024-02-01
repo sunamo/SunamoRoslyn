@@ -52,10 +52,10 @@ void FindPageMethod
 
         List<string> project = new List<string>();
 
-        var folders = FS.GetFolders(sczRootPath, SearchOption.TopDirectoryOnly);
+        var folders = Directory.GetDirectories(sczRootPath, "*", SearchOption.TopDirectoryOnly);
         foreach (var item in folders)
         {
-            string nameProject = FS.GetFileName(item);
+            string nameProject = Path.GetFileName(item);
             if (nameProject.EndsWith("X"))
             {
                 string project2 = nameProject.Substring(0, nameProject.Length - 1);
@@ -65,7 +65,7 @@ void FindPageMethod
                     project.Add(project2);
                 }
 
-                var files = FS.GetFiles(item, FS.MascFromExtension(AllExtensions.cs), SearchOption.TopDirectoryOnly);
+                var files = Directory.GetFiles(item, FS.MascFromExtension(AllExtensions.cs), SearchOption.TopDirectoryOnly).ToList();
 #if ASYNC
                 await AddPageMethodsAsync
 #else
@@ -78,7 +78,7 @@ AddPageMethods
         foreach (var item in project)
         {
             string path = Path.Combine(sczRootPath, item);
-            var pages = FS.GetFiles(path, "*Page*.cs", SearchOption.TopDirectoryOnly);
+            var pages = Directory.GetFiles(path, "*Page*.cs", SearchOption.TopDirectoryOnly).ToList();
 #if ASYNC
             await AddPageMethodsAsync
 #else

@@ -1,4 +1,7 @@
+
 namespace SunamoRoslyn;
+using SunamoStringFormat;
+
 
 public class WebToStandaloneAssembly
 {
@@ -81,15 +84,15 @@ void
 #endif
 AspxCsToStandaloneAssembly(string from, string to, string baseClassCs, string nsBaseClassCs, List<string> skipAspx)
     {
-        var files = FS.GetFiles(from, FS.MascFromExtension(".aspx.cs"), SearchOption.TopDirectoryOnly);
+        var files = Directory.GetFiles(from, FS.MascFromExtension(".aspx.cs"), SearchOption.TopDirectoryOnly);
         // Get namespace
-        string ns = FS.GetFileName(from);
-        string nsX = FS.GetFileName(to);
+        string ns = Path.GetFileName(from);
+        string nsX = Path.GetFileName(to);
 
 
         foreach (var fileAspxCs in files)
         {
-            string fnwoeAspxCs = FS.GetFileNameWithoutExtensions(fileAspxCs);
+            string fnwoeAspxCs = Path.GetFileNameWithoutExtension(fileAspxCs);
 
             if (CA.IsEqualToAnyElement(Path.GetFileNameWithoutExtension(fnwoeAspxCs), skipAspx))
             {
@@ -102,8 +105,8 @@ AspxCsToStandaloneAssembly(string from, string to, string baseClassCs, string ns
 
             #region Generate and save *Cs file
             CollectionWithoutDuplicates<string> usings;
-            var v1 = FSSE.ExistsFile(designer);
-            var v2 = !FSSE.ExistsFile(fullPathTo);
+            var v1 = File.Exists(designer);
+            var v2 = !File.Exists(fullPathTo);
             if (v1 && v2)
             {
                 #region Get variables in designer and *.aspx.cs
@@ -111,12 +114,12 @@ AspxCsToStandaloneAssembly(string from, string to, string baseClassCs, string ns
 #if ASYNC
 await
 #endif
-TF.ReadAllText(designer);
+File.ReadAllTextAsync(designer);
                 var fileAspxCsContent =
 #if ASYNC
 await
 #endif
-TF.ReadAllText(fileAspxCs);
+File.ReadAllTextAsync(fileAspxCs);
                 // Move all html controls and variables from *.aspx.cs - everything must be in *Cs.cs
                 var dict = RoslynParser.GetVariablesInCsharp(RoslynHelper.GetSyntaxTree(designerContent).GetRoot(), SHGetLines.GetLines(fileAspxCsContent), out usings);
                 usings.Add(ns);
@@ -204,9 +207,9 @@ TF.ReadAllText(fileAspxCs);
                 content = SHReplace.ReplaceAll(content, string.Empty, "CreateEmpty();");
 
                 // save .cs file
-                await TF.WriteAllLines(fileAspxCs, contentFileNew);
+                await File.WriteAllLinesAsync(fileAspxCs, contentFileNew);
                 // save new file
-                await TF.WriteAllText(fullPathTo, content);
+                await File.WriteAllTextAsync(fullPathTo, content);
 
 
 

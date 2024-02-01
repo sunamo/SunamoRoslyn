@@ -62,14 +62,14 @@ GetCodeOfElementsClass(string folderFrom, string folderTo)
         FSSE.WithEndSlash(ref folderFrom);
         FSSE.WithEndSlash(ref folderTo);
 
-        var files = FS.GetFiles(folderFrom, FS.MascFromExtension(".aspx.cs"), SearchOption.TopDirectoryOnly);
+        var files = Directory.GetFiles(folderFrom, FS.MascFromExtension(".aspx.cs"), SearchOption.TopDirectoryOnly);
         foreach (var file in files)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(
 #if ASYNC
 await
 #endif
-TF.ReadAllText(file));
+File.ReadAllTextAsync(file));
 
             List<string> result = new List<string>();
             // Here probable it mean SpaceName, ale když není namespace, uloží třídu
@@ -99,7 +99,7 @@ TF.ReadAllText(file));
 
             var d = sn.SyntaxTree.ToString();
             var fileTo = SHReplace.Replace(file, folderFrom, folderTo);
-            await TF.WriteAllText(fileTo, d);
+            await File.WriteAllTextAsync(fileTo, d);
         }
 
         return null;

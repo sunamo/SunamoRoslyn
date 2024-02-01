@@ -61,7 +61,7 @@ public partial class SourceCodeIndexerRoslyn
                 // Check whether folder is already indexing
                 //if (!watchers.IsIndexindDirectory(pathFile))
                 //{
-                //watchers.Start(FS.GetDirectoryName( pathFile));
+                //watchers.Start(Path.GetDirectoryName( pathFile));
                 //}
             }
 
@@ -241,7 +241,7 @@ public partial class SourceCodeIndexerRoslyn
                 continue;
             }
 #if DEBUG
-            //if (FS.GetFileName( item.Key) == "MainWindow.cs")
+            //if (Path.GetFileName( item.Key) == "MainWindow.cs")
             //{
             //}
 #endif

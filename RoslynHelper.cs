@@ -1,4 +1,7 @@
+
 namespace SunamoRoslyn;
+using SunamoRoslyn._sunamo;
+
 
 //using Microsoft.CodeAnalysis.CSharp;
 
@@ -137,7 +140,7 @@ public class RoslynHelper
 
             var doc = @"
 /// <summary>
-" + SHJoin.JoinNL(usedIn) + @"
+" + string.Join(Environment.NewLine, usedIn) + @"
 /// </summary>
 ";
             var p = oldMethodNode.Parent;
@@ -288,7 +291,7 @@ public class RoslynHelper
 
         var root = firstTree.GetRoot();
 
-        var vr = Formatter.Format(root, workspace);
+        var vr = Microsoft.CodeAnalysis.Formatting.Formatter.Format(root, workspace);
         // Instert space between all tokens, replace all nl by spaces
         //vr = root.NormalizeWhitespace();
         // With ToFullString and ToString is output the same - good but without new lines
@@ -378,7 +381,7 @@ public class RoslynHelper
 
         if (node2 && token)
         {
-            ThrowEx.Custom(sess.i18n(XlfKeys.CantProcessTokenAndSyntaxNodeOutputCouldBeDuplicated));
+            throw new Exception(sess.i18n(XlfKeys.CantProcessTokenAndSyntaxNodeOutputCouldBeDuplicated));
         }
 
         // Early if token we get Parent, so now we dont get Parent again
@@ -396,7 +399,7 @@ public class RoslynHelper
         //OptionSet os = new DocumentOptionSet()
 
 
-        var formattedResult = Formatter.Format(node, workspace);
+        var formattedResult = Microsoft.CodeAnalysis.Formatting.Formatter.Format(node, workspace);
 
 
         sb.AppendLine(formattedResult.ToFullString().Trim());
@@ -437,7 +440,7 @@ public class RoslynHelper
             }
         }
 
-        var nl = SHJoin.JoinNL(lines);
+        var nl = string.Join(Environment.NewLine, lines);
 
         nl = nl.Replace(CsKeywords.ns, Environment.NewLine + CsKeywords.ns);
 

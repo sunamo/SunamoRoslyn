@@ -64,7 +64,7 @@ public partial class SourceCodeIndexerRoslyn
 
         var uf = UnindexableFiles.uf;
 
-        var fn = FS.GetFileName(pathFile);
+        var fn = Path.GetFileName(pathFile);
         if (CA.ReturnWhichContainsIndexes(fileNames, fn, SearchStrategy.FixedSpace).Count > 0)
         {
             uf.unindexableFileNamesFiles.Add(pathFile);
@@ -131,11 +131,11 @@ public partial class SourceCodeIndexerRoslyn
             List<string> lines = null;
             if (fromFileSystemWatcher)
             {
-                lines =
+                lines = (
 #if ASYNC
     await
 #endif
- TF.ReadAllLines(pathFile);
+ File.ReadAllLinesAsync(pathFile)).ToList();
             }
             else
             {
@@ -159,20 +159,20 @@ public partial class SourceCodeIndexerRoslyn
                     }
                     else
                     {
-
+                        (
 #if ASYNC
                         await
 #endif
-                        TF.ReadAllLines(pathFile);
+                        File.ReadAllLinesAsync(pathFile)).ToList();
                     }
                 }
             }
 
-            fileContent = SHJoin.JoinNL(lines);
+            fileContent = string.Join(Environment.NewLine, lines);
             if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
             {
                 var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
-                await TF.WriteAllText(gf, fileContent);
+                await File.WriteAllTextAsync(gf, fileContent);
             }
 
             List<string> linesAll = lines; // SHGetLines.GetLines(fileContent);
