@@ -1,14 +1,12 @@
-
-namespace SunamoRoslyn;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
+using Microsoft.CodeAnalysis.Formatting;
 using SunamoRoslyn._sunamo;
 
-
-//using Microsoft.CodeAnalysis.CSharp;
-
+namespace SunamoRoslyn;
 
 public class RoslynHelper
 {
-    static Type type = typeof(RoslynHelper);
+    private static Type type = typeof(RoslynHelper);
 
     public static void a()
     {
@@ -26,40 +24,38 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// A1 can be SyntaxNode or string
+    ///     A1 can be SyntaxNode or string
     /// </summary>
     /// <param name="o"></param>
     /// <returns></returns>
     public static string AddWhereIsUsedVariablesInMethods(object o)
     {
-        SyntaxNode root = RoslynParser.SyntaxNodeFromObjectOrString(o);
+        var root = RoslynParser.SyntaxNodeFromObjectOrString(o);
         var methods = ChildNodes.MethodsDescendant(root);
         var fields = ChildNodes.FieldsDescendant(root);
 
         string before = null;
         string after = null;
-        int i = 0;
+        var i = 0;
 
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.Append(root.ToFullString());
 
         Tuple<List<string>, List<string>> ls = null;
 
-        Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+        var dict = new Dictionary<string, List<string>>();
         string methodName = null;
 
-        foreach (MethodDeclarationSyntax oldMethodNode in methods)
+        foreach (var oldMethodNode in methods)
         {
             ls = RoslynParser.ParseVariables(oldMethodNode);
 
             methodName = oldMethodNode.Identifier.Text;
 
-            foreach (var item in ls.Item2)
-            {
-                DictionaryHelper.AddOrCreate(dict, item, methodName);
-            }
+            foreach (var item in ls.Item2) DictionaryHelperSE.AddOrCreate(dict, item, methodName);
 
             #region MyRegion
+
             //        var testDocumentation = SyntaxFactory.DocumentationCommentTrivia(
             //        SyntaxKind.SingleLineDocumentationCommentTrivia,
             //        SyntaxFactory.List<XmlNodeSyntax>(
@@ -115,9 +111,8 @@ public class RoslynHelper
             //{
             //    leadingTrivia.RemoveAt(i);
             //}
+
             #endregion
-
-
         }
 
         string variableName = null;
@@ -128,13 +123,9 @@ public class RoslynHelper
             variableName = oldMethodNode.Declaration.Variables.First().Identifier.Text;
 
             if (dict.ContainsKey(variableName))
-            {
                 usedIn = dict[variableName];
-            }
             else
-            {
                 continue;
-            }
 
             CA.Prepend("/// ", usedIn);
 
@@ -151,7 +142,6 @@ public class RoslynHelper
                 var oldMethodNode2 = oldMethodNode.WithLeadingTrivia(SyntaxTriviaList.Create(lt));
 
 
-
                 before = oldMethodNode.ToFullString();
                 //root = root.ReplaceNode(oldMethodNode, oldMethodNode2);
                 after = oldMethodNode2.ToFullString();
@@ -165,8 +155,8 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// VariableDeclarationSyntax->CSharpSyntaxNode
-    /// FieldDeclarationSyntax->BaseFieldDeclarationSyntax->MemberDeclarationSyntax->CSharpSyntaxNode
+    ///     VariableDeclarationSyntax->CSharpSyntaxNode
+    ///     FieldDeclarationSyntax->BaseFieldDeclarationSyntax->MemberDeclarationSyntax->CSharpSyntaxNode
     /// </summary>
     /// <param name="oldMethodNode"></param>
     /// <returns></returns>
@@ -176,21 +166,17 @@ public class RoslynHelper
         while (parent != null)
         {
             if (parent is BlockSyntax)
-            {
                 return false;
-            }
-            else if (parent is ClassDeclarationSyntax)
-            {
-                return true;
-            }
+            if (parent is ClassDeclarationSyntax) return true;
             parent = parent.Parent;
         }
+
         return false;
     }
 
     /// <summary>
-    /// Return also referenced projects (sunamo return also duo and Resources, although is not in sunamo)
-    /// If I want what is only in sln, use APSH.GetProjectsInSlnFile
+    ///     Return also referenced projects (sunamo return also duo and Resources, although is not in sunamo)
+    ///     If I want what is only in sln, use APSH.GetProjectsInSlnFile
     /// </summary>
     /// <param name="slnPath"></param>
     /// <param name="SkipUnrecognizedProjects"></param>
@@ -202,7 +188,7 @@ public class RoslynHelper
 #endif
         GetAllProjectsInSolution(string slnPath, bool SkipUnrecognizedProjects = false)
     {
-        var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
+        var _ = typeof(CSharpFormattingOptions);
 
         var msWorkspace = MSBuildWorkspace.Create();
         // Will include also referenced file
@@ -237,16 +223,13 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// A2 - first must be class or namespace
+    ///     A2 - first must be class or namespace
     /// </summary>
     /// <param name="code"></param>
     /// <param name="wrapIntoClass"></param>
     public static SyntaxTree GetSyntaxTree(string code, bool wrapIntoClass = false)
     {
-        if (wrapIntoClass)
-        {
-            code = WrapIntoClass(code);
-        }
+        if (wrapIntoClass) code = WrapIntoClass(code);
 
         return CSharpSyntaxTree.ParseText(code);
     }
@@ -259,7 +242,7 @@ public class RoslynHelper
         format = Regex.Replace(format, RegexHelper.rBrTagCaseInsensitive.ToString(), string.Empty);
 
         // Create SyntaxTree
-        SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);
+        var firstTree = CSharpSyntaxTree.ParseText(format);
 
         var root = firstTree.GetRoot();
 
@@ -270,11 +253,10 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// Format good
-    /// Format2 = remove empty lines Format = keep empty lines
-    /// code must be compilable
-    /// when isnt ; i) instead od ; i++), private in variables return input without changes
-    ///
+    ///     Format good
+    ///     Format2 = remove empty lines Format = keep empty lines
+    ///     code must be compilable
+    ///     when isnt ; i) instead od ; i++), private in variables return input without changes
     /// </summary>
     /// <param name="format"></param>
     public static string Format2(string format)
@@ -287,11 +269,11 @@ public class RoslynHelper
         var workspace = MSBuildWorkspace.Create();
 
         // Create SyntaxTree
-        SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);
+        var firstTree = CSharpSyntaxTree.ParseText(format);
 
         var root = firstTree.GetRoot();
 
-        var vr = Microsoft.CodeAnalysis.Formatting.Formatter.Format(root, workspace);
+        var vr = Formatter.Format(root, workspace);
         // Instert space between all tokens, replace all nl by spaces
         //vr = root.NormalizeWhitespace();
         // With ToFullString and ToString is output the same - good but without new lines
@@ -302,10 +284,10 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// Format good
-    /// Format2 = remove empty lines Format = keep empty lines
-    /// code must be compilable
-    /// when isnt ; i) instead od ; i++), private in variables return input without changes
+    ///     Format good
+    ///     Format2 = remove empty lines Format = keep empty lines
+    ///     code must be compilable
+    ///     when isnt ; i) instead od ; i++), private in variables return input without changes
     /// </summary>
     /// <param name="format"></param>
     public static string Format(string format)
@@ -316,32 +298,34 @@ public class RoslynHelper
         format = Regex.Replace(format, RegexHelper.rBrTagCaseInsensitive.ToString(), string.Empty);
 
         var workspace = MSBuildWorkspace.Create();
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         // Create SyntaxTree
-        SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);
+        var firstTree = CSharpSyntaxTree.ParseText(format);
 
         // Get root of ST
         var firstRoot = firstTree.GetRoot();
 
 
-
         #region Process all incomplete nodes in ChildNodesAndTokens and insert into syntaxNodes2
+
         // Get all Child nodes
         var syntaxNodes = firstRoot.ChildNodesAndTokens();
 
         // Whether at least one in syntaxNodes is SyntaxNodeOrToken - take its parent
-        bool token = false;
+        var token = false;
         // Whether at least one in syntaxNodes is SyntaxNode - take itself
-        bool node2 = false;
+        var node2 = false;
 
         // Parent if token or itself if node2
         SyntaxNode node = null;
 
-        List<SyntaxNode> syntaxNodes2 = new List<SyntaxNode>();
+        var syntaxNodes2 = new List<SyntaxNode>();
 
         // Process all incomplete members
+
         #region If its only code fragment, almost everything will be here IncompleteMember and on end will be delete from code
+
         //foreach (var item in syntaxNodes.Where(d => d.Kind() == SyntaxKind.IncompleteMember))
         //{
         //    // zde nevím co to dělá
@@ -350,7 +334,9 @@ public class RoslynHelper
         //    // insert output of AsNode
         //    syntaxNodes2.Add(node3);
         //}
+
         #endregion
+
         #endregion
 
         // Again get ChildNodesAndTokens, dont know why because should be immutable
@@ -360,18 +346,18 @@ public class RoslynHelper
         foreach (var syntaxNode in syntaxNodes)
         {
             var syntaxNodeType = syntaxNode.GetType();
-            string s = syntaxNodeType.FullName.ToString();
+            var s = syntaxNodeType.FullName;
             if (syntaxNodeType == typeof(SyntaxNodeOrToken))
             {
                 token = true;
                 node = syntaxNode.Parent;
                 break;
             }
-            else if (syntaxNodeType == typeof(SyntaxNode))
+
+            if (syntaxNodeType == typeof(SyntaxNode))
             {
                 node2 = true;
                 node = (SyntaxNode)syntaxNode;
-
             }
             else
             {
@@ -380,16 +366,11 @@ public class RoslynHelper
         }
 
         if (node2 && token)
-        {
             throw new Exception(sess.i18n(XlfKeys.CantProcessTokenAndSyntaxNodeOutputCouldBeDuplicated));
-        }
 
         // Early if token we get Parent, so now we dont get Parent again
         var node4 = node.Parent;
-        if (token)
-        {
-            node4 = node;
-        }
+        if (token) node4 = node;
         // Remove nodes which was marked as Incomplete members
         node = node4.ReplaceNode(node, node.RemoveNodes(syntaxNodes2, SyntaxRemoveOptions.AddElasticMarker));
         // Only for debugging
@@ -399,13 +380,12 @@ public class RoslynHelper
         //OptionSet os = new DocumentOptionSet()
 
 
-        var formattedResult = Microsoft.CodeAnalysis.Formatting.Formatter.Format(node, workspace);
+        var formattedResult = Formatter.Format(node, workspace);
 
 
         sb.AppendLine(formattedResult.ToFullString().Trim());
 
-        string result = sb.ToString();
-
+        var result = sb.ToString();
 
 
         //var formattedResult2 = RoslynServicesHelper.Format(result);
@@ -413,7 +393,7 @@ public class RoslynHelper
         return FinalizeFormat(result);
     }
 
-    static string FinalizeFormat(string result)
+    private static string FinalizeFormat(string result)
     {
         var lines = SHGetLines.GetLines(result);
 
@@ -423,21 +403,14 @@ public class RoslynHelper
         // Important, otherwise is every line delimited by empty
         CA.RemoveStringsEmpty2(lines);
 
-        for (int i = lines.Count - 1; i >= 0; i--)
+        for (var i = lines.Count - 1; i >= 0; i--)
         {
             var line = lines[i];
             var trimmedLine = lines[i].Trim();
             if (trimmedLine.StartsWith(CSharpConsts.lc) && !trimmedLine.StartsWith("///"))
-            {
                 if (i != 0)
-                {
                     if (lines[i - 1].Trim() != AllStringsSE.lcub)
-                    {
                         lines.Insert(i, string.Empty);
-                    }
-                }
-
-            }
         }
 
         var nl = string.Join(Environment.NewLine, lines);
@@ -461,46 +434,41 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// Because of searching is very unreliable
-    /// Into A1 I have to insert class when I search in classes. If I insert root/ns/etc, method will be return to me whole class, because its contain method
+    ///     Because of searching is very unreliable
+    ///     Into A1 I have to insert class when I search in classes. If I insert root/ns/etc, method will be return to me whole
+    ///     class, because its contain method
     /// </summary>
     /// <param name="parent"></param>
     /// <param name="child"></param>
     public static SyntaxNode FindNode(SyntaxNode parent, SyntaxNode child, bool onlyDirectSub, out int dx)
     {
-
         dx = -1;
 
         #region MyRegion
+
         if (false)
         {
             if (onlyDirectSub)
-            {
                 // toto mi vratí např. jen public, nikoliv celou stránku
                 //var ss = cl.ChildThatContainsPosition(cl.GetLocation().SourceSpan.Start);
                 foreach (var item in parent.ChildNodes())
                 {
                     // Má tu lokaci trochu dál protože obsahuje zároveň celou třídu
-                    string l1 = item.GetLocation().ToString();
-                    string l2 = child.GetLocation().ToString();
+                    var l1 = item.GetLocation().ToString();
+                    var l2 = child.GetLocation().ToString();
 
                     var s = child.Span;
                     var s2 = child.FullSpan;
                     var s3 = child.GetReference();
 
-                    if (l1 == l2)
-                    {
-                        return item;
-                    }
+                    if (l1 == l2) return item;
                 }
-            }
             else
-            {
                 return parent.FindNode(child.FullSpan, false, true).WithoutLeadingTrivia().WithoutTrailingTrivia();
-            }
 
             return null;
         }
+
         #endregion
 
         var childType = child.GetType().FullName;
@@ -510,8 +478,8 @@ public class RoslynHelper
 
         if (child is MethodDeclarationSyntax && parent is ClassDeclarationSyntax)
         {
-            ClassDeclarationSyntax cl = (ClassDeclarationSyntax)parent;
-            MethodDeclarationSyntax method = (MethodDeclarationSyntax)child;
+            var cl = (ClassDeclarationSyntax)parent;
+            var method = (MethodDeclarationSyntax)child;
 
             foreach (var item in cl.Members)
             {
@@ -519,29 +487,19 @@ public class RoslynHelper
                 if (item is MethodDeclarationSyntax)
                 {
                     var method2 = (MethodDeclarationSyntax)item;
-                    bool same = true;
+                    var same = true;
 
-                    if (method.Identifier.Text != method2.Identifier.Text)
-                    {
-                        same = false;
-                    }
+                    if (method.Identifier.Text != method2.Identifier.Text) same = false;
 
                     if (same)
-                    {
                         if (!RoslynComparer.Modifiers(method.Modifiers, method2.Modifiers))
-                        {
                             same = false;
-                        }
-                    }
 
                     if (same)
                     {
-                        string p1 = GetParameters(method.ParameterList);
-                        string p2 = GetParameters(method2.ParameterList);
-                        if (p1 != p2)
-                        {
-                            same = false;
-                        }
+                        var p1 = GetParameters(method.ParameterList);
+                        var p2 = GetParameters(method2.ParameterList);
+                        if (p1 != p2) same = false;
                     }
 
                     if (same)
@@ -575,8 +533,8 @@ public class RoslynHelper
             foreach (NamespaceDeclarationSyntax item in ns.Members)
             {
                 dx++;
-                string fs1 = method.Name.ToFullString();
-                string fs2 = item.Name.ToFullString();
+                var fs1 = method.Name.ToFullString();
+                var fs2 = item.Name.ToFullString();
                 if (fs1 == fs2)
                 {
                     result = method;
@@ -592,8 +550,8 @@ public class RoslynHelper
             foreach (ClassDeclarationSyntax item in ns.Members)
             {
                 dx++;
-                string fs1 = method.Identifier.ToFullString();
-                string fs2 = item.Identifier.ToFullString();
+                var fs1 = method.Identifier.ToFullString();
+                var fs2 = item.Identifier.ToFullString();
                 if (fs1 == fs2)
                 {
                     result = method;
@@ -603,7 +561,8 @@ public class RoslynHelper
         }
         else
         {
-            ThrowEx.NotImplementedCase(SHJoin.JoinPairs(XlfKeys.Parent, parent.ToFullString(), XlfKeys.Child, child.ToFullString()));
+            ThrowEx.NotImplementedCase(SHJoin.JoinPairs(XlfKeys.Parent, parent.ToFullString(), XlfKeys.Child,
+                child.ToFullString()));
         }
 
 
@@ -612,14 +571,16 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// IUN
+    ///     IUN
     /// </summary>
     /// <param name="cl2"></param>
     /// <param name="method"></param>
     /// <param name="keepDirectives"></param>
-    public static ClassDeclarationSyntax RemoveNode(ClassDeclarationSyntax cl2, SyntaxNode method, SyntaxRemoveOptions keepDirectives)
+    public static ClassDeclarationSyntax RemoveNode(ClassDeclarationSyntax cl2, SyntaxNode method,
+        SyntaxRemoveOptions keepDirectives)
     {
         #region MyRegion
+
         //var children = method.ChildNodesAndTokens().ToList();
         //for (int i = children.Count() - 1; i >= 0; i--)
         //{
@@ -638,12 +599,13 @@ public class RoslynHelper
         //FindNode()
         //cl2.Members.
         return null;
+
         #endregion
     }
 
     /// <summary>
-    /// A1 can be SyntaxTree, string
-    /// if it List<string>, use RoslynParser.Usings
+    ///     A1 can be SyntaxTree, string
+    ///     if it List<string>, use RoslynParser.Usings
     /// </summary>
     /// <param name="t"></param>
     public static IList<string> Usings(object t)
@@ -653,27 +615,24 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// A1 can be SyntaxTree, string
-    /// if it List<string>, use RoslynParser.Usings
+    ///     A1 can be SyntaxTree, string
+    ///     if it List<string>, use RoslynParser.Usings
     /// </summary>
     /// <param name="t"></param>
     /// <param name="lines"></param>
     public static IList<string> Usings(object t, out List<string> lines)
     {
         string text = null;
-        if (t is SyntaxTree || t is string)
-        {
-            text = t.ToString();
-        }
+        if (t is SyntaxTree || t is string) text = t.ToString();
 
         lines = SHGetLines.GetLines(text);
         return CSharpHelper.Usings(lines).c;
     }
 
     /// <summary>
-    /// Return null if
-    /// Into A2 insert first member of A1 - Namespace/Class
-    /// A1 should be rather Tree/CompilationUnitSyntax than Node because of Members - Node.ChildNodes.First is usings
+    ///     Return null if
+    ///     Into A2 insert first member of A1 - Namespace/Class
+    ///     A1 should be rather Tree/CompilationUnitSyntax than Node because of Members - Node.ChildNodes.First is usings
     /// </summary>
     /// <param name="root"></param>
     /// <param name="ns"></param>
@@ -688,10 +647,7 @@ public class RoslynHelper
 
         // Returns usings and ns
         var childNodes = root.ChildNodes();
-        if (childNodes.OfType<ClassDeclarationSyntax>().Count() > 1)
-        {
-            return null;
-        }
+        if (childNodes.OfType<ClassDeclarationSyntax>().Count() > 1) return null;
         SyntaxNode firstMember = null;
         firstMember = ChildNodes.NamespaceOrClass(root);
         //firstMember = (SyntaxNode)root.ChildNodes().OfType<NamespaceDeclarationSyntax>().FirstOrNull();
@@ -703,12 +659,9 @@ public class RoslynHelper
         if (firstMember is NamespaceDeclarationSyntax)
         {
             ns = (NamespaceDeclarationSyntax)firstMember;
-            int i = 0;
+            var i = 0;
             var fm = ((NamespaceDeclarationSyntax)ns).Members[i++];
-            while (fm.GetType() != typeof(ClassDeclarationSyntax))
-            {
-                fm = ((NamespaceDeclarationSyntax)ns).Members[i++];
-            }
+            while (fm.GetType() != typeof(ClassDeclarationSyntax)) fm = ((NamespaceDeclarationSyntax)ns).Members[i++];
             helloWorldDeclaration = (ClassDeclarationSyntax)fm;
         }
         else if (firstMember is ClassDeclarationSyntax)
@@ -727,13 +680,13 @@ public class RoslynHelper
 
     public static List<string> HeadersOfMethod(IList<SyntaxNode> enumerable, bool alsoModifier = true)
     {
-        List<string> clMethodsSharedNew = new List<string>();
+        var clMethodsSharedNew = new List<string>();
 
         foreach (MethodDeclarationSyntax m in enumerable)
         {
-            string h = GetHeaderOfMethod(m, alsoModifier);
+            var h = GetHeaderOfMethod(m, alsoModifier);
             clMethodsSharedNew.Add(h);
-            int i = 0;
+            var i = 0;
         }
 
         return clMethodsSharedNew;
@@ -747,33 +700,27 @@ public class RoslynHelper
     public static string GetHeaderOfMethod(MethodDeclarationSyntax m, bool alsoModifier = true)
     {
         m = m.WithoutTrivia();
-        InstantSB sb = new InstantSB(AllStringsSE.space);
+        var sb = new InstantSB(AllStringsSE.space);
 
-        if (alsoModifier)
-        {
-            sb.AddItem(RoslynParser.GetAccessModifiers(m.Modifiers));
-        }
+        if (alsoModifier) sb.AddItem(RoslynParser.GetAccessModifiers(m.Modifiers));
 
-        bool isStatic = IsStatic(m.Modifiers);
-        if (isStatic)
-        {
-            sb.AddItem("static");
-        }
+        var isStatic = IsStatic(m.Modifiers);
+        if (isStatic) sb.AddItem("static");
         sb.AddItem(m.ReturnType.WithoutTrivia().ToFullString());
         sb.AddItem(m.Identifier.WithoutTrivia().Text);
         // in brackets, newline
         //string parameters = m.ParameterList.ToFullString();
         // only text
-        string p2 = GetParameters(m.ParameterList);
+        var p2 = GetParameters(m.ParameterList);
         sb.AddItem(AllStringsSE.lb + p2 + AllStringsSE.rb);
 
-        string s = sb.ToString();
+        var s = sb.ToString();
         return s;
     }
 
     /// <summary>
-    /// CompilationUnitSyntax is also SyntaxNode
-    /// After line must be A1 = A2 or some RoslynHelper.Get* methods
+    ///     CompilationUnitSyntax is also SyntaxNode
+    ///     After line must be A1 = A2 or some RoslynHelper.Get* methods
     /// </summary>
     /// <param name="cl"></param>
     /// <param name="cl2"></param>
@@ -784,22 +731,19 @@ public class RoslynHelper
     }
 
     /// <summary>
-    /// CompilationUnitSyntax is also SyntaxNode
-    /// After line must be A1 = A2
+    ///     CompilationUnitSyntax is also SyntaxNode
+    ///     After line must be A1 = A2
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="cl"></param>
     /// <param name="cl2"></param>
     public static T ReplaceNode<T>(SyntaxNode cl, SyntaxNode cl2, out SyntaxNode root) where T : SyntaxNode
     {
-        bool first = true;
+        var first = true;
         T result = default;
         while (cl is SyntaxNode)
         {
-            if (cl.Parent == null)
-            {
-                break;
-            }
+            if (cl.Parent == null) break;
             cl = cl.Parent.ReplaceNode(cl, cl2);
 
             if (first)
@@ -807,14 +751,16 @@ public class RoslynHelper
                 result = (T)cl2;
                 first = false;
             }
+
             cl2 = cl;
             cl = cl.Parent;
         }
+
         root = cl2;
         if (result == null)
         {
-
         }
+
         return result;
     }
 
@@ -822,24 +768,19 @@ public class RoslynHelper
     {
         var c1 = parameterList.ChildNodes();
         //var c2 = parameterList.ChildNodesAndTokens();
-        StringBuilder sb = new StringBuilder();
-        foreach (var item in c1)
-        {
-            sb.Append(item.ToFullString() + ", ");
-        }
-        string r = SH.RemoveLastLetters(sb.ToString(), 2);
+        var sb = new StringBuilder();
+        foreach (var item in c1) sb.Append(item.ToFullString() + ", ");
+        var r = SH.RemoveLastLetters(sb.ToString(), 2);
         return r;
     }
 
     public static bool IsStatic(SyntaxTokenList modifiers)
     {
-
         return modifiers.Where(e => e.Value.ToString() == "static").Count() > 0;
     }
 
     public static string NameWithoutGeneric(string name)
     {
-
         return SHParts.RemoveAfterFirst(name, AllStringsSE.lt);
     }
 }

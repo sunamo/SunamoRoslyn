@@ -1,14 +1,14 @@
 namespace SunamoRoslyn.Data;
 
-    public class CodeElements
-    {
+public class CodeElements
+{
     /// <summary>
-    /// Používá se 2x v DoSearch v Everyline a poté ji vrací společně s classes SourceCodeIndexerRoslyn.cs
-    /// 
+    ///     Používá se 2x v DoSearch v Everyline a poté ji vrací společně s namespacema SourceCodeIndexerRoslyn.cs
     /// </summary>
-        public Dictionary<string, NamespaceCodeElements> namespaces = new Dictionary<string, NamespaceCodeElements>();
+    public Dictionary<string, ClassCodeElements> classes = new();
+
     /// <summary>
-    /// Používá se 2x v DoSearch v Everyline a poté ji vrací společně s namespacema SourceCodeIndexerRoslyn.cs
+    ///     Používá se 2x v DoSearch v Everyline a poté ji vrací společně s classes SourceCodeIndexerRoslyn.cs
     /// </summary>
-        public Dictionary<string, ClassCodeElements> classes = new Dictionary<string, ClassCodeElements>();
-    }
+    public Dictionary<string, NamespaceCodeElements> namespaces = new();
+}

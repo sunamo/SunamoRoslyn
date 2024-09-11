@@ -2,7 +2,7 @@ namespace SunamoRoslyn;
 
 public class RoslynParents
 {
-    Dictionary<string, SyntaxNode> n = new Dictionary<string, SyntaxNode>();
+    private Dictionary<string, SyntaxNode> n = new();
 
     public void Add(string where, SyntaxNode n)
     {
@@ -11,6 +11,5 @@ public class RoslynParents
         {
             ////DebugLogger.Instance.WriteLine(where + SH.NullToStringOrDefault(n.Parent, ("not null")));
         }
-
     }
 }

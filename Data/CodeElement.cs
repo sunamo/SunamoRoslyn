@@ -1,31 +1,37 @@
 namespace SunamoRoslyn.Data;
 
 public class CodeElement<T>
-    {
+{
+    /// <summary>
+    ///     Index in document with start
+    /// </summary>
+    public int From;
+
+    public int Index;
+    public int Length;
+
+    /// <summary>
+    ///     Base classes of MemberDeclarationSyntax is only CSharpSyntaxNode and SyntaxNode
+    /// </summary>
+    public MemberDeclarationSyntax Member;
+
+    private string name;
     public string NameWithoutGeneric;
-    string name;
-        public string Name
+
+    /// <summary>
+    ///     Index in document with last char
+    /// </summary>
+    public int To;
+
+    public T Type;
+
+    public string Name
     {
-        get { return name; }
-        set { name = value;
+        get => name;
+        set
+        {
+            name = value;
             NameWithoutGeneric = RoslynHelper.NameWithoutGeneric(name);
         }
     }
-
-    public T Type;
-        public int Index;
-    /// <summary>
-    /// Index in document with start
-    /// </summary>
-    public int From;
-    /// <summary>
-    /// Index in document with last char 
-    /// 
-    /// </summary>
-    public int To;
-    public int Length;
-    /// <summary>
-    /// Base classes of MemberDeclarationSyntax is only CSharpSyntaxNode and SyntaxNode
-    /// </summary>
-    public MemberDeclarationSyntax Member;
-    }
+}

@@ -1,11 +1,12 @@
 namespace SunamoRoslyn;
 
-class Method
+internal class Method
 {
+    private string content;
+
     // whether I can scan source code and simply add
-    bool IsStatic;
-    string ns;
-    string type;
-    string name;
-    string content;
+    private bool IsStatic;
+    private string name;
+    private string ns;
+    private string type;
 }

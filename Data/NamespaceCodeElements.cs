@@ -1,6 +1,5 @@
 namespace SunamoRoslyn.Data;
 
-    public class NamespaceCodeElements : List<NamespaceCodeElement>
-    {
-        
-    }
+public class NamespaceCodeElements : List<NamespaceCodeElement>
+{
+}

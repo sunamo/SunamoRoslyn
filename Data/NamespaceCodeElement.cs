@@ -1,9 +1,9 @@
 namespace SunamoRoslyn.Data;
 
-    public class NamespaceCodeElement : CodeElement<NamespaceCodeElementsType>
+public class NamespaceCodeElement : CodeElement<NamespaceCodeElementsType>
+{
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return SourceCodeIndexerRoslyn.e2sNamespaceCodeElements[Type] + AllStrings.space + Name;
-        }
+        return SourceCodeIndexerRoslyn.e2sNamespaceCodeElements[Type] + AllStringsSE.space + Name;
     }
+}

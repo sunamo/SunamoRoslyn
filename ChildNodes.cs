@@ -3,7 +3,7 @@ namespace SunamoRoslyn;
 public class ChildNodes
 {
     /// <summary>
-    /// If will not working, try MethodsDescendant()
+    ///     If will not working, try MethodsDescendant()
     /// </summary>
     /// <param name="n"></param>
     /// <returns></returns>
@@ -13,7 +13,7 @@ public class ChildNodes
     }
 
     /// <summary>
-    /// If will not working, try Methods()
+    ///     If will not working, try Methods()
     /// </summary>
     /// <param name="n"></param>
     /// <returns></returns>
@@ -23,7 +23,6 @@ public class ChildNodes
     }
 
     /// <summary>
-    ///
     /// </summary>
     /// <param name="n"></param>
     /// <returns></returns>
@@ -33,8 +32,8 @@ public class ChildNodes
     }
 
     /// <summary>
-    /// VariablesDescendant - only int a1.
-    /// FieldsDescendant - whole public int a1. when I want to add xml comment like to have be
+    ///     VariablesDescendant - only int a1.
+    ///     FieldsDescendant - whole public int a1. when I want to add xml comment like to have be
     /// </summary>
     /// <param name="n"></param>
     /// <returns></returns>
@@ -54,19 +53,13 @@ public class ChildNodes
 
     public static NamespaceDeclarationSyntax Namespace(SyntaxNode n)
     {
-        if (n is NamespaceDeclarationSyntax)
-        {
-            return (NamespaceDeclarationSyntax)n;
-        }
+        if (n is NamespaceDeclarationSyntax) return (NamespaceDeclarationSyntax)n;
         return (NamespaceDeclarationSyntax)n.ChildNodes().OfType<NamespaceDeclarationSyntax>().ToList().FirstOrNull();
     }
 
     public static ClassDeclarationSyntax Class(SyntaxNode n)
     {
-        if (n is ClassDeclarationSyntax)
-        {
-            return (ClassDeclarationSyntax)n;
-        }
+        if (n is ClassDeclarationSyntax) return (ClassDeclarationSyntax)n;
         var r = n.ChildNodes().OfType<ClassDeclarationSyntax>();
         return (ClassDeclarationSyntax)r.ToList().FirstOrNull();
     }
@@ -74,10 +67,7 @@ public class ChildNodes
     public static SyntaxNode NamespaceOrClass(SyntaxNode root)
     {
         var ns = Namespace(root);
-        if (ns != null)
-        {
-            return ns;
-        }
+        if (ns != null) return ns;
         return Class(root);
     }
 }
