@@ -1,46 +1,51 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <Platforms>AnyCPU</Platforms>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <Version>24.7.16.1</Version>
-        <Description>Work with Roslyn platform</Description>
-    </PropertyGroup>
-    <PropertyGroup>
-        <PackageId>Roslyn</PackageId>
-        <PackageVersion>1.0.0.0</PackageVersion>
-        <Authors>n</Authors>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <Description>Roslyn</Description>
-        <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
-        <Copyright>Copyright</Copyright>
-        <PackageTags>Roslyn, analyzers</PackageTags>
-        <NoPackageAnalysis>true</NoPackageAnalysis>
-        <DisableMSBuildAssemblyCopyCheck>true</DisableMSBuildAssemblyCopyCheck>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-        <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DefineConstants>$(DefineConstants)TRACE;ASYNC</DefineConstants>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Build" Version="17.8.3" ExcludeAssets="runtime">
-        </PackageReference>
-        <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" ExcludeAssets="runtime">
-        </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0">
-        </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0">
-        </PackageReference>
-        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0">
-        </PackageReference>
-        <PackageReference Include="SunamoDevCode" Version="24.1.14.1"/>
-        <PackageReference Include="SunamoStringFormat" Version="24.1.23.1"/>
-        <PackageReference Include="SunamoStringParts" Version="24.1.23.6"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <Platforms>AnyCPU</Platforms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Version>24.9.20.1</Version>
+    <Description>Work with Roslyn platform</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Roslyn</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>www.sunamo.cz</Authors>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Roslyn</Description>
+    <PackageReleaseNotes>removed code</PackageReleaseNotes>
+    <Copyright>www.sunamo.cz</Copyright>
+    <PackageTags>Roslyn, analyzers</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <DisableMSBuildAssemblyCopyCheck>true</DisableMSBuildAssemblyCopyCheck>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;ASYNC</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="17.8.3" ExcludeAssets="runtime">
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" ExcludeAssets="runtime">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0">
+    </PackageReference>
+    <PackageReference Include="SunamoDevCode" Version="24.1.14.1" />
+    <PackageReference Include="SunamoStringFormat" Version="24.1.23.1" />
+    <PackageReference Include="SunamoStringParts" Version="24.1.23.6" />
+  </ItemGroup>
 </Project>

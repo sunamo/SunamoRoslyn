@@ -53,3 +53,6 @@ global using SunamoRoslyn.Enums;
 global using SunamoRoslyn.Roslyns;
 global using SunamoShared.Constants.Paths;
 global using System.Resources;
+global using SunamoRoslyn;
+global using SunamoRoslyn.Extensions;
+global using SunamoRoslyn._sunamo;

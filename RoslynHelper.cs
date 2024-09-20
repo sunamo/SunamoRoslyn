@@ -1,8 +1,8 @@
+
+namespace SunamoRoslyn;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.Formatting;
 using SunamoRoslyn._sunamo;
-
-namespace SunamoRoslyn;
 
 public class RoslynHelper
 {

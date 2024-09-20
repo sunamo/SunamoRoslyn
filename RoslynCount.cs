@@ -14,6 +14,7 @@ public class RoslynCount
 
     public Type type = typeof(RoslynCount);
 
+
     public void FillBefore(ClassDeclarationSyntax cl2_2)
     {
         before = cl2_2.Members.Count;

@@ -1,6 +1,6 @@
-using SunamoStringFormat;
 
 namespace SunamoRoslyn;
+using SunamoStringFormat;
 
 public class WebToStandaloneAssembly
 {
@@ -10,9 +10,6 @@ public class WebToStandaloneAssembly
     /// <param name="ctorArgs"></param>
     private string GetContentOfNewAspxCs(string csClass, string ctorArgs)
     {
-        //CSharpGenerator genAspxCs = new CSharpGenerator();
-        //genAspxCs.Field(2, AccessModifiers.Private, false, VariableModifiers.None, fnwoe + "Cs", "cs", false);
-
         const string template = @"
             protected void Page_Init(object sender, EventArgs e)
             [
