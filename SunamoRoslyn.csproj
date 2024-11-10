@@ -1,10 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <Platforms>AnyCPU</Platforms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>24.11.10.1</Version>
+    <Version>24.11.10.2</Version>
     <Description>Work with Roslyn platform</Description>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>
@@ -13,13 +10,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <Authors>www.sunamo.cz</Authors>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Roslyn</Description>
-    <PackageReleaseNotes>Clean up</PackageReleaseNotes>
+    <PackageReleaseNotes>Removed from csproj</PackageReleaseNotes>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
-    <NoPackageAnalysis>true</NoPackageAnalysis>
-    <DisableMSBuildAssemblyCopyCheck>true</DisableMSBuildAssemblyCopyCheck>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG2;DEBUG;TRACE;ASYNC;SunamoRoslyn;SunamoRoslyn.csproj</DefineConstants>
@@ -31,10 +24,6 @@
     <DefineConstants>$(DefineConstants)TRACE;ASYNC;SunamoRoslyn;SunamoRoslyn.csproj</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="17.12.6" ExcludeAssets="runtime">
-    </PackageReference>
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" ExcludeAssets="runtime">
-    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0">
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
