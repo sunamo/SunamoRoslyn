@@ -20,7 +20,6 @@ public class RoslynHelper
         var fields = ChildNodes.FieldsDescendant(root);
         string before = null;
         string after = null;
-        int i = 0;
         StringBuilder sb = new StringBuilder();
         sb.Append(root.ToFullString());
         Tuple<List<string>, List<string>> ls = null;
