@@ -453,7 +453,6 @@ public class RoslynHelper
         {
             string h = GetHeaderOfMethod(m, alsoModifier);
             clMethodsSharedNew.Add(h);
-            int i = 0;
         }
         return clMethodsSharedNew;
     }

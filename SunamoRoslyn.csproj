@@ -17,7 +17,7 @@
     <Authors>www.sunamo.cz</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Roslyn</Description>
-    <PackageReleaseNotes>Added removing comments by Roslyn</PackageReleaseNotes>
+    <PackageReleaseNotes>Clean up</PackageReleaseNotes>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
