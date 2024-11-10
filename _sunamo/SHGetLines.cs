@@ -1,4 +1,4 @@
-﻿
+namespace SunamoRoslyn._sunamo;
 internal class SHGetLines
 {
     internal static List<string> GetLines(string p)

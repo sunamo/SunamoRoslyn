@@ -1,5 +1,5 @@
-
 namespace SunamoRoslyn;
+using SunamoRoslyn._public;
 using static CsFileFilter;
 
 public partial class SourceCodeIndexerRoslyn
@@ -10,9 +10,9 @@ public partial class SourceCodeIndexerRoslyn
     #region All 4 for which is checked
     public EndArgs endArgs = null;
     public ContainsArgs containsArgs = null;
-    public CollectionOnDrive fileNames = null;
-    public CollectionOnDrive fileNamesExactly = null;
-    public CollectionOnDrive pathStarts = null;
+    public List<string> fileNames = null;
+    public List<string> fileNamesExactly = null;
+    public List<string> pathStarts = null;
     #endregion
 
     public List<string> endsOther = null;
@@ -217,7 +217,7 @@ public partial class SourceCodeIndexerRoslyn
                 ClassCodeElement element = new ClassCodeElement()
                 { Index = fileLinePositionSpan.StartLinePosition.Line, Name = methodName, Type = ClassCodeElementsType.Method, From = s.Start, To = s.End, Length = s.Length, Member = method };
 
-                DictionaryHelper.AddOrCreate<string, ClassCodeElement>(classCodeElements, pathFile, element);
+                DictionaryHelper.AddOrCreate<string, ClassCodeElement, object>(classCodeElements, pathFile, element);
             }
         }
     }
@@ -248,7 +248,7 @@ public partial class SourceCodeIndexerRoslyn
             var indexes = linesWithIndexes[item.Key];
             include = false;
             // return with zero elements - in item.Value is only lines with content. I need lines with exactly content of file to localize searched results
-            List<int> founded = CA.ReturnWhichContainsIndexes(item.Value, term, SearchStrategy.AnySpaces);
+            List<int> founded = CA.ReturnWhichContainsIndexes(item.Value, term, SearchStrategyRoslyn.AnySpaces);
 
             if (inComments.HasValue)
             {
@@ -307,7 +307,7 @@ public partial class SourceCodeIndexerRoslyn
     /// <param name = "type"></param>
     /// <param name = "classType"></param>
     /// <param name = "searchStrategy"></param>
-    public CodeElements FindNamespaceElement(List<string> loadExtensions, string text, NamespaceCodeElementsType type, ClassCodeElementsType classType, SearchStrategy searchStrategy = SearchStrategy.FixedSpace)
+    public CodeElements FindNamespaceElement(List<string> loadExtensions, string text, NamespaceCodeElementsType type, ClassCodeElementsType classType, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
     {
         bool makeChecking = type != NamespaceCodeElementsType.All;
         Dictionary<string, NamespaceCodeElements> result = new Dictionary<string, NamespaceCodeElements>();
@@ -342,7 +342,7 @@ public partial class SourceCodeIndexerRoslyn
 
                     if (add)
                     {
-                        if (.Contains(item2.NameWithoutGeneric, text, searchStrategy))
+                        if (SH.Contains(item2.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
                         {
                             d.Add(item2);
                         }
@@ -379,7 +379,7 @@ public partial class SourceCodeIndexerRoslyn
 
                     if (add)
                     {
-                        if (.Contains(item2.NameWithoutGeneric, text, searchStrategy))
+                        if (SH.Contains(item2.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
                         {
                             d.Add(item2);
                         }

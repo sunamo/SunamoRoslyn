@@ -1,13 +1,26 @@
-﻿using System;
+namespace SunamoRoslyn._sunamo;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SunamoRoslyn._sunamo;
 internal class ThrowEx
 {
+    internal static bool Custom(string message, bool reallyThrow = true, string secondMessage = "")
+    {
+        string joined = string.Join(" ", message, secondMessage);
+        string? str = Exceptions.Custom(FullNameOfExecutedCode(), joined);
+        return ThrowIsNotNull(str, reallyThrow);
+    }
+
+    internal static bool DifferentCountInLists(string namefc, int countfc, string namesc, int countsc)
+    {
+        return ThrowIsNotNull(
+            Exceptions.DifferentCountInLists(FullNameOfExecutedCode(), namefc, countfc, namesc, countsc));
+    }
+
     internal static bool NotImplementedCase(object notImplementedName)
     { return ThrowIsNotNull(Exceptions.NotImplementedCase, notImplementedName); }
 
@@ -25,6 +38,14 @@ internal class ThrowEx
     }
 
 
+
+    internal static bool NotImplementedMethod() { return ThrowIsNotNull(Exceptions.NotImplementedMethod); }
+
+    internal static bool ThrowIsNotNull(Func<string, string?> f)
+    {
+        string? exc = f(FullNameOfExecutedCode());
+        return ThrowIsNotNull(exc);
+    }
 
     static string FullNameOfExecutedCode(object type, string methodName, bool fromThrowEx = false)
     {

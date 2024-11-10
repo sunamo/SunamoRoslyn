@@ -1,13 +1,31 @@
-﻿using System;
+namespace SunamoRoslyn._sunamo;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SunamoRoslyn._sunamo;
 internal class Exceptions
 {
+    internal static string? Custom(string before, string message)
+    {
+        return CheckBefore(before) + message;
+    }
+    internal static string? DifferentCountInLists(string before, string namefc, int countfc, string namesc, int countsc)
+    {
+        if (countfc != countsc)
+            return CheckBefore(before) + " different count elements in collection" + " " +
+            string.Concat(namefc + "-" + countfc) + " vs. " +
+            string.Concat(namesc + "-" + countsc);
+        return null;
+    }
+
+    internal static string? NotImplementedMethod(string before)
+    {
+        return CheckBefore(before) + "Not implemented method.";
+    }
+
     public static void TypeAndMethodName(string l, out string type, out string methodName)
     {
         var s2 = l.Split("at ")[1].Trim();

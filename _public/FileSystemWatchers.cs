@@ -1,11 +1,10 @@
-namespace SunamoRoslyn._sunamo;
+namespace SunamoRoslyn._public;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal class CSharpConsts
+public class FileSystemWatchers
 {
-    public const string lc = "//";
 }

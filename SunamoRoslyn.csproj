@@ -4,17 +4,21 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <Platforms>AnyCPU</Platforms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>24.2.1.1</Version>
+    <Version>24.11.10.1</Version>
     <Description>Work with Roslyn platform</Description>
+    <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>Roslyn</PackageId>
     <PackageVersion>1.0.0.0</PackageVersion>
-    <Authors>n</Authors>
+    <Authors>www.sunamo.cz</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Roslyn</Description>
-    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
-    <Copyright>Copyright</Copyright>
+    <PackageReleaseNotes>Added removing comments by Roslyn</PackageReleaseNotes>
+    <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DisableMSBuildAssemblyCopyCheck>true</DisableMSBuildAssemblyCopyCheck>
@@ -29,15 +33,20 @@
     <DefineConstants>$(DefineConstants)TRACE;ASYNC;SunamoRoslyn;SunamoRoslyn.csproj</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build" Version="17.8.3" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.Build" Version="17.12.6" ExcludeAssets="runtime">
     </PackageReference>
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" ExcludeAssets="runtime">
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" ExcludeAssets="runtime">
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0">
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.11.0">
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0">
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.8.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.11.0">
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 </Project>

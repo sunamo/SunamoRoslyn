@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal class CSharpConsts
+internal enum ContainsCompareMethodRoslyn
 {
-    public const string lc = "//";
+    WholeInput,
+    SplitToWords,
+    Negations
 }

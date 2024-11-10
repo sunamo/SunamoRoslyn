@@ -481,7 +481,7 @@ public class RoslynHelper
         //string parameters = m.ParameterList.ToFullString();
         // only text
         string p2 = GetParameters(m.ParameterList);
-        sb.AddItem(addAfter, AllStrings.lb + p2 + AllStrings.rb);
+        sb.AddItem(addAfter, "(" + p2 + ")");
         string s = sb.ToString();
         return s;
     }
@@ -546,6 +546,6 @@ public class RoslynHelper
     }
     public static string NameWithoutGeneric(string name)
     {
-        return SHParts.RemoveAfterFirst(name, AllStrings.lt);
+        return SHParts.RemoveAfterFirst(name, "<");
     }
 }

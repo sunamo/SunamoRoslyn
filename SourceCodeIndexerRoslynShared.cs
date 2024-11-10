@@ -1,6 +1,7 @@
-using static CsFileFilter;
-
 namespace SunamoRoslyn;
+using SunamoRoslyn._public;
+using SunamoRoslyn._sunamo;
+using static CsFileFilter;
 
 public partial class SourceCodeIndexerRoslyn
 {
@@ -57,7 +58,7 @@ public partial class SourceCodeIndexerRoslyn
     public bool IsToIndexed(string pathFile)
     {
         #region All 4 for which is checked
-        if (CA.ReturnWhichContainsIndexes(endsOther, pathFile, SearchStrategy.FixedSpace).Count > 0)
+        if (CA.ReturnWhichContainsIndexes(endsOther, pathFile, SearchStrategyRoslyn.FixedSpace).Count > 0)
         {
             return false;
         }
@@ -65,7 +66,7 @@ public partial class SourceCodeIndexerRoslyn
         var uf = UnindexableFiles.uf;
 
         var fn = Path.GetFileName(pathFile);
-        if (CA.ReturnWhichContainsIndexes(fileNames, fn, SearchStrategy.FixedSpace).Count > 0)
+        if (CA.ReturnWhichContainsIndexes(fileNames, fn, SearchStrategyRoslyn.FixedSpace).Count > 0)
         {
             uf.unindexableFileNamesFiles.Add(pathFile);
 
@@ -78,6 +79,56 @@ public partial class SourceCodeIndexerRoslyn
     }
 
     public bool isCallingIsToIndexed = false;
+
+    internal static List<T> GetValues<T>()
+      where T : struct
+    {
+        return GetValues<T>(false, true);
+    }
+    /// <summary>
+    /// Get all values expect of Nope/None
+    /// </summary>
+    /// <typeparam name = "T"></typeparam>
+    /// <param name = "type"></param>
+    internal static List<T> GetValues<T>(bool IncludeNope, bool IncludeShared)
+        where T : struct
+    {
+        var type = typeof(T);
+        var values = Enum.GetValues(type).Cast<T>().ToList();
+        T nope;
+        if (!IncludeNope)
+        {
+            if (Enum.TryParse<T>(CodeElementsConstants.NopeValue, out nope))
+            {
+                values.Remove(nope);
+            }
+        }
+
+        if (!IncludeShared)
+        {
+            if (type.Name == "MySites")
+            {
+                if (Enum.TryParse<T>("Shared", out nope))
+                {
+                    values.Remove(nope);
+                }
+            }
+            else
+            {
+                if (Enum.TryParse<T>("Sha", out nope))
+                {
+                    values.Remove(nope);
+                }
+            }
+        }
+
+        if (Enum.TryParse<T>(CodeElementsConstants.NoneValue, out nope))
+        {
+            values.Remove(nope);
+        }
+
+        return values;
+    }
 
     /// <summary>
     /// SourceCodeIndexerRoslyn.ProcessFile
@@ -169,15 +220,15 @@ public partial class SourceCodeIndexerRoslyn
             }
 
             fileContent = string.Join(Environment.NewLine, lines);
-            if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
-            {
-                var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
-                await File.WriteAllTextAsync(gf, fileContent);
-            }
+            //if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
+            //{
+            //    var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
+            //    await File.WriteAllTextAsync(gf, fileContent);
+            //}
 
             List<string> linesAll = lines; // SHGetLines.GetLines(fileContent);
             // nechápu proč to obaluji mezerou ale nevadí
-            linesAll = CA.WrapWith(linesAll, AllStrings.space).ToList();
+            linesAll = CA.WrapWith(linesAll, " ").ToList();
             List<int> FullFileIndex = new List<int>();
             for (int i = linesAll.Count - 1; i >= 0; i--)
             {
@@ -231,7 +282,7 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             {
                 if (namespaceCodeElementsType.HasFlag(item))
                 {
-                    namespaceCodeElementsKeywords.Add(SH.WrapWith(item.ToString().ToLower(), AllStrings.space));
+                    namespaceCodeElementsKeywords.Add(SH.WrapWith(item.ToString().ToLower(), " "));
                 }
             }
 

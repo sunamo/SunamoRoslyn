@@ -1,4 +1,3 @@
-
 namespace SunamoRoslyn;
 public class RoslynParents
 {

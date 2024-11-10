@@ -140,7 +140,7 @@ internal class RoslynFormatService
             {
                 if (i != 0)
                 {
-                    if (lines[i - 1].Trim() != AllStrings.lcub)
+                    if (lines[i - 1].Trim() != "{")
                     {
                         lines.Insert(i, string.Empty);
                     }

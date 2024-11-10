@@ -1,4 +1,5 @@
 namespace SunamoRoslyn;
+using SunamoRoslyn._public;
 
 /// <summary>
 /// RoslynParser - use roslyn classes
@@ -62,7 +63,7 @@ GetCodeOfElementsClass(string folderFrom, string folderTo)
         FS.WithEndSlash(ref folderFrom);
         FS.WithEndSlash(ref folderTo);
 
-        var files = Directory.GetFiles(folderFrom, FS.MascFromExtension(".aspx.cs"), SearchOption.TopDirectoryOnly);
+        var files = Directory.GetFiles(folderFrom, "*.aspx.cs", SearchOption.TopDirectoryOnly);
         foreach (var file in files)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(
@@ -98,7 +99,7 @@ File.ReadAllTextAsync(file));
             root = root.TrackNodes(sn);
 
             var d = sn.SyntaxTree.ToString();
-            var fileTo = SHReplace.Replace(file, folderFrom, folderTo);
+            var fileTo = file.Replace(folderFrom, folderTo);
             await File.WriteAllTextAsync(fileTo, d);
         }
 
@@ -119,10 +120,10 @@ File.ReadAllTextAsync(file));
     /// </summary>
     /// <param name="root"></param>
     /// <param name="wrapIntoClass"></param>
-    public static ABC GetVariablesInCsharp(SyntaxNode root)
+    public static ABCRoslyn GetVariablesInCsharp(SyntaxNode root)
     {
         List<string> lines = new List<string>();
-        CollectionWithoutDuplicates<string> usings;
+        List<string> usings;
 
         return GetVariablesInCsharp(root, lines, out usings);
     }
@@ -147,7 +148,7 @@ File.ReadAllTextAsync(file));
             //CL.WriteLine(variableDeclaration.Variables.First().Identifier.Value);
             string variableName = variableDeclaration.Declaration.Type.ToString();
             variableName = SHReplace.ReplaceOnce(variableName, "global::", "");
-            int lastIndex = variableName.LastIndexOf(AllChars.dot);
+            int lastIndex = variableName.LastIndexOf('.');
             string ns, cn;
             SH.GetPartsByLocation(out ns, out cn, variableName, lastIndex);
             usings.Add(ns);
@@ -163,9 +164,9 @@ File.ReadAllTextAsync(file));
     /// <param name="root"></param>
     /// <param name="lines"></param>
     /// <param name="usings"></param>
-    public static ABC GetVariablesInCsharp(SyntaxNode root, List<string> lines, out CollectionWithoutDuplicates<string> usings)
+    public static ABCRoslyn GetVariablesInCsharp(SyntaxNode root, List<string> lines, out List<string> usings)
     {
-        ABC result = new ABC();
+        ABCRoslyn result = new ABCRoslyn();
         usings = CSharpHelper.Usings(lines);
 
         ClassDeclarationSyntax helloWorldDeclaration = null;
@@ -179,14 +180,16 @@ File.ReadAllTextAsync(file));
             //CL.WriteLine(variableDeclaration.Variables.First().Identifier.Value);
             string variableName = variableDeclaration.Declaration.Type.ToString();
             variableName = SHReplace.ReplaceOnce(variableName, "global::", "");
-            int lastIndex = variableName.LastIndexOf(AllChars.dot);
+            int lastIndex = variableName.LastIndexOf('.');
             string ns, cn;
             SH.GetPartsByLocation(out ns, out cn, variableName, lastIndex);
             usings.Add(ns);
             // in key type, in value name
-            result.Add(AB.Get(cn, variableDeclaration.Declaration.Variables.First().Identifier.Text));
+            result.Add(ABRoslyn.Get(cn, variableDeclaration.Declaration.Variables.First().Identifier.Text));
 
         }
+
+        usings = usings.Distinct().ToList();
 
         return result;
     }

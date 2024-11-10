@@ -1,4 +1,3 @@
-
 namespace SunamoRoslyn;
 /// <summary>
 /// RoslynParser - use roslyn classes
@@ -32,7 +31,7 @@ void AddPageMethods
             sb.AppendLine(file2.Key);
             foreach (var method in file2.Value)
             {
-                if (method.Name.StartsWith("On") || method.Name.StartsWith(sess.i18n(XlfKeys.Page) + "_"))
+                if (method.Name.StartsWith("On") || method.Name.StartsWith("Page" + "_"))
                 {
                     sb.AppendLine(method.Name);
                 }
@@ -60,12 +59,12 @@ void FindPageMethod
             {
                 string project2 = nameProject.Substring(0, nameProject.Length - 1);
                 // General files is in Nope. GeneralX is only for pages in General folder
-                if (project2 != XlfKeys.General)
+                if (project2 != "General")
                 {
                     project.Add(project2);
                 }
 
-                var files = Directory.GetFiles(item, FS.MascFromExtension(AllExtensions.cs), SearchOption.TopDirectoryOnly).ToList();
+                var files = Directory.GetFiles(item, "*.cs", SearchOption.TopDirectoryOnly).ToList();
 #if ASYNC
                 await AddPageMethodsAsync
 #else
@@ -88,7 +87,7 @@ AddPageMethods
                 (sb, pages);
         }
 
-        ClipboardService.SetText(sb);
+        //ClipboardService.SetText(sb);
     }
 
 

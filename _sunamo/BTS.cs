@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal static class StringBuilderExtensions
+internal class BTS
 {
-    public static void AddItem(this StringBuilder sb, string postfix, string text)
+    public static bool Is(bool binFp, bool n)
     {
-        sb.Append(text + postfix);
+        if (n) return !binFp;
+        return binFp;
     }
 }

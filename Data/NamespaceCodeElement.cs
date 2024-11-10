@@ -4,6 +4,6 @@ namespace SunamoRoslyn.Data;
     {
         public override string ToString()
         {
-            return SourceCodeIndexerRoslyn.e2sNamespaceCodeElements[Type] + AllStrings.space + Name;
+            return SourceCodeIndexerRoslyn.e2sNamespaceCodeElements[Type] + " " + Name;
         }
     }

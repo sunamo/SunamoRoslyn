@@ -58,7 +58,7 @@ public class ChildNodes
         {
             return (NamespaceDeclarationSyntax)n;
         }
-        return (NamespaceDeclarationSyntax)n.ChildNodes().OfType<NamespaceDeclarationSyntax>().ToList().FirstOrNull();
+        return (NamespaceDeclarationSyntax)n.ChildNodes().OfType<NamespaceDeclarationSyntax>().ToList().FirstOrDefault();
     }
 
     public static ClassDeclarationSyntax Class(SyntaxNode n)
@@ -68,7 +68,7 @@ public class ChildNodes
             return (ClassDeclarationSyntax)n;
         }
         var r = n.ChildNodes().OfType<ClassDeclarationSyntax>();
-        return (ClassDeclarationSyntax)r.ToList().FirstOrNull();
+        return (ClassDeclarationSyntax)r.ToList().FirstOrDefault();
     }
 
     public static SyntaxNode NamespaceOrClass(SyntaxNode root)
