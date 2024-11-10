@@ -1,5 +1,6 @@
 namespace SunamoRoslyn.Data;
 
-public class ClassCodeElements : List<ClassCodeElement>
-{
-}
+    public class ClassCodeElements : List<ClassCodeElement>
+    {
+
+    }

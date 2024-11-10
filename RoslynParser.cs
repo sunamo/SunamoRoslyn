@@ -1,14 +1,14 @@
 namespace SunamoRoslyn;
 
 /// <summary>
-///     RoslynParser - use roslyn classes
-///     RoslynParserText - no use roslyn classes, only text or indexer
+/// RoslynParser - use roslyn classes
+/// RoslynParserText - no use roslyn classes, only text or indexer
 /// </summary>
 public class RoslynParser
 {
     // TODO: take also usings
 
-    private static Type type = null;
+    static Type type = null;
 
     public static bool IsCSharpCode(string input)
     {
@@ -20,8 +20,8 @@ public class RoslynParser
         catch (Exception ex)
         {
             // throwed Method not found: 'Boolean Microsoft.CodeAnalysis.StackGuard.IsInsufficientExecutionStackException(System.Exception)'.' for non cs code
-        }
 
+        }
         var s = d.GetText().ToString();
         return d != null;
     }
@@ -42,55 +42,57 @@ public class RoslynParser
     }
 
 
+
+
+
     /// <summary>
-    ///     Úplně nevím k čemu toto mělo sloužit.
-    ///     Read comments inside
+    /// Úplně nevím k čemu toto mělo sloužit.
+    /// Read comments inside
     /// </summary>
     /// <param name="folderFrom"></param>
     /// <param name="folderTo"></param>
     public
 #if ASYNC
-        async Task<List<string>>
+async Task<List<string>>
 #else
 List<string>
 #endif
-        GetCodeOfElementsClass(string folderFrom, string folderTo)
+GetCodeOfElementsClass(string folderFrom, string folderTo)
     {
-        FSSE.WithEndSlash(ref folderFrom);
-        FSSE.WithEndSlash(ref folderTo);
+        FS.WithEndSlash(ref folderFrom);
+        FS.WithEndSlash(ref folderTo);
 
         var files = Directory.GetFiles(folderFrom, FS.MascFromExtension(".aspx.cs"), SearchOption.TopDirectoryOnly);
         foreach (var file in files)
         {
-            var tree = CSharpSyntaxTree.ParseText(
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(
 #if ASYNC
-                await
+await
 #endif
-                    File.ReadAllTextAsync(file));
+File.ReadAllTextAsync(file));
 
-            var result = new List<string>();
+            List<string> result = new List<string>();
             // Here probable it mean SpaceName, ale když není namespace, uloží třídu
             SyntaxNode sn;
             var cl = RoslynHelper.GetClass(tree.GetRoot(), out sn);
 
-            var saSn = new SyntaxAnnotation();
+            SyntaxAnnotation saSn = new SyntaxAnnotation();
             sn = sn.WithAdditionalAnnotations(saSn);
 
-            var saCl = new SyntaxAnnotation();
+            SyntaxAnnotation saCl = new SyntaxAnnotation();
             cl = cl.WithAdditionalAnnotations(saCl);
             //ClassDeclarationSyntax cl2 = cl.Parent.)
 
             var root = tree.GetRoot();
 
-            var count = cl.Members.Count;
-            for (var i = count - 1; i >= 0; i--)
+            int count = cl.Members.Count;
+            for (int i = count - 1; i >= 0; i--)
             {
                 var item = cl.Members[i];
                 //cl.Members.RemoveAt(i);
                 //cl.Members.Remove(item);
                 cl = cl.RemoveNode(item, SyntaxRemoveOptions.KeepEndOfLine);
             }
-
             // záměna namespace za class pak dělá problémy tady
             sn = sn.TrackNodes(cl);
             root = root.TrackNodes(sn);
@@ -102,21 +104,24 @@ List<string>
 
         return null;
     }
-
     private SyntaxNode FindTopParent(SyntaxNode cl)
     {
         var result = cl;
-        while (result.Parent != null) result = result.Parent;
+        while (result.Parent != null)
+        {
+            result = result.Parent;
+        }
         return result;
     }
 
     /// <summary>
+    ///
     /// </summary>
     /// <param name="root"></param>
     /// <param name="wrapIntoClass"></param>
     public static ABC GetVariablesInCsharp(SyntaxNode root)
     {
-        var lines = new List<string>();
+        List<string> lines = new List<string>();
         CollectionWithoutDuplicates<string> usings;
 
         return GetVariablesInCsharp(root, lines, out usings);
@@ -125,7 +130,7 @@ List<string>
     public static Dictionary<string, string> GetVariablesInCsharp(SyntaxTree tree, out List<string> usings)
     {
         usings = new List<string>();
-        var result = new Dictionary<string, string>();
+        Dictionary<string, string> result = new Dictionary<string, string>();
         var root = (CompilationUnitSyntax)tree.GetRoot();
 
         var firstMember = root.Members[0];
@@ -140,13 +145,14 @@ List<string>
         {
             //CL.WriteLine(variableDeclaration.Variables.First().Identifier.);
             //CL.WriteLine(variableDeclaration.Variables.First().Identifier.Value);
-            var variableName = variableDeclaration.Declaration.Type.ToString();
+            string variableName = variableDeclaration.Declaration.Type.ToString();
             variableName = SHReplace.ReplaceOnce(variableName, "global::", "");
-            var lastIndex = variableName.LastIndexOf(AllCharsSE.dot);
+            int lastIndex = variableName.LastIndexOf(AllChars.dot);
             string ns, cn;
             SH.GetPartsByLocation(out ns, out cn, variableName, lastIndex);
             usings.Add(ns);
             result.Add(cn, variableDeclaration.Declaration.Variables.First().Identifier.Text);
+
         }
 
         return result;
@@ -157,10 +163,9 @@ List<string>
     /// <param name="root"></param>
     /// <param name="lines"></param>
     /// <param name="usings"></param>
-    public static ABC GetVariablesInCsharp(SyntaxNode root, List<string> lines,
-        out CollectionWithoutDuplicates<string> usings)
+    public static ABC GetVariablesInCsharp(SyntaxNode root, List<string> lines, out CollectionWithoutDuplicates<string> usings)
     {
-        var result = new ABC();
+        ABC result = new ABC();
         usings = CSharpHelper.Usings(lines);
 
         ClassDeclarationSyntax helloWorldDeclaration = null;
@@ -172,23 +177,26 @@ List<string>
         {
             //CL.WriteLine(variableDeclaration.Variables.First().Identifier.);
             //CL.WriteLine(variableDeclaration.Variables.First().Identifier.Value);
-            var variableName = variableDeclaration.Declaration.Type.ToString();
+            string variableName = variableDeclaration.Declaration.Type.ToString();
             variableName = SHReplace.ReplaceOnce(variableName, "global::", "");
-            var lastIndex = variableName.LastIndexOf(AllCharsSE.dot);
+            int lastIndex = variableName.LastIndexOf(AllChars.dot);
             string ns, cn;
             SH.GetPartsByLocation(out ns, out cn, variableName, lastIndex);
             usings.Add(ns);
             // in key type, in value name
             result.Add(AB.Get(cn, variableDeclaration.Declaration.Variables.First().Identifier.Text));
+
         }
 
         return result;
     }
 
 
+
     public static string GetAccessModifiers(SyntaxTokenList modifiers)
     {
         foreach (var item in modifiers)
+        {
             switch (item.Kind())
             {
                 case SyntaxKind.PublicKeyword:
@@ -201,12 +209,13 @@ List<string>
                     return item.WithoutTrivia().ToFullString();
             }
 
+        }
         return string.Empty;
     }
 
     /// <summary>
-    ///     return declaredVariables, assignedVariables
-    ///     A1 can be string or CompilationUnitSyntax
+    /// return declaredVariables, assignedVariables
+    /// A1 can be string or CompilationUnitSyntax
     /// </summary>
     /// <param name="code"></param>
     /// <returns></returns>
@@ -222,8 +231,8 @@ List<string>
         var variableDeclarations = root.DescendantNodes().OfType<VariableDeclarationSyntax>();
         var variableAssignments = root.DescendantNodes().OfType<AssignmentExpressionSyntax>();
 
-        var declaredVariables = new List<string>(variableDeclarations.Count());
-        var assignedVariables = new List<string>(variableAssignments.Count());
+        List<string> declaredVariables = new List<string>(variableDeclarations.Count());
+        List<string> assignedVariables = new List<string>(variableAssignments.Count());
 
         foreach (var variableDeclaration in variableDeclarations)
             declaredVariables.Add(variableDeclaration.Variables.First().Identifier.Value.ToString());
@@ -244,7 +253,7 @@ List<string>
         }
         else if (code is string)
         {
-            var tree = CSharpSyntaxTree.ParseText(code.ToString());
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(code.ToString());
             root = tree.GetRoot();
         }
         else
@@ -257,14 +266,14 @@ List<string>
 
     public static Dictionary<string, List<string>> GetVariablesInEveryMethod(string s)
     {
-        var m = new Dictionary<string, List<string>>();
+        Dictionary<string, List<string>> m = new Dictionary<string, List<string>>();
 
         var tree = CSharpSyntaxTree.ParseText(s);
         var root = tree.GetRoot();
 
         IList<MethodDeclarationSyntax> methods = root
-            .DescendantNodes()
-            .OfType<MethodDeclarationSyntax>().ToList();
+          .DescendantNodes()
+          .OfType<MethodDeclarationSyntax>().ToList();
 
         foreach (var method in methods)
         {

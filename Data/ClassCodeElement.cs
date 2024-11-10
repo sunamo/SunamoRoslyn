@@ -4,6 +4,6 @@ public class ClassCodeElement : CodeElement<ClassCodeElementsType>
 {
     public override string ToString()
     {
-        return SourceCodeIndexerRoslyn.e2sClassCodeElements[Type] + AllStringsSE.space + Name;
+        return SourceCodeIndexerRoslyn.e2sClassCodeElements[Type] + AllStrings.space + Name;
     }
 }
