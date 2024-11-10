@@ -12,8 +12,6 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageId>Roslyn</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
     <Authors>www.sunamo.cz</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Roslyn</Description>

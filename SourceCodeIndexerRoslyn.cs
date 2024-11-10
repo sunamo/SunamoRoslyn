@@ -35,9 +35,6 @@ public partial class SourceCodeIndexerRoslyn
 #endif
        ProcessFile(string pathFile, NamespaceCodeElementsType namespaceCodeElementsType, ClassCodeElementsType classCodeElementsType, bool removeRegions, bool fromFileSystemWatcher)
     {
-        bool removed = false;
-
-
         ProcessFileBoolResult result = null;
         result =
 #if ASYNC
@@ -52,7 +49,6 @@ public partial class SourceCodeIndexerRoslyn
         {
             if (sourceFileTrees.ContainsKey(pathFile))
             {
-                removed = true;
                 sourceFileTrees.Remove(pathFile);
             }
             else
