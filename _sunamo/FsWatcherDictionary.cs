@@ -1,4 +1,4 @@
-namespace SunamoRoslyn._sunamo;
+﻿namespace SunamoRoslyn._sunamo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// Nemůžu dědit protože vše tu musí být internal
+/// Ale jinak musí být public kvůli SourceCodeIndexerRoslyn
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <typeparam name="U"></typeparam>
 public class FsWatcherDictionary<T, U> : IDictionary<T, U>
 {
     private static Type type = typeof(FsWatcherDictionary<T, U>);

@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 internal class CSharpConsts
 {
-    public const string lc = "//";
+    internal const string lc = "//";
 }

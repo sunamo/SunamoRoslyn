@@ -1,4 +1,4 @@
-namespace SunamoRoslyn._sunamo;
+namespace SunamoRoslyn._public;
 using System;
 using System.Collections.Generic;
 using System.Linq;

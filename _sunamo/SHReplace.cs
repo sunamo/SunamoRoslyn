@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 internal class SHReplace
 {
-    public static string ReplaceOnce(string input, string what, string zaco)
+    internal static string ReplaceOnce(string input, string what, string zaco)
     {
         if (what == "") return input;
         var pos = input.IndexOf(what);

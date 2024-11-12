@@ -1,6 +1,6 @@
 namespace SunamoRoslyn;
 using SunamoRoslyn._public;
-using static CsFileFilter;
+using static CsFileFilterRoslyn;
 
 public partial class SourceCodeIndexerRoslyn
 {

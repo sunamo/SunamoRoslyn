@@ -10,7 +10,7 @@ internal class CA
     /// <param name="suMethods"></param>
     /// <param name="line"></param>
     /// <returns></returns>
-    public static string StartWith(List<string> suMethods, string line)
+    internal static string StartWith(List<string> suMethods, string line)
     {
         string element = null;
         return StartWith(suMethods, line, out element);
@@ -24,7 +24,7 @@ internal class CA
     /// </summary>
     /// <param name="suMethods"></param>
     /// <param name="line"></param>
-    public static string StartWith(List<string> suMethods, string line, out string element)
+    internal static string StartWith(List<string> suMethods, string line, out string element)
     {
         element = null;
 
@@ -38,7 +38,7 @@ internal class CA
 
         return null;
     }
-    public static List<string> ReturnWhichContains(List<string> lines, string term, out List<int> founded,
+    internal static List<string> ReturnWhichContains(List<string> lines, string term, out List<int> founded,
     ContainsCompareMethodRoslyn parseNegations = ContainsCompareMethodRoslyn.WholeInput)
     {
         founded = new List<int>();
@@ -80,7 +80,7 @@ internal class CA
 
         return result;
     }
-    public static List<string> WrapWith(List<string> whereIsUsed2, string v)
+    internal static List<string> WrapWith(List<string> whereIsUsed2, string v)
     {
         return WrapWith(whereIsUsed2, v, v);
     }
@@ -90,12 +90,12 @@ internal class CA
     /// </summary>
     /// <param name="whereIsUsed2"></param>
     /// <param name="v"></param>
-    public static List<string> WrapWith(List<string> whereIsUsed2, string before, string after)
+    internal static List<string> WrapWith(List<string> whereIsUsed2, string before, string after)
     {
         for (var i = 0; i < whereIsUsed2.Count; i++) whereIsUsed2[i] = before + whereIsUsed2[i] + after;
         return whereIsUsed2;
     }
-    public static bool EndsWith(string fn, List<string> allowedExtension)
+    internal static bool EndsWith(string fn, List<string> allowedExtension)
     {
         foreach (var item in allowedExtension)
             if (fn.EndsWith(item))
@@ -103,7 +103,7 @@ internal class CA
         return false;
     }
 
-    public static List<int> ReturnWhichContainsIndexes(IList<string> value, string term,
+    internal static List<int> ReturnWhichContainsIndexes(IList<string> value, string term,
         SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
     {
         var result = new List<int>();
@@ -117,14 +117,14 @@ internal class CA
 
         return result;
     }
-    public static List<string> Prepend(string v, List<string> toReplace)
+    internal static List<string> Prepend(string v, List<string> toReplace)
     {
         for (var i = 0; i < toReplace.Count; i++)
             if (!toReplace[i].StartsWith(v))
                 toReplace[i] = v + toReplace[i];
         return toReplace;
     }
-    public static void RemoveLines(List<string> lines, List<int> removeLines)
+    internal static void RemoveLines(List<string> lines, List<int> removeLines)
     {
         removeLines.Sort();
         for (var i = removeLines.Count - 1; i >= 0; i--)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 internal static class StringBuilderExtensions
 {
-    public static void AddItem(this StringBuilder sb, string postfix, string text)
+    internal static void AddItem(this StringBuilder sb, string postfix, string text)
     {
         sb.Append(text + postfix);
     }

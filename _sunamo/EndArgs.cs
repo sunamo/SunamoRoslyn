@@ -1,17 +1,17 @@
 namespace SunamoRoslyn._sunamo;
 //namespace SunamoRoslyn._sunamo;
-//public class EndArgs
+//internal class EndArgs
 //{
-//    public bool designerCs;
-//    public bool DesignerCs;
-//    public bool gCs;
-//    public bool gICs;
-//    public bool iCs;
-//    public bool notTranslateAble;
-//    public bool sharedCs;
-//    public bool tmp;
-//    public bool TMP;
-//    public bool xamlCs;
+//    internal bool designerCs;
+//    internal bool DesignerCs;
+//    internal bool gCs;
+//    internal bool gICs;
+//    internal bool iCs;
+//    internal bool notTranslateAble;
+//    internal bool sharedCs;
+//    internal bool tmp;
+//    internal bool TMP;
+//    internal bool xamlCs;
 
 //    /// <summary>
 //    ///     false which not to index, true which to index
@@ -25,7 +25,7 @@ namespace SunamoRoslyn._sunamo;
 //    /// <param name="tmp"></param>
 //    /// <param name="TMP"></param>
 //    /// <param name="DesignerCs"></param>
-//    public EndArgs(bool designerCs, bool xamlCs, bool sharedCs, bool iCs, bool gICs, bool gCs, bool tmp, bool TMP,
+//    internal EndArgs(bool designerCs, bool xamlCs, bool sharedCs, bool iCs, bool gICs, bool gCs, bool tmp, bool TMP,
 //        bool DesignerCs)
 //    {
 //        this.designerCs = designerCs;

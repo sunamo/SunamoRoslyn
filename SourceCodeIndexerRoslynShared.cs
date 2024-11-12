@@ -1,7 +1,7 @@
 namespace SunamoRoslyn;
 using SunamoRoslyn._public;
 using SunamoRoslyn._sunamo;
-using static CsFileFilter;
+using static CsFileFilterRoslyn;
 
 public partial class SourceCodeIndexerRoslyn
 {
@@ -31,7 +31,7 @@ public partial class SourceCodeIndexerRoslyn
         var uf = UnindexableFiles.uf;
         bool end2 = false;
 
-        if (!CsFileFilter.AllowOnly(pathFile, endArgs, containsArgs, ref end2, alsoEnds))
+        if (!CsFileFilterRoslyn.AllowOnly(pathFile, endArgs, containsArgs, ref end2, alsoEnds))
         {
             if (end2)
             {

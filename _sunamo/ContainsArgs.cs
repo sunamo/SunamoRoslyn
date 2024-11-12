@@ -1,10 +1,10 @@
 namespace SunamoRoslyn._sunamo;
 //namespace SunamoRoslyn._sunamo;
-//public class ContainsArgs
+//internal class ContainsArgs
 //{
-//    public bool binFp;
-//    public bool objFp;
-//    public bool tildaRF;
+//    internal bool binFp;
+//    internal bool objFp;
+//    internal bool tildaRF;
 
 //    /// <summary>
 //    ///     false which not to index, true which to index
@@ -13,7 +13,7 @@ namespace SunamoRoslyn._sunamo;
 //    /// <param name="binFp"></param>
 //    /// <param name="tildaRF"></param>
 //    /// <param name="notTranslateAble"></param>
-//    public ContainsArgs(bool objFp, bool binFp, bool tildaRF, bool notTranslateAble)
+//    internal ContainsArgs(bool objFp, bool binFp, bool tildaRF, bool notTranslateAble)
 //    {
 //        this.objFp = objFp;
 //        this.binFp = binFp;

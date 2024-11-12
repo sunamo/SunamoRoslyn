@@ -56,7 +56,7 @@ internal class EnumHelper
 
         return values;
     }
-    public static Dictionary<T, string> EnumToString<T>(Type enumType)
+    internal static Dictionary<T, string> EnumToString<T>(Type enumType)
     {
         return Enum.GetValues(enumType).Cast<T>().Select(t => new
         {
@@ -67,7 +67,7 @@ internal class EnumHelper
         ).ToDictionary(r => r.Key, r => r.Value);
     }
 
-    public static string EnumToString<T>(T ds) where T : Enum
+    internal static string EnumToString<T>(T ds) where T : Enum
     {
         const string comma = ",";
         var sb = new StringBuilder();

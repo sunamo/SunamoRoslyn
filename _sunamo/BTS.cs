@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 internal class BTS
 {
-    public static bool Is(bool binFp, bool n)
+    internal static bool Is(bool binFp, bool n)
     {
         if (n) return !binFp;
         return binFp;

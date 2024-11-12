@@ -5,22 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class StringOrStringList
+internal class StringOrStringList
 {
-    public StringOrStringList(string s)
+    internal StringOrStringList(string s)
     {
         String = s;
     }
 
-    public StringOrStringList(List<string> list)
+    internal StringOrStringList(List<string> list)
     {
         List = list;
     }
 
-    public string String { get; private set; }
-    public List<string> List { get; private set; }
+    internal string String { get; private set; }
+    internal List<string> List { get; private set; }
 
-    public string GetString()
+    internal string GetString()
     {
         if (String != null)
         {
@@ -38,7 +38,7 @@ public class StringOrStringList
         throw new Exception("Both is null");
     }
 
-    public List<string> GetList()
+    internal List<string> GetList()
     {
         if (String != null)
         {

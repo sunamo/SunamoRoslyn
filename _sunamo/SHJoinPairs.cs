@@ -1,7 +1,7 @@
 namespace SunamoRoslyn._sunamo;
 internal class SHJoinPairs
 {
-    public static string JoinPairs(string firstDelimiter, string secondDelimiter, params string[] parts)
+    internal static string JoinPairs(string firstDelimiter, string secondDelimiter, params string[] parts)
     {
         //InitApp.TemplateLogger.NotEvenNumberOfElements(type, "JoinPairs", @"args", parts);
         //InitApp.TemplateLogger.AnyElementIsNull(type, "JoinPairs", @"args", parts);

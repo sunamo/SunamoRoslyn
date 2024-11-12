@@ -5,17 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class UnindexableFiles
+internal class UnindexableFiles
 {
-    public static UnindexableFiles uf = new UnindexableFiles();
+    internal static UnindexableFiles uf = new UnindexableFiles();
 
     private UnindexableFiles()
     {
     }
 
-    public List<string> unindexablePathPartsFiles = new List<string>();
-    public List<string> unindexableFileNamesFiles = new List<string>();
-    public List<string> unindexableFileNamesExactlyFiles = new List<string>();
-    public List<string> unindexablePathEndsFiles = new List<string>();
-    public List<string> unindexablePathStartsFiles = new List<string>();
+    internal List<string> unindexablePathPartsFiles = new List<string>();
+    internal List<string> unindexableFileNamesFiles = new List<string>();
+    internal List<string> unindexableFileNamesExactlyFiles = new List<string>();
+    internal List<string> unindexablePathEndsFiles = new List<string>();
+    internal List<string> unindexablePathStartsFiles = new List<string>();
 }

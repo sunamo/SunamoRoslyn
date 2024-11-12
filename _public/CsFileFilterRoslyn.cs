@@ -1,8 +1,8 @@
-namespace SunamoRoslyn._sunamo;
+namespace SunamoRoslyn._public;
 /// <summary>
 ///     Cant be derived from FiltersNotTranslateAble because easy of finding instances of CsFileFilter
 /// </summary>
-public class CsFileFilter //: ICsFileFilter
+public class CsFileFilterRoslyn //: ICsFileFilter
 {
     //private static readonly FiltersNotTranslateAble f = FiltersNotTranslateAble.Instance;
 
@@ -15,7 +15,7 @@ public class CsFileFilter //: ICsFileFilter
     ///     In default is everything in false
     ///     Call some Set* method
     /// </summary>
-    public CsFileFilter()
+    public CsFileFilterRoslyn()
     {
     }
 

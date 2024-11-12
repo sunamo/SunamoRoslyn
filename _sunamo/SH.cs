@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 internal class SH
 {
-    public static string WrapWith(string value, string h)
+    internal static string WrapWith(string value, string h)
     {
         return h + value + h;
     }
 
-    public static string WrapWithChar(string value, char v, bool _trimWrapping = false,
+    internal static string WrapWithChar(string value, char v, bool _trimWrapping = false,
         bool alsoIfIsWhitespaceOrEmpty = true)
     {
         if (string.IsNullOrWhiteSpace(value) && !alsoIfIsWhitespaceOrEmpty) return string.Empty;
@@ -21,7 +21,7 @@ internal class SH
         return WrapWith(_trimWrapping ? value.Trim() : value, v.ToString());
     }
 
-    public static string WordAfter(string input, string word)
+    internal static string WordAfter(string input, string word)
     {
         input = WrapWithChar(input, ' ');
         var dex = input.IndexOf(word);
@@ -78,7 +78,7 @@ internal class SH
                 za = string.Empty;
         }
     }
-    public static List<string> SplitCharMore(string s, params char[] dot)
+    internal static List<string> SplitCharMore(string s, params char[] dot)
     {
         return s.Split(dot, StringSplitOptions.RemoveEmptyEntries).ToList();
     }
@@ -143,13 +143,13 @@ internal class SH
         return input.Contains(term);
     }
 
-    public static string RemoveLastLetters(string v1, int v2)
+    internal static string RemoveLastLetters(string v1, int v2)
     {
         if (v1.Length > v2) return v1.Substring(0, v1.Length - v2);
         return v1;
     }
 
-    public static void IndentAsPreviousLine(List<string> lines)
+    internal static void IndentAsPreviousLine(List<string> lines)
     {
         var indentPrevious = string.Empty;
         string line = null;
