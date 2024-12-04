@@ -115,59 +115,30 @@ File.ReadAllTextAsync(file));
         return result;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="root"></param>
-    /// <param name="wrapIntoClass"></param>
-    public static ABCRoslyn GetVariablesInCsharp(SyntaxNode root)
-    {
-        List<string> lines = new List<string>();
-        List<string> usings;
+    ///// <summary>
+    /////
+    ///// </summary>
+    ///// <param name="root"></param>
+    ///// <param name="wrapIntoClass"></param>
+    //public static ABCRoslyn GetVariablesInCsharp(SyntaxNode root)
+    //{
+    //    List<string> lines = new List<string>();
+    //    List<string> usings;
 
-        return GetVariablesInCsharp(root, lines, out usings);
-    }
-
-    public static Dictionary<string, string> GetVariablesInCsharp(SyntaxTree tree, out List<string> usings)
-    {
-        usings = new List<string>();
-        Dictionary<string, string> result = new Dictionary<string, string>();
-        var root = (CompilationUnitSyntax)tree.GetRoot();
-
-        var firstMember = root.Members[0];
-
-        var helloWorldDeclaration = (NamespaceDeclarationSyntax)firstMember;
-
-        var programDeclaration = (ClassDeclarationSyntax)helloWorldDeclaration.Members[0];
-
-        var variableDeclarations = programDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>();
-
-        foreach (var variableDeclaration in variableDeclarations)
-        {
-            //CL.WriteLine(variableDeclaration.Variables.First().Identifier.);
-            //CL.WriteLine(variableDeclaration.Variables.First().Identifier.Value);
-            string variableName = variableDeclaration.Declaration.Type.ToString();
-            variableName = SHReplace.ReplaceOnce(variableName, "global::", "");
-            int lastIndex = variableName.LastIndexOf('.');
-            string ns, cn;
-            SH.GetPartsByLocation(out ns, out cn, variableName, lastIndex);
-            usings.Add(ns);
-            result.Add(cn, variableDeclaration.Declaration.Variables.First().Identifier.Text);
-
-        }
-
-        return result;
-    }
+    //    return GetVariablesInCsharp(root);
+    //}
 
     /// <summary>
+    /// A1 by mohl být SyntaxNode kdybych nepotřeboval získávat globální usingy
+    /// Prop Usings je pouze ve CompilationUnitSyntax
     /// </summary>
     /// <param name="root"></param>
     /// <param name="lines"></param>
     /// <param name="usings"></param>
-    public static ABCRoslyn GetVariablesInCsharp(SyntaxNode root, List<string> lines, out List<string> usings)
+    public static ABCRoslyn GetVariablesInCsharp(CompilationUnitSyntax root, out List<string> usings)
     {
         ABCRoslyn result = new ABCRoslyn();
-        usings = CSharpHelper.Usings(lines);
+        usings = CSharpHelper.Usings(root);
 
         ClassDeclarationSyntax helloWorldDeclaration = null;
         helloWorldDeclaration = RoslynHelper.GetClass(root);

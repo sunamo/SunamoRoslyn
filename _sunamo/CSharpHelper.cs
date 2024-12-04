@@ -5,50 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-internal class CSharpHelper
+internal static class CSharpHelper
 {
-    internal const string Using = "using ";
-
-    internal static List<string> Usings(List<string> lines, string keyword, bool remove = false)
+    internal static List<string> Usings(CompilationUnitSyntax root)
     {
-        List<int> removeLines = null;
-        return Usings(lines, keyword, out removeLines, remove);
-    }
+        List<string> result = new();
 
-    internal static List<string> Usings(List<string> lines, bool remove = false)
-    {
-        return Usings(lines, Using, remove);
-    }
-
-    internal static List<string> Usings(List<string> lines, string keyword, out List<int> removeLines, bool remove = false)
-    {
-        List<string> usings = new();
-        removeLines = new List<int>();
-
-        int i = -1;
-        foreach (var item in lines)
+        foreach (UsingDirectiveSyntax usingDirective in root.Usings)
         {
-            i++;
-            var line = item.Trim();
-            if (line != string.Empty)
-            {
-                if (line.StartsWith(keyword))
-                {
-                    removeLines.Add(i);
-                    usings.Add(line);
-                }
-                else //if (line.Contains("{"))
-                {
-                    break;
-                }
-            }
-        }
+            // Získání názvu using direktivy
+            result.Add(usingDirective.Name.ToString());
 
-        if (remove)
-        {
-            CA.RemoveLines(lines, removeLines);
         }
-
-        return usings.Distinct().ToList();
+        return result;
     }
+
 }

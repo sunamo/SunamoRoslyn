@@ -369,32 +369,7 @@ public class RoslynHelper
         return null;
         #endregion
     }
-    /// <summary>
-    /// A1 can be SyntaxTree, string
-    /// if it List<string>, use RoslynParser.Usings
-    /// </summary>
-    /// <param name="t"></param>
-    public static IList<string> Usings(object t)
-    {
-        List<string> lines;
-        return Usings(t, out lines);
-    }
-    /// <summary>
-    /// A1 can be SyntaxTree, string
-    /// if it List<string>, use RoslynParser.Usings
-    /// </summary>
-    /// <param name="t"></param>
-    /// <param name="lines"></param>
-    public static IList<string> Usings(object t, out List<string> lines)
-    {
-        string text = null;
-        if (t is SyntaxTree || t is string)
-        {
-            text = t.ToString();
-        }
-        lines = SHGetLines.GetLines(text);
-        return CSharpHelper.Usings(lines);
-    }
+
     /// <summary>
     /// Return null if
     /// Into A2 insert first member of A1 - Namespace/Class
