@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 
 internal class FS
 {
-    internal static string WithEndSlash(string v)
-    {
-        return WithEndSlash(ref v);
-    }
 
     /// <summary>
     ///     Usage: Exceptions.FileWasntFoundInDirectory

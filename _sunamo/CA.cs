@@ -124,15 +124,6 @@ internal class CA
                 toReplace[i] = v + toReplace[i];
         return toReplace;
     }
-    internal static void RemoveLines(List<string> lines, List<int> removeLines)
-    {
-        removeLines.Sort();
-        for (var i = removeLines.Count - 1; i >= 0; i--)
-        {
-            var dx = removeLines[i];
-            lines.RemoveAt(dx);
-        }
-    }
     internal static List<string> RemoveStringsEmptyTrimBefore(List<string> mySites)
     {
         for (var i = mySites.Count - 1; i >= 0; i--)

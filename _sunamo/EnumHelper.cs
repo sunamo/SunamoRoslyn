@@ -67,18 +67,4 @@ internal class EnumHelper
         ).ToDictionary(r => r.Key, r => r.Value);
     }
 
-    internal static string EnumToString<T>(T ds) where T : Enum
-    {
-        const string comma = ",";
-        var sb = new StringBuilder();
-        var v = Enum.GetValues(typeof(T));
-        foreach (T item in v)
-            if (ds.HasFlag(item))
-            {
-                var ts = item.ToString();
-                if (ts != CodeElementsConstants.NopeValue) sb.Append(ts + comma);
-            }
-
-        return sb.ToString().TrimEnd(comma[0]);
-    }
 }
