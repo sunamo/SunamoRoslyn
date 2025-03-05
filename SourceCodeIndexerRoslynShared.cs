@@ -1,12 +1,9 @@
 namespace SunamoRoslyn;
-using SunamoRoslyn._public;
-using SunamoRoslyn._sunamo;
+
 using static CsFileFilterRoslyn;
 
 public partial class SourceCodeIndexerRoslyn
 {
-
-
     /// <summary>
     /// used only in FileSystemWatcher
     /// </summary>
@@ -25,12 +22,10 @@ public partial class SourceCodeIndexerRoslyn
 #endif
                 ProcessFile(file, NamespaceCodeElementsType.All, ClassCodeElementsType.All, false, fromFileSystemWatcher);
     }
-
     public bool IsToIndexedFolder(string pathFile, bool alsoEnds)
     {
         var uf = UnindexableFiles.uf;
         bool end2 = false;
-
         if (!CsFileFilterRoslyn.AllowOnly(pathFile, endArgs, containsArgs, ref end2, alsoEnds))
         {
             if (end2)
@@ -41,20 +36,15 @@ public partial class SourceCodeIndexerRoslyn
             {
                 uf.unindexablePathPartsFiles.Add(pathFile);
             }
-
             return false;
         }
-
         if (CA.StartWith(pathStarts, pathFile) != null)
         {
             uf.unindexablePathStartsFiles.Add(pathFile);
-
             return false;
         }
-
         return true;
     }
-
     public bool IsToIndexed(string pathFile)
     {
         #region All 4 for which is checked
@@ -62,24 +52,17 @@ public partial class SourceCodeIndexerRoslyn
         {
             return false;
         }
-
         var uf = UnindexableFiles.uf;
-
         var fn = Path.GetFileName(pathFile);
         if (CA.ReturnWhichContainsIndexes(fileNames, fn, SearchStrategyRoslyn.FixedSpace).Count > 0)
         {
             uf.unindexableFileNamesFiles.Add(pathFile);
-
             return false;
         }
-
         #endregion
-
         return IsToIndexedFolder(pathFile, true);
     }
-
     public bool isCallingIsToIndexed = false;
-
     internal static List<T> GetValues<T>()
       where T : struct
     {
@@ -103,7 +86,6 @@ public partial class SourceCodeIndexerRoslyn
                 values.Remove(nope);
             }
         }
-
         if (!IncludeShared)
         {
             if (type.Name == "MySites")
@@ -121,15 +103,12 @@ public partial class SourceCodeIndexerRoslyn
                 }
             }
         }
-
         if (Enum.TryParse<T>(CodeElementsConstants.NoneValue, out nope))
         {
             values.Remove(nope);
         }
-
         return values;
     }
-
     /// <summary>
     /// SourceCodeIndexerRoslyn.ProcessFile
     ///
@@ -152,13 +131,11 @@ public partial class SourceCodeIndexerRoslyn
     {
         SyntaxTree tree = null;
         CompilationUnitSyntax root = null;
-
         // A2 must be false otherwise read file twice
         if (!File.Exists(pathFile))
         {
             return new ProcessFileBoolResult();
         }
-
         if (!isCallingIsToIndexed)
         {
             if (!IsToIndexed(pathFile))
@@ -166,7 +143,6 @@ public partial class SourceCodeIndexerRoslyn
                 return new ProcessFileBoolResult();
             }
         }
-
         if (!linesWithContent.ContainsKey(pathFile) || isLoadingFromFile)
         {
             IList<NamespaceCodeElementsType> namespaceCodeElementsAll = EnumHelper.GetValues<NamespaceCodeElementsType>();
@@ -174,11 +150,9 @@ public partial class SourceCodeIndexerRoslyn
             List<string> namespaceCodeElementsKeywords = new List<string>();
             List<string> classCodeElementsKeywords = new List<string>();
             string fileContent = string.Empty;
-
             var linesWithContent = SourceCodeIndexerRoslyn.Instance.linesWithContent;
             //var linesWithNonTextContent = SourceCodeIndexerRoslyn.Instance.linesWithNonTextContent;
             var linesWithIndexes = SourceCodeIndexerRoslyn.Instance.linesWithIndexes;
-
             List<string> lines = null;
             if (fromFileSystemWatcher)
             {
@@ -195,14 +169,10 @@ public partial class SourceCodeIndexerRoslyn
                     if (linesWithContent.ContainsKey(pathFile))
                     {
                         lines = linesWithContent[pathFile];
-
                         if (pathFile.EndsWith("\\.cs"))
                         {
-
                         }
-
                         var between = GetLinesBetween(linesWithIndexes[pathFile], true);
-
                         for (int i = 0; i < between.Count; i++)
                         {
                             lines.Insert(between[i], String.Empty);
@@ -218,14 +188,12 @@ public partial class SourceCodeIndexerRoslyn
                     }
                 }
             }
-
             fileContent = string.Join(Environment.NewLine, lines);
             //if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
             //{
             //    var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
             //    await File.WriteAllTextAsync(gf, fileContent);
             //}
-
             List<string> linesAll = lines; // SHGetLines.GetLines(fileContent);
             // nechápu proč to obaluji mezerou ale nevadí
             linesAll = CA.WrapWith(linesAll, " ").ToList();
@@ -234,20 +202,13 @@ public partial class SourceCodeIndexerRoslyn
             {
                 if (linesAll[i].Contains("dates.Clear()"))
                 {
-
                 }
-
                 string item = linesAll[i];
                 // nemůžu kontrolovat jen pokud nemá písmeno - do FasterStartup musím vložit i zárovky jinak bez nich nejsem schopen poskládat opět vstupní soubor
                 //) //
-
                 /*
 Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
-
                  */
-
-
-
                 if (item.Trim() == String.Empty) //!SH.HasLetter(item))
                 {
                     linesAll.RemoveAt(i);
@@ -257,7 +218,6 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
                     //var b1 = item.Trim() != String.Empty;
                     //if(b1)
                     //{
-
                     //}
                     // Přidám pokud má nějaké písmeno
                     FullFileIndex.Add(i);
@@ -275,7 +235,6 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             {
                 linesWithIndexes.Remove(pathFile);
             }
-
             // Přidám řádky jež mají nějaké písmeno
             linesWithIndexes.AddIfNotExists(pathFile, FullFileIndex);
             foreach (var item in namespaceCodeElementsAll)
@@ -285,7 +244,6 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
                     namespaceCodeElementsKeywords.Add(SH.WrapWith(item.ToString().ToLower(), " "));
                 }
             }
-
             foreach (var item in namespaceCodeElementsKeywords)
             {
                 string elementTypeString = item.Trim();
@@ -307,13 +265,11 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
                     }
                 }
             }
-
             ClassCodeElementsType classCodeElementsTypeToFind = ClassCodeElementsType.All;
             if (classCodeElementsType.HasFlag(ClassCodeElementsType.All))
             {
                 classCodeElementsTypeToFind |= ClassCodeElementsType.Method;
             }
-
             tree = CSharpSyntaxTree.ParseText(fileContent);
             root = (CompilationUnitSyntax)tree.GetRoot();
             var c = classCodeElements;
@@ -330,15 +286,12 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             AddMethodsFrom(root, pathFile);
             return new ProcessFileBoolResult { indexed = true, tree = tree, root = root };
         }
-
         return new ProcessFileBoolResult();
     }
-
     private List<int> GetLinesBetween(List<int> i2, bool fromZeroIndex)
     {
         List<int> l = new List<int>();
         i2.Sort();
-
         if (fromZeroIndex)
         {
             if (i2[0] != 0)
@@ -346,7 +299,6 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
                 i2.Insert(0, 0);
             }
         }
-
         for (int i = 0; i < i2.Count - 1; i++)
         {
             var a1 = i2[i] + 1;
@@ -359,7 +311,6 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
                 }
             }
         }
-
         return l;
     }
 }

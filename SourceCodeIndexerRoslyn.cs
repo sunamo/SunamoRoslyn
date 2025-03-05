@@ -1,12 +1,11 @@
 namespace SunamoRoslyn;
-using SunamoRoslyn._public;
+
 using static CsFileFilterRoslyn;
 
 public partial class SourceCodeIndexerRoslyn
 {
     // Ve LoadAllFiles mi odstraní soubory jež nebyly ve selectMoreFolders
     // Z indexu odstraním ty z EndArgs aj. souvisejících v ProcessFile kde odjakživa se s tímto pracovalo
-
     #region All 4 for which is checked
     public EndArgs endArgs = null;
     public ContainsArgs containsArgs = null;
@@ -14,10 +13,8 @@ public partial class SourceCodeIndexerRoslyn
     public List<string> fileNamesExactly = null;
     public List<string> pathStarts = null;
     #endregion
-
     public List<string> endsOther = null;
     public List<string> containsOther = null;
-
     #region Working method
     /// <summary>
     /// Je veřejná jen kvůli testu
@@ -41,10 +38,8 @@ public partial class SourceCodeIndexerRoslyn
          await
 #endif
          ProcessFileBool(pathFile, namespaceCodeElementsType, classCodeElementsType, removeRegions, fromFileSystemWatcher);
-
         SyntaxTree _tree = result.tree;
         CompilationUnitSyntax root = result.root;
-
         if (result.indexed)
         {
             if (sourceFileTrees.ContainsKey(pathFile))
@@ -60,7 +55,6 @@ public partial class SourceCodeIndexerRoslyn
                 //watchers.Start(Path.GetDirectoryName( pathFile));
                 //}
             }
-
             if (!sourceFileTrees.ContainsKey(pathFile))
             {
                 sourceFileTrees.Add(pathFile, new SourceFileTree { root = root, tree = _tree });
@@ -75,7 +69,6 @@ public partial class SourceCodeIndexerRoslyn
             RemoveFile(pathFile);
         }
     }
-
     public void RemoveFile(string t, bool fromFileSystemWatcher = false)
     {
         linesWithContent.Remove(t);
@@ -83,7 +76,6 @@ public partial class SourceCodeIndexerRoslyn
         sourceFileTrees.Remove(t);
         classCodeElements.Remove(t);
         namespaceCodeElements.Remove(t);
-
         // watcher I cant stop, its one for all!!
         //if (!fromFileSystemWatcher)
         //{
@@ -92,7 +84,6 @@ public partial class SourceCodeIndexerRoslyn
         //}
     }
     #endregion
-
     /// <summary>
     /// NO TODRIVE - používají se jen klíče a ty jsou i v linesWithContent, linesWithIndexes
     /// Syntax root is the same as root - contains all code (include usings)
@@ -111,7 +102,6 @@ public partial class SourceCodeIndexerRoslyn
     /// </summary>
     public IDictionary<string, List<int>> linesWithIndexes = new Dictionary<string, List<int>>();
     //public IDictionary<string, List<int>> linesWithNonTextContent = new Dictionary<string, List<int>>();
-
     public void Nuke()
     {
         linesWithContent.Clear();
@@ -120,7 +110,6 @@ public partial class SourceCodeIndexerRoslyn
         namespaceCodeElements.Clear();
         classCodeElements.Clear();
     }
-
     /// <summary>
     /// Type of NamespaceCodeElementsType
     /// </summary>
@@ -144,23 +133,17 @@ public partial class SourceCodeIndexerRoslyn
     /// </summary>
     public static Dictionary<NamespaceCodeElementsType, string> e2sNamespaceCodeElements = EnumHelper.EnumToString<NamespaceCodeElementsType>(namespaceCodeElementsType2);
     public static Dictionary<ClassCodeElementsType, string> e2sClassCodeElements = EnumHelper.EnumToString<ClassCodeElementsType>(classCodeElementsType2);
-
     public FileSystemWatchers watchers = null;
     public bool isLoadingFromFile = false;
-
     public bool IsIndexed(string pathFile)
     {
         if (isLoadingFromFile)
         {
             return false;
         }
-
         return linesWithContent.ContainsKey(pathFile);
     }
-
     public static SourceCodeIndexerRoslyn Instance = new SourceCodeIndexerRoslyn();
-
-
     /// <summary>
     /// 15-6-20 Make it private & singleton
     /// </summary>
@@ -174,27 +157,22 @@ public partial class SourceCodeIndexerRoslyn
                 allNamespaceCodeElements |= item;
             }
         }
-
         // TODO: dělám to teď na asynchronní. nebudu řešit ještě watchery
         //watchers = new FileSystemWatchers( ProcessFile, RemoveFile);
     }
-
     public
 #if ASYNC
         async Task
 #else
         void
 #endif
-
         ProcessAllCodeElementsInFiles(string file, bool fromFileSystemWatcher, bool removeRegions = false)
     {
 #if ASYNC
         await
 #endif
         ProcessFile(file, allNamespaceCodeElements, allClassCodeElements, removeRegions, fromFileSystemWatcher);
-
     }
-
     private void AddMethodsFrom(CSharpSyntaxNode ancestor, string pathFile)
     {
         // ancestor.DescendantNodes() returns all recursive
@@ -212,12 +190,10 @@ public partial class SourceCodeIndexerRoslyn
                 string methodName = method.Identifier.ToString();
                 ClassCodeElement element = new ClassCodeElement()
                 { Index = fileLinePositionSpan.StartLinePosition.Line, Name = methodName, Type = ClassCodeElementsType.Method, From = s.Start, To = s.End, Length = s.Length, Member = method };
-
                 DictionaryHelper.AddOrCreate<string, ClassCodeElement, object>(classCodeElements, pathFile, element);
             }
         }
     }
-
     /// <summary>
     /// A1 cant be null because is taked from MainWindowEveryLine.Instance2.chblIndexableExtensions.CheckedStrings() and this is not available in Roslyn project
     /// </summary>
@@ -245,7 +221,6 @@ public partial class SourceCodeIndexerRoslyn
             include = false;
             // return with zero elements - in item.Value is only lines with content. I need lines with exactly content of file to localize searched results
             List<int> founded = CA.ReturnWhichContainsIndexes(item.Value, term, SearchStrategyRoslyn.AnySpaces);
-
             if (inComments.HasValue)
             {
                 //var lines = SHGetLines.GetLines
@@ -268,7 +243,6 @@ public partial class SourceCodeIndexerRoslyn
                     }
                 }
             }
-
             if (founded.Count == 0)
             {
                 if (includeEmpty)
@@ -280,22 +254,18 @@ public partial class SourceCodeIndexerRoslyn
             {
                 include = true;
             }
-
             var founded2 = new List<FoundedCodeElement>();
             foreach (var item2 in founded)
             {
                 founded2.Add(new FoundedCodeElement(indexes[item2], -1, 0));
             }
-
             if (include)
             {
                 result.Add(item.Key, founded2);
             }
         }
-
         return result;
     }
-
     /// <summary>
     /// A4 = search for exact occur. otherwise split both to words
     /// </summary>
@@ -309,7 +279,6 @@ public partial class SourceCodeIndexerRoslyn
         Dictionary<string, NamespaceCodeElements> result = new Dictionary<string, NamespaceCodeElements>();
         Dictionary<string, ClassCodeElements> resultClass = new Dictionary<string, ClassCodeElements>();
         bool add = true;
-
         if (type != NamespaceCodeElementsType.Nope)
         {
             foreach (var item in namespaceCodeElements)
@@ -318,7 +287,6 @@ public partial class SourceCodeIndexerRoslyn
                 {
                     continue;
                 }
-
                 NamespaceCodeElements d = new NamespaceCodeElements();
                 foreach (var item2 in item.Value)
                 {
@@ -335,7 +303,6 @@ public partial class SourceCodeIndexerRoslyn
                             add = true;
                         }
                     }
-
                     if (add)
                     {
                         if (SH.Contains(item2.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
@@ -344,14 +311,12 @@ public partial class SourceCodeIndexerRoslyn
                         }
                     }
                 }
-
                 if (d.Count > 0)
                 {
                     result.Add(item.Key, d);
                 }
             }
         }
-
         if (classType != ClassCodeElementsType.Nope)
         {
             foreach (var item in classCodeElements)
@@ -372,7 +337,6 @@ public partial class SourceCodeIndexerRoslyn
                             add = true;
                         }
                     }
-
                     if (add)
                     {
                         if (SH.Contains(item2.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
@@ -381,14 +345,12 @@ public partial class SourceCodeIndexerRoslyn
                         }
                     }
                 }
-
                 if (d.Count > 0)
                 {
                     resultClass.Add(item.Key, d);
                 }
             }
         }
-
         return new CodeElements()
         { classes = resultClass, namespaces = result };
     }
