@@ -1,9 +1,4 @@
 namespace SunamoRoslyn._sunamo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 internal class EnumHelper
 {
@@ -30,7 +25,6 @@ internal class EnumHelper
                 values.Remove(nope);
             }
         }
-
         if (!IncludeShared)
         {
             if (type.Name == "MySites")
@@ -48,12 +42,10 @@ internal class EnumHelper
                 }
             }
         }
-
         if (Enum.TryParse<T>(CodeElementsConstants.NoneValue, out nope))
         {
             values.Remove(nope);
         }
-
         return values;
     }
     internal static Dictionary<T, string> EnumToString<T>(Type enumType)
@@ -66,5 +58,4 @@ internal class EnumHelper
         }
         ).ToDictionary(r => r.Key, r => r.Value);
     }
-
 }

@@ -1,5 +1,4 @@
 namespace SunamoRoslyn._sunamo;
-using SunamoRoslyn._public;
 
 internal class CA
 {
@@ -15,7 +14,6 @@ internal class CA
         string element = null;
         return StartWith(suMethods, line, out element);
     }
-
     /// <summary>
     ///     Return A2 if start something in A1
     ///     Really different method than string, List
@@ -27,7 +25,6 @@ internal class CA
     internal static string StartWith(List<string> suMethods, string line, out string element)
     {
         element = null;
-
         if (suMethods != null)
             foreach (var method in suMethods)
                 if (line.StartsWith(method))
@@ -35,7 +32,6 @@ internal class CA
                     element = method;
                     return line;
                 }
-
         return null;
     }
     internal static List<string> ReturnWhichContains(List<string> lines, string term, out List<int> founded,
@@ -44,7 +40,6 @@ internal class CA
         founded = new List<int>();
         var result = new List<string>();
         var i = 0;
-
         List<string> w = null;
         if (parseNegations == ContainsCompareMethodRoslyn.SplitToWords ||
             parseNegations == ContainsCompareMethodRoslyn.Negations)
@@ -60,7 +55,6 @@ internal class CA
                     founded.Add(i);
                     result.Add(item);
                 }
-
                 i++;
             }
         else if (parseNegations == ContainsCompareMethodRoslyn.SplitToWords ||
@@ -72,19 +66,16 @@ internal class CA
                     founded.Add(i);
                     result.Add(item);
                 }
-
                 i++;
             }
         else
             ThrowEx.NotImplementedCase(parseNegations);
-
         return result;
     }
     internal static List<string> WrapWith(List<string> whereIsUsed2, string v)
     {
         return WrapWith(whereIsUsed2, v, v);
     }
-
     /// <summary>
     ///     direct edit
     /// </summary>
@@ -102,7 +93,6 @@ internal class CA
                 return true;
         return false;
     }
-
     internal static List<int> ReturnWhichContainsIndexes(IList<string> value, string term,
         SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
     {
@@ -114,7 +104,6 @@ internal class CA
                 if (item.Contains(term) /*.Contains(item, term, searchStrategy)*/) result.Add(i);
                 i++;
             }
-
         return result;
     }
     internal static List<string> Prepend(string v, List<string> toReplace)

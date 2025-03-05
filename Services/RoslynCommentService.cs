@@ -1,9 +1,4 @@
 namespace SunamoRoslyn.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class RoslynCommentService
 {
@@ -11,14 +6,11 @@ public class RoslynCommentService
     {
         SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
         var root = (CompilationUnitSyntax)tree.GetRoot();
-
         var rewriter = new CommentRemover();
         var newRoot = rewriter.Visit(root);
-
         return newRoot.ToFullString();
     }
 }
-
 public class CommentRemover : CSharpSyntaxRewriter
 {
     public override SyntaxTrivia VisitTrivia(SyntaxTrivia trivia)
@@ -28,11 +20,9 @@ public class CommentRemover : CSharpSyntaxRewriter
             trivia.IsKind(SyntaxKind.MultiLineCommentTrivia) ||
             trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
             trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
-
         {
             return default; // Return an empty trivia
         }
-
         return base.VisitTrivia(trivia);
     }
 }

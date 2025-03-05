@@ -1,10 +1,4 @@
 namespace SunamoRoslyn._sunamo;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 internal class Exceptions
 {
@@ -20,12 +14,10 @@ internal class Exceptions
             string.Concat(namesc + "-" + countsc);
         return null;
     }
-
     internal static string? NotImplementedMethod(string before)
     {
         return CheckBefore(before) + "Not implemented method.";
     }
-
     internal static void TypeAndMethodName(string l, out string type, out string methodName)
     {
         var s2 = l.Split("at ")[1].Trim();
@@ -35,7 +27,6 @@ internal class Exceptions
         p.RemoveAt(p.Count - 1);
         type = string.Join(".", p);
     }
-
     internal static Tuple<string, string, string> PlaceOfException(
 bool fillAlsoFirstTwo = true)
     {
@@ -64,7 +55,6 @@ bool fillAlsoFirstTwo = true)
         }
         return new Tuple<string, string, string>(type, methodName, string.Join(Environment.NewLine, l));
     }
-
     internal static string CallingMethod(int v = 1)
     {
         StackTrace stackTrace = new();
@@ -76,7 +66,6 @@ bool fillAlsoFirstTwo = true)
         var methodName = methodBase.Name;
         return methodName;
     }
-
     internal static string? NotImplementedCase(string before, object notImplementedName)
     {
         var fr = string.Empty;
@@ -91,7 +80,6 @@ bool fillAlsoFirstTwo = true)
         return CheckBefore(before) + "Not implemented case" + fr + " . internal program error. Please contact developer" +
         ".";
     }
-
     internal static string CheckBefore(string before)
     {
         return string.IsNullOrWhiteSpace(before) ? string.Empty : before + ": ";
