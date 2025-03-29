@@ -30,7 +30,6 @@ global using SunamoRoslyn;
 global using SunamoRoslyn.Extensions;
 global using SunamoRoslyn.Services;
 global using SunamoRoslyn._public;
-
 global using System.Collections;
 global using System.Diagnostics;
 global using ILogger = Microsoft.Extensions.Logging.ILogger;
