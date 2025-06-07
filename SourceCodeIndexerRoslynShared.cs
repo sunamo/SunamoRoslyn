@@ -1,7 +1,4 @@
 namespace SunamoRoslyn;
-
-using static CsFileFilterRoslyn;
-
 public partial class SourceCodeIndexerRoslyn
 {
     /// <summary>
@@ -48,13 +45,13 @@ public partial class SourceCodeIndexerRoslyn
     public bool IsToIndexed(string pathFile)
     {
         #region All 4 for which is checked
-        if (CA.ReturnWhichContainsIndexes(endsOther, pathFile, SearchStrategyRoslyn.FixedSpace).Count > 0)
+        if (CA.ReturnWhichContainsIndexes(endsOther, pathFile/*, SearchStrategyRoslyn.FixedSpace*/).Count > 0)
         {
             return false;
         }
         var uf = UnindexableFiles.uf;
         var fn = Path.GetFileName(pathFile);
-        if (CA.ReturnWhichContainsIndexes(fileNames, fn, SearchStrategyRoslyn.FixedSpace).Count > 0)
+        if (CA.ReturnWhichContainsIndexes(fileNames, fn/*, SearchStrategyRoslyn.FixedSpace*/).Count > 0)
         {
             uf.unindexableFileNamesFiles.Add(pathFile);
             return false;

@@ -112,8 +112,8 @@ public class CsFileFilterRoslyn //: ICsFileFilter
     {
         //false which not to index, true which to index
 
-        e = new EndArgs(false, true, true, false, false, false, false, false, false);
-        c = new ContainsArgs(false, false, false, false);
+        e = new EndArgs(false, true, true, false, /*false,*/ false, false, false, false);
+        c = new ContainsArgs(false, false, false/*, false*/);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         public static ContainsArgs FillEndFromFileList(List<string> unindexablePathEnds)
         {
             u = unindexablePathEnds;
-            var ea = new ContainsArgs(c(objFp), c(binFp), c(tildaRFFp), c(notTranslateAbleFp));
+            var ea = new ContainsArgs(c(objFp), c(binFp), c(tildaRFFp)/*, c(notTranslateAbleFp)*/);
             return ea;
         }
 
@@ -209,7 +209,7 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         /// <param name="binFp"></param>
         /// <param name="tildaRF"></param>
         /// <param name="notTranslateAble"></param>
-        public ContainsArgs(bool objFp, bool binFp, bool tildaRF, bool notTranslateAble)
+        public ContainsArgs(bool objFp, bool binFp, bool tildaRF)
         {
             this.objFp = objFp;
             this.binFp = binFp;
@@ -242,7 +242,7 @@ public class CsFileFilterRoslyn //: ICsFileFilter
             u = unindexablePathEnds;
             var x = c(xamlCsPp);
 
-            var ea = new EndArgs(c(designerCsPp), x, c(sharedCsPp), c(iCsPp), c(gICsPp), c(gCsPp), c(tmpPp), c(TMPPp),
+            var ea = new EndArgs(c(designerCsPp), x, c(sharedCsPp), c(iCsPp), /*c(gICsPp),*/ c(gCsPp), c(tmpPp), c(TMPPp),
                 c(DesignerCsPp));
             return ea;
         }
@@ -285,7 +285,7 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         /// <param name="tmp"></param>
         /// <param name="TMP"></param>
         /// <param name="DesignerCs"></param>
-        public EndArgs(bool designerCs, bool xamlCs, bool sharedCs, bool iCs, bool gICs, bool gCs, bool tmp, bool TMP,
+        public EndArgs(bool designerCs, bool xamlCs, bool sharedCs, bool iCs, /*bool gICs,*/ bool gCs, bool tmp, bool TMP,
             bool DesignerCs)
         {
             this.designerCs = designerCs;

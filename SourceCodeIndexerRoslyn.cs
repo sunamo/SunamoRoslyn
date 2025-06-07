@@ -69,7 +69,7 @@ public partial class SourceCodeIndexerRoslyn
             RemoveFile(pathFile);
         }
     }
-    public void RemoveFile(string t, bool fromFileSystemWatcher = false)
+    public void RemoveFile(string t)
     {
         linesWithContent.Remove(t);
         linesWithIndexes.Remove(t);
@@ -220,7 +220,7 @@ public partial class SourceCodeIndexerRoslyn
             var indexes = linesWithIndexes[item.Key];
             include = false;
             // return with zero elements - in item.Value is only lines with content. I need lines with exactly content of file to localize searched results
-            List<int> founded = CA.ReturnWhichContainsIndexes(item.Value, term, SearchStrategyRoslyn.AnySpaces);
+            List<int> founded = CA.ReturnWhichContainsIndexes(item.Value, term/*, SearchStrategyRoslyn.AnySpaces*/);
             if (inComments.HasValue)
             {
                 //var lines = SHGetLines.GetLines

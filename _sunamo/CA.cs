@@ -93,8 +93,8 @@ internal class CA
                 return true;
         return false;
     }
-    internal static List<int> ReturnWhichContainsIndexes(IList<string> value, string term,
-        SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
+    internal static List<int> ReturnWhichContainsIndexes(IList<string> value, string term/*,
+        SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace*/)
     {
         var result = new List<int>();
         var i = 0;

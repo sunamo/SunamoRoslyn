@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Version>25.3.29.1</Version>
+    <Version>25.6.7.1</Version>
     <Description>Work with Roslyn platform</Description>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>
@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Authors>www.sunamo.cz</Authors>
-    <PackageReleaseNotes>Updated nuget to latest versions</PackageReleaseNotes>
+    <PackageReleaseNotes>Removed unused method parameters</PackageReleaseNotes>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
   </PropertyGroup>

@@ -219,7 +219,7 @@ public class RoslynHelper
     {
         dx = -1;
         #region MyRegion
-        if (false)
+        if (true)
         {
             if (onlyDirectSub)
             {
@@ -347,8 +347,12 @@ public class RoslynHelper
     /// <param name="cl2"></param>
     /// <param name="method"></param>
     /// <param name="keepDirectives"></param>
+#pragma warning disable
     public static ClassDeclarationSyntax RemoveNode(ClassDeclarationSyntax cl2, SyntaxNode method, SyntaxRemoveOptions keepDirectives)
+#pragma warning restore
     {
+        ThrowEx.NotImplementedMethod();
+
         #region MyRegion
         //var children = method.ChildNodesAndTokens().ToList();
         //for (int i = children.Count() - 1; i >= 0; i--)
