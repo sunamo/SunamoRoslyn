@@ -88,7 +88,7 @@ public partial class SourceCodeIndexerRoslyn
     /// NO TODRIVE - používají se jen klíče a ty jsou i v linesWithContent, linesWithIndexes
     /// Syntax root is the same as root - contains all code (include usings)
     /// </summary>
-    public FsWatcherDictionary<string, SourceFileTree> sourceFileTrees = new FsWatcherDictionary<string, SourceFileTree>();
+    FsWatcherDictionary<string, SourceFileTree> sourceFileTrees = new FsWatcherDictionary<string, SourceFileTree>();
     Type type = typeof(SourceCodeIndexerRoslyn);
     //public Dictionary<string, TU<string, int>> foundedLines = new Dictionary<string, TU<string, int>>();
     /// <summary>
@@ -118,11 +118,11 @@ public partial class SourceCodeIndexerRoslyn
     /// <summary>
     /// In key are full file path, in value parsed code elements
     /// </summary>
-    public FsWatcherDictionary<string, List<NamespaceCodeElement>> namespaceCodeElements = new FsWatcherDictionary<string, List<NamespaceCodeElement>>();
+    FsWatcherDictionary<string, List<NamespaceCodeElement>> namespaceCodeElements = new FsWatcherDictionary<string, List<NamespaceCodeElement>>();
     /// <summary>
     /// In key are full file path, in value parsed code elements
     /// </summary>
-    public FsWatcherDictionary<string, List<ClassCodeElement>> classCodeElements = new FsWatcherDictionary<string, List<ClassCodeElement>>();
+    internal FsWatcherDictionary<string, List<ClassCodeElement>> classCodeElements = new FsWatcherDictionary<string, List<ClassCodeElement>>();
     /// <summary>
     /// All code elements
     /// </summary>
