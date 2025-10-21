@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn.Services;
 internal class RoslynFormatService
 {
@@ -53,7 +56,7 @@ internal class RoslynFormatService
         // Replace all <br> with empty
         format = Regex.Replace(format, RegexHelper.rBrTagCaseInsensitive.ToString(), string.Empty);
         var workspace = MSBuildWorkspace.Create();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         // Create SyntaxTree
         SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);
         // Get root of ST
@@ -86,7 +89,7 @@ internal class RoslynFormatService
         foreach (var syntaxNode in syntaxNodes)
         {
             var syntaxNodeType = syntaxNode.GetType();
-            string s = syntaxNodeType.FullName.ToString();
+            string text = syntaxNodeType.FullName.ToString();
             if (syntaxNodeType == typeof(SyntaxNodeOrToken))
             {
                 token = true;
@@ -120,8 +123,8 @@ internal class RoslynFormatService
         // Dont get to OptionSet - abstract. DocumentOptionSet - sealed, no static member, no ctor.
         //OptionSet os = new DocumentOptionSet()
         var formattedResult = Microsoft.CodeAnalysis.Formatting.Formatter.Format(node, workspace);
-        sb.AppendLine(formattedResult.ToFullString().Trim());
-        string result = sb.ToString();
+        stringBuilder.AppendLine(formattedResult.ToFullString().Trim());
+        string result = stringBuilder.ToString();
         //var formattedResult2 = RoslynServicesHelper.Format(result);
         return FinalizeFormat(result);
     }

@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn._public;
 /// <summary>
 ///     Cant be derived from FiltersNotTranslateAble because easy of finding instances of CsFileFilter
@@ -33,9 +36,9 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         }
     }
 
-    public List<string> GetFilesFiltered(string s, string masc, SearchOption so)
+    public List<string> GetFilesFiltered(string text, string masc, SearchOption so)
     {
-        var f = Directory.GetFiles(s, masc, so).ToList();
+        var f = Directory.GetFiles(text, masc, so).ToList();
 
         f.RemoveAll(AllowOnly);
         f.RemoveAll(AllowOnlyContains);
@@ -123,32 +126,32 @@ public class CsFileFilterRoslyn //: ICsFileFilter
     /// <returns></returns>
     public List<string> GetContainsByFlags(bool n)
     {
-        var l = new List<string>();
-        if (BTS.Is(c.binFp, n)) l.Add(Contains.binFp);
-        if (BTS.Is(c.objFp, n)) l.Add(Contains.objFp);
-        if (BTS.Is(c.tildaRF, n)) l.Add(Contains.tildaRFFp);
+        var list = new List<string>();
+        if (BTS.Is(c.binFp, n)) list.Add(Contains.binFp);
+        if (BTS.Is(c.objFp, n)) list.Add(Contains.objFp);
+        if (BTS.Is(c.tildaRF, n)) list.Add(Contains.tildaRFFp);
 
 
-        return l;
+        return list;
     }
 
     public List<string> GetEndingByFlags(bool n)
     {
-        var l = new List<string>();
-        if (Is(e.designerCs, n)) l.Add(End.designerCsPp);
-        if (Is(e.xamlCs, n)) l.Add(End.xamlCsPp);
-        if (Is(e.xamlCs, n)) l.Add(End.xamlCsPp);
-        if (Is(e.sharedCs, n)) l.Add(End.sharedCsPp);
-        if (Is(e.iCs, n)) l.Add(End.iCsPp);
-        if (Is(e.gICs, n)) l.Add(End.gICsPp);
-        if (Is(e.gCs, n)) l.Add(End.gCsPp);
-        if (Is(e.tmp, n)) l.Add(End.tmpPp);
-        if (Is(e.TMP, n)) l.Add(End.TMPPp);
-        if (Is(e.DesignerCs, n)) l.Add(End.DesignerCsPp);
-        if (Is(e.notTranslateAble, n)) l.Add("NotTranslateAble");
+        var list = new List<string>();
+        if (Is(e.designerCs, n)) list.Add(End.designerCsPp);
+        if (Is(e.xamlCs, n)) list.Add(End.xamlCsPp);
+        if (Is(e.xamlCs, n)) list.Add(End.xamlCsPp);
+        if (Is(e.sharedCs, n)) list.Add(End.sharedCsPp);
+        if (Is(e.iCs, n)) list.Add(End.iCsPp);
+        if (Is(e.gICs, n)) list.Add(End.gICsPp);
+        if (Is(e.gCs, n)) list.Add(End.gCsPp);
+        if (Is(e.tmp, n)) list.Add(End.tmpPp);
+        if (Is(e.TMP, n)) list.Add(End.TMPPp);
+        if (Is(e.DesignerCs, n)) list.Add(End.DesignerCsPp);
+        if (Is(e.notTranslateAble, n)) list.Add("NotTranslateAble");
 
 
-        return l;
+        return list;
     }
 
     private bool Is(bool tMP, bool n)
@@ -240,9 +243,9 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         public static EndArgs FillEndFromFileList(List<string> unindexablePathEnds)
         {
             u = unindexablePathEnds;
-            var x = c(xamlCsPp);
+            var xValue = c(xamlCsPp);
 
-            var ea = new EndArgs(c(designerCsPp), x, c(sharedCsPp), c(iCsPp), /*c(gICsPp),*/ c(gCsPp), c(tmpPp), c(TMPPp),
+            var ea = new EndArgs(c(designerCsPp), xValue, c(sharedCsPp), c(iCsPp), /*c(gICsPp),*/ c(gCsPp), c(tmpPp), c(TMPPp),
                 c(DesignerCsPp));
             return ea;
         }

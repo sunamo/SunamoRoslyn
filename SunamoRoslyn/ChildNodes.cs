@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn;
 
 public class ChildNodes
@@ -67,8 +70,8 @@ public class ChildNodes
         {
             return (ClassDeclarationSyntax)n;
         }
-        var r = n.ChildNodes().OfType<ClassDeclarationSyntax>();
-        return (ClassDeclarationSyntax)r.ToList().FirstOrDefault();
+        var result = n.ChildNodes().OfType<ClassDeclarationSyntax>();
+        return (ClassDeclarationSyntax)result.ToList().FirstOrDefault();
     }
 
     public static SyntaxNode NamespaceOrClass(SyntaxNode root)

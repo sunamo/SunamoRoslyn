@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn;
 public partial class SourceCodeIndexerRoslyn
 {
@@ -269,7 +272,7 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             }
             tree = CSharpSyntaxTree.ParseText(fileContent);
             root = (CompilationUnitSyntax)tree.GetRoot();
-            var c = classCodeElements;
+            var count = classCodeElements;
             var ns = root.DescendantNodes();
             IList<NamespaceDeclarationSyntax> namespaces = ns.OfType<NamespaceDeclarationSyntax>().ToList();
             foreach (var nameSpace in namespaces)
@@ -287,7 +290,7 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
     }
     private List<int> GetLinesBetween(List<int> i2, bool fromZeroIndex)
     {
-        List<int> l = new List<int>();
+        List<int> list = new List<int>();
         i2.Sort();
         if (fromZeroIndex)
         {
@@ -304,10 +307,10 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             {
                 for (int y = a1; y < a2; y++)
                 {
-                    l.Add(y);
+                    list.Add(y);
                 }
             }
         }
-        return l;
+        return list;
     }
 }

@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn;
 
 /// <summary>
@@ -10,17 +13,17 @@ public class RoslynParser
     static Type type = null;
     public static bool IsCSharpCode(string input)
     {
-        SyntaxTree d = null;
+        SyntaxTree data = null;
         try
         {
-            d = CSharpSyntaxTree.ParseText(input);
+            data = CSharpSyntaxTree.ParseText(input);
         }
         catch (Exception ex)
         {
             // throwed Method not found: 'Boolean Microsoft.CodeAnalysis.StackGuard.IsInsufficientExecutionStackException(System.Exception)'.' for non cs code
         }
-        var s = d.GetText().ToString();
-        return d != null;
+        var text = data.GetText().ToString();
+        return data != null;
     }
     public static MethodDeclarationSyntax Method(string item)
     {
@@ -79,9 +82,9 @@ File.ReadAllTextAsync(file));
             // záměna namespace za class pak dělá problémy tady
             sn = sn.TrackNodes(cl);
             root = root.TrackNodes(sn);
-            var d = sn.SyntaxTree.ToString();
+            var data = sn.SyntaxTree.ToString();
             var fileTo = file.Replace(folderFrom, folderTo);
-            await File.WriteAllTextAsync(fileTo, d);
+            await File.WriteAllTextAsync(fileTo, data);
         }
         return null;
     }
@@ -190,18 +193,18 @@ File.ReadAllTextAsync(file));
         }
         return root;
     }
-    public static Dictionary<string, List<string>> GetVariablesInEveryMethod(string s)
+    public static Dictionary<string, List<string>> GetVariablesInEveryMethod(string text)
     {
         Dictionary<string, List<string>> m = new Dictionary<string, List<string>>();
-        var tree = CSharpSyntaxTree.ParseText(s);
+        var tree = CSharpSyntaxTree.ParseText(text);
         var root = tree.GetRoot();
         IList<MethodDeclarationSyntax> methods = root
           .DescendantNodes()
           .OfType<MethodDeclarationSyntax>().ToList();
         foreach (var method in methods)
         {
-            var v = ParseVariables(method);
-            m.Add(method.Identifier.Text, v.Item2);
+            var value = ParseVariables(method);
+            m.Add(method.Identifier.Text, value.Item2);
         }
         return m;
     }

@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn._sunamo;
 
 internal class Exceptions
@@ -18,28 +21,28 @@ internal class Exceptions
     {
         return CheckBefore(before) + "Not implemented method.";
     }
-    internal static void TypeAndMethodName(string l, out string type, out string methodName)
+    internal static void TypeAndMethodName(string lines, out string type, out string methodName)
     {
-        var s2 = l.Split("at ")[1].Trim();
-        var s = s2.Split("(")[0];
-        var p = s.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-        methodName = p[^1];
-        p.RemoveAt(p.Count - 1);
-        type = string.Join(".", p);
+        var s2 = lines.Split("at ")[1].Trim();
+        var text = s2.Split("(")[0];
+        var parameter = text.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        methodName = parameter[^1];
+        parameter.RemoveAt(parameter.Count - 1);
+        type = string.Join(".", parameter);
     }
     internal static Tuple<string, string, string> PlaceOfException(
 bool fillAlsoFirstTwo = true)
     {
         StackTrace st = new();
-        var v = st.ToString();
-        var l = v.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-        l.RemoveAt(0);
+        var value = st.ToString();
+        var lines = value.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        lines.RemoveAt(0);
         var i = 0;
         string type = string.Empty;
         string methodName = string.Empty;
-        for (; i < l.Count; i++)
+        for (; i < lines.Count; i++)
         {
-            var item = l[i];
+            var item = lines[i];
             if (fillAlsoFirstTwo)
                 if (!item.StartsWith("   at ThrowEx"))
                 {
@@ -48,17 +51,17 @@ bool fillAlsoFirstTwo = true)
                 }
             if (item.StartsWith("at System."))
             {
-                l.Add(string.Empty);
-                l.Add(string.Empty);
+                lines.Add(string.Empty);
+                lines.Add(string.Empty);
                 break;
             }
         }
-        return new Tuple<string, string, string>(type, methodName, string.Join(Environment.NewLine, l));
+        return new Tuple<string, string, string>(type, methodName, string.Join(Environment.NewLine, lines));
     }
-    internal static string CallingMethod(int v = 1)
+    internal static string CallingMethod(int value = 1)
     {
         StackTrace stackTrace = new();
-        var methodBase = stackTrace.GetFrame(v)?.GetMethod();
+        var methodBase = stackTrace.GetFrame(value)?.GetMethod();
         if (methodBase == null)
         {
             return "Method name cannot be get";

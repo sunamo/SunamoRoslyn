@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn._sunamo;
 internal class SHJoinPairs
 {
@@ -5,12 +8,12 @@ internal class SHJoinPairs
     {
         //InitApp.TemplateLogger.NotEvenNumberOfElements(type, "JoinPairs", @"args", parts);
         //InitApp.TemplateLogger.AnyElementIsNull(type, "JoinPairs", @"args", parts);
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < parts.Length; i++)
         {
-            sb.Append(parts[i++] + firstDelimiter);
-            sb.Append(parts[i] + secondDelimiter);
+            stringBuilder.Append(parts[i++] + firstDelimiter);
+            stringBuilder.Append(parts[i] + secondDelimiter);
         }
-        return sb.ToString();
+        return stringBuilder.ToString();
     }
 }

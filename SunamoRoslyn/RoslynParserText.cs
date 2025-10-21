@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn;
 /// <summary>
 /// RoslynParser - use roslyn classes
@@ -13,7 +16,7 @@ public class RoslynParserText
 #else
 void AddPageMethods
 #endif
-        (StringBuilder sb, List<string> files)
+        (StringBuilder stringBuilder, List<string> files)
     {
         SourceCodeIndexerRoslyn Instance = SourceCodeIndexerRoslyn.Instance;
 
@@ -28,12 +31,12 @@ void AddPageMethods
 
         foreach (var file2 in Instance.classCodeElements)
         {
-            sb.AppendLine(file2.Key);
+            stringBuilder.AppendLine(file2.Key);
             foreach (var method in file2.Value)
             {
                 if (method.Name.StartsWith("On") || method.Name.StartsWith("Page" + "_"))
                 {
-                    sb.AppendLine(method.Name);
+                    stringBuilder.AppendLine(method.Name);
                 }
             }
         }
@@ -47,7 +50,7 @@ void FindPageMethod
 #endif
         (string sczRootPath)
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         List<string> project = new List<string>();
 
@@ -70,7 +73,7 @@ void FindPageMethod
 #else
 AddPageMethods
 #endif
-                        (sb, files);
+                        (stringBuilder, files);
             }
         }
 
@@ -84,10 +87,10 @@ AddPageMethods
 AddPageMethods
 #endif
 
-                (sb, pages);
+                (stringBuilder, pages);
         }
 
-        //ClipboardService.SetText(sb);
+        //ClipboardService.SetText(stringBuilder);
     }
 
 

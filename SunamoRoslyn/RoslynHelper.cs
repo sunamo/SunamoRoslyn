@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn;
 public class RoslynHelper
 {
@@ -6,7 +9,7 @@ public class RoslynHelper
     public static List<Type> GetTypesInAssembly(Assembly assembly, string contains)
     {
         var types = assembly.GetTypes();
-        return types.Where(t => t.Name.Contains(contains)).ToList();
+        return types.Where(temp => temp.Name.Contains(contains)).ToList();
     }
     /// <summary>
     /// A1 can be SyntaxNode or string
@@ -20,8 +23,8 @@ public class RoslynHelper
         var fields = ChildNodes.FieldsDescendant(root);
         string before = null;
         string after = null;
-        StringBuilder sb = new StringBuilder();
-        sb.Append(root.ToFullString());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.Append(root.ToFullString());
         Tuple<List<string>, List<string>> ls = null;
         Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
         string methodName = null;
@@ -108,7 +111,7 @@ public class RoslynHelper
 " + string.Join(Environment.NewLine, usedIn) + @"
 /// </summary>
 ";
-            var p = oldMethodNode.Parent;
+            var parameter = oldMethodNode.Parent;
             if (IsGlobalVariable(oldMethodNode))
             {
                 var lt = SyntaxFactory.Comment(doc);
@@ -116,10 +119,10 @@ public class RoslynHelper
                 before = oldMethodNode.ToFullString();
                 //root = root.ReplaceNode(oldMethodNode, oldMethodNode2);
                 after = oldMethodNode2.ToFullString();
-                sb = sb.Replace(before, after);
+                stringBuilder = stringBuilder.Replace(before, after);
             }
         }
-        var result = sb.ToString(); // root.ToFullString();
+        var result = stringBuilder.ToString(); // root.ToFullString();
         return result;
     }
     /// <summary>
@@ -230,7 +233,7 @@ public class RoslynHelper
                     // Má tu lokaci trochu dál protože obsahuje zároveň celou třídu
                     string l1 = item.GetLocation().ToString();
                     string l2 = child.GetLocation().ToString();
-                    var s = child.Span;
+                    var text = child.Span;
                     var s2 = child.FullSpan;
                     var s3 = child.GetReference();
                     if (l1 == l2)
@@ -357,7 +360,7 @@ public class RoslynHelper
         //var children = method.ChildNodesAndTokens().ToList();
         //for (int i = children.Count() - 1; i >= 0; i--)
         //{
-        //    var t = children[i].GetType().FullName;
+        //    var temp = children[i].GetType().FullName;
         //    if (!(children[i] is MethodDeclarationSyntax))
         //    {
         //        int i2 = 0;
@@ -442,25 +445,25 @@ public class RoslynHelper
     {
         m = m.WithoutTrivia();
         string addAfter = " ";
-        StringBuilder sb = new();
+        StringBuilder stringBuilder = new();
         if (alsoModifier)
         {
-            sb.AddItem(addAfter, RoslynParser.GetAccessModifiers(m.Modifiers));
+            stringBuilder.AddItem(addAfter, RoslynParser.GetAccessModifiers(m.Modifiers));
         }
         bool isStatic = IsStatic(m.Modifiers);
         if (isStatic)
         {
-            sb.AddItem(addAfter, "static");
+            stringBuilder.AddItem(addAfter, "static");
         }
-        sb.AddItem(addAfter, m.ReturnType.WithoutTrivia().ToFullString());
-        sb.AddItem(addAfter, m.Identifier.WithoutTrivia().Text);
+        stringBuilder.AddItem(addAfter, m.ReturnType.WithoutTrivia().ToFullString());
+        stringBuilder.AddItem(addAfter, m.Identifier.WithoutTrivia().Text);
         // in brackets, newline
         //string parameters = m.ParameterList.ToFullString();
         // only text
         string p2 = GetParameters(m.ParameterList);
-        sb.AddItem(addAfter, "(" + p2 + ")");
-        string s = sb.ToString();
-        return s;
+        stringBuilder.AddItem(addAfter, "(" + p2 + ")");
+        string text = stringBuilder.ToString();
+        return text;
     }
     /// <summary>
     /// CompilationUnitSyntax is also SyntaxNode
@@ -480,10 +483,10 @@ public class RoslynHelper
     /// <typeparam name="T"></typeparam>
     /// <param name="cl"></param>
     /// <param name="cl2"></param>
-    public static T ReplaceNode<T>(SyntaxNode cl, SyntaxNode cl2, out SyntaxNode root) where T : SyntaxNode
+    public static temp ReplaceNode<T>(SyntaxNode cl, SyntaxNode cl2, out SyntaxNode root) where temp : SyntaxNode
     {
         bool first = true;
-        T result = default;
+        temp result = default;
         while (cl is SyntaxNode)
         {
             if (cl.Parent == null)
@@ -493,7 +496,7 @@ public class RoslynHelper
             cl = cl.Parent.ReplaceNode(cl, cl2);
             if (first)
             {
-                result = (T)cl2;
+                result = (temp)cl2;
                 first = false;
             }
             cl2 = cl;
@@ -509,12 +512,12 @@ public class RoslynHelper
     {
         var c1 = parameterList.ChildNodes();
         //var c2 = parameterList.ChildNodesAndTokens();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         foreach (var item in c1)
         {
-            sb.Append(item.ToFullString() + ", ");
+            stringBuilder.Append(item.ToFullString() + ", ");
         }
-        string r = SH.RemoveLastLetters(sb.ToString(), 2);
+        string r = SH.RemoveLastLetters(stringBuilder.ToString(), 2);
         return r;
     }
     public static bool IsStatic(SyntaxTokenList modifiers)

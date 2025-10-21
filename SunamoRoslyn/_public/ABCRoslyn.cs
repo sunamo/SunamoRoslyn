@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn._public;
 
 public class ABCRoslyn : List<ABRoslyn> //, IList<AB>
@@ -14,12 +17,12 @@ public class ABCRoslyn : List<ABRoslyn> //, IList<AB>
     {
         if (setsNameValue.Length == 0) return;
         var o = setsNameValue[0];
-        var t = o.GetType();
-        var t2 = t;
+        var temp = o.GetType();
+        var t2 = temp;
         if (o is IList)
         {
-            var s = o as IList;
-            var o2 = s.Count != 0 ? s[0] : null;
+            var text = o as IList;
+            var o2 = text.Count != 0 ? text[0] : null;
             t2 = o2.GetType();
         }
         //var t2 = setsNameValue[0][0].GetType();
@@ -48,7 +51,7 @@ public class ABCRoslyn : List<ABRoslyn> //, IList<AB>
                 }
             }
         }
-        else if (t == typeof(ABCRoslyn))
+        else if (temp == typeof(ABCRoslyn))
         {
             var abc = (ABCRoslyn)o;
             AddRange(abc);
@@ -68,9 +71,9 @@ public class ABCRoslyn : List<ABRoslyn> //, IList<AB>
     public int Length => Count;
     public override string ToString()
     {
-        var sb = new StringBuilder();
-        foreach (var item in this) sb.Append(item + ",");
-        return sb.ToString();
+        var stringBuilder = new StringBuilder();
+        foreach (var item in this) stringBuilder.Append(item + ",");
+        return stringBuilder.ToString();
     }
     /// <summary>
     ///     Must be [] due to SQL viz

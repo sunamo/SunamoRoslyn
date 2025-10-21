@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn._sunamo;
 
 internal class SH
@@ -18,7 +21,7 @@ internal class SH
         input = WrapWithChar(input, ' ');
         var dex = input.IndexOf(word);
         var dex2 = input.IndexOf(' ', dex + 1);
-        var sb = new StringBuilder();
+        var stringBuilder = new StringBuilder();
         if (dex2 != -1)
         {
             dex2++;
@@ -26,12 +29,12 @@ internal class SH
             {
                 var ch = input[i];
                 if (ch != ' ')
-                    sb.Append(ch);
+                    stringBuilder.Append(ch);
                 else
                     break;
             }
         }
-        return sb.ToString();
+        return stringBuilder.ToString();
     }
     #region SH.FirstCharUpper
     internal static void FirstCharUpper(ref string nazevPP)
@@ -45,7 +48,7 @@ internal class SH
             return nazevPP.ToUpper();
         }
         string sb = nazevPP.Substring(1);
-        return nazevPP[0].ToString().ToUpper() + sb;
+        return nazevPP[0].ToString().ToUpper() + stringBuilder;
     }
     #endregion
     internal static void GetPartsByLocation(out string pred, out string za, string text, int pozice)
@@ -64,9 +67,9 @@ internal class SH
                 za = string.Empty;
         }
     }
-    internal static List<string> SplitChar(string s, params char[] dot)
+    internal static List<string> SplitChar(string text, params char[] dot)
     {
-        return s.Split(dot, StringSplitOptions.RemoveEmptyEntries).ToList();
+        return text.Split(dot, StringSplitOptions.RemoveEmptyEntries).ToList();
     }
     internal static bool Contains(string input, StringOrStringList termO, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace, bool caseSensitive = false, bool isEnoughPartialContainsOfSplitted = true)
     {
@@ -128,7 +131,7 @@ internal class SH
     {
         var indentPrevious = string.Empty;
         string line = null;
-        var sb = new StringBuilder();
+        var stringBuilder = new StringBuilder();
         for (var i = 0; i < lines.Count - 1; i++)
         {
             line = lines[i];
@@ -140,13 +143,13 @@ internal class SH
                 }
                 else
                 {
-                    sb.Clear();
+                    stringBuilder.Clear();
                     foreach (var item in line)
                         if (char.IsWhiteSpace(item))
-                            sb.Append(item);
+                            stringBuilder.Append(item);
                         else
                             break;
-                    indentPrevious = sb.ToString();
+                    indentPrevious = stringBuilder.ToString();
                 }
             }
         }

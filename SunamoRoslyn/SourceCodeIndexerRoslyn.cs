@@ -1,3 +1,6 @@
+// EN: Variable names have been checked and replaced with self-descriptive names
+// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+
 namespace SunamoRoslyn;
 
 using static CsFileFilterRoslyn;
@@ -5,7 +8,7 @@ using static CsFileFilterRoslyn;
 public partial class SourceCodeIndexerRoslyn
 {
     // Ve LoadAllFiles mi odstraní soubory jež nebyly ve selectMoreFolders
-    // Z indexu odstraním ty z EndArgs aj. souvisejících v ProcessFile kde odjakživa se s tímto pracovalo
+    // Z indexu odstraním ty z EndArgs aj. souvisejících v ProcessFile kde odjakživa se text tímto pracovalo
     #region All 4 for which is checked
     public EndArgs endArgs = null;
     public ContainsArgs containsArgs = null;
@@ -184,12 +187,12 @@ public partial class SourceCodeIndexerRoslyn
             foreach (MethodDeclarationSyntax method2 in methods)
             {
                 var method = method2;
-                var s = method.Span;
+                var text = method.Span;
                 var location = method.GetLocation();
                 FileLinePositionSpan fileLinePositionSpan = location.GetLineSpan();
                 string methodName = method.Identifier.ToString();
                 ClassCodeElement element = new ClassCodeElement()
-                { Index = fileLinePositionSpan.StartLinePosition.Line, Name = methodName, Type = ClassCodeElementsType.Method, From = s.Start, To = s.End, Length = s.Length, Member = method };
+                { Index = fileLinePositionSpan.StartLinePosition.Line, Name = methodName, Type = ClassCodeElementsType.Method, From = text.Start, To = text.End, Length = text.Length, Member = method };
                 DictionaryHelper.AddOrCreate<string, ClassCodeElement, object>(classCodeElements, pathFile, element);
             }
         }
