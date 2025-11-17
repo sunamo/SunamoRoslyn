@@ -483,10 +483,10 @@ public class RoslynHelper
     /// <typeparam name="T"></typeparam>
     /// <param name="cl"></param>
     /// <param name="cl2"></param>
-    public static temp ReplaceNode<T>(SyntaxNode cl, SyntaxNode cl2, out SyntaxNode root) where temp : SyntaxNode
+    public static T ReplaceNode<T>(SyntaxNode cl, SyntaxNode cl2, out SyntaxNode root) where T : SyntaxNode
     {
         bool first = true;
-        temp result = default;
+        T result = default;
         while (cl is SyntaxNode)
         {
             if (cl.Parent == null)
@@ -496,7 +496,7 @@ public class RoslynHelper
             cl = cl.Parent.ReplaceNode(cl, cl2);
             if (first)
             {
-                result = (temp)cl2;
+                result = (T)cl2;
                 first = false;
             }
             cl2 = cl;

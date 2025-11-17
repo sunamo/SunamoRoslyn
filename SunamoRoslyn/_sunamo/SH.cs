@@ -48,7 +48,7 @@ internal class SH
             return nazevPP.ToUpper();
         }
         string sb = nazevPP.Substring(1);
-        return nazevPP[0].ToString().ToUpper() + stringBuilder;
+        return nazevPP[0].ToString().ToUpper() + sb;
     }
     #endregion
     internal static void GetPartsByLocation(out string pred, out string za, string text, int pozice)
