@@ -1,19 +1,15 @@
 // EN: Variable names have been checked and replaced with self-descriptive names
 // CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
-
 namespace SunamoRoslyn._public;
 /// <summary>
 ///     Cant be derived from FiltersNotTranslateAble because easy of finding instances of CsFileFilter
 /// </summary>
-public class CsFileFilterRoslyn //: ICsFileFilter
+public partial class CsFileFilterRoslyn
 {
     //private static readonly FiltersNotTranslateAble f = FiltersNotTranslateAble.Instance;
-
     private static bool? _rv;
     private ContainsArgs c;
-
     private EndArgs e;
-
     /// <summary>
     ///     In default is everything in false
     ///     Call some Set* method
@@ -39,10 +35,8 @@ public class CsFileFilterRoslyn //: ICsFileFilter
     public List<string> GetFilesFiltered(string text, string masc, SearchOption so)
     {
         var f = Directory.GetFiles(text, masc, so).ToList();
-
         f.RemoveAll(AllowOnly);
         f.RemoveAll(AllowOnlyContains);
-
         return f;
     }
 
@@ -56,52 +50,55 @@ public class CsFileFilterRoslyn //: ICsFileFilter
     ///     A2 is also for master.designer.cs and aspx.designer.cs
     ///     A2,3 can be null
     /// </summary>
-    /// <param name="item"></param>
-    /// <param name="designerCs"></param>
-    /// <param name="xamlCs"></param>
-    /// <param name="sharedCs"></param>
+    /// <param name = "item"></param>
+    /// <param name = "designerCs"></param>
+    /// <param name = "xamlCs"></param>
+    /// <param name = "sharedCs"></param>
     public static bool AllowOnly(string item, EndArgs end, ContainsArgs c, ref bool end2, bool alsoEnds)
     {
         rv = null;
-
         if (alsoEnds && end != null)
         {
             end2 = true;
-
-
-            if (!end.designerCs && item.EndsWith(End.designerCsPp)) rv = false;
-            if (!end.xamlCs && item.EndsWith(End.xamlCsPp)) rv = false;
-            if (!end.sharedCs && item.EndsWith(End.sharedCsPp)) rv = false;
-            if (!end.iCs && item.EndsWith(End.iCsPp)) rv = false;
-            if (!end.gICs && item.EndsWith(End.gICsPp)) rv = false;
-            if (!end.gCs && item.EndsWith(End.gCsPp)) rv = false;
-            if (!end.tmp && item.EndsWith(End.tmpPp)) rv = false;
-            if (!end.TMP && item.EndsWith(End.TMPPp)) rv = false;
-            if (!end.DesignerCs && item.EndsWith(End.DesignerCsPp)) rv = false;
-            if (!end.notTranslateAble && item.EndsWith(End.NotTranslateAblePp)) rv = false;
+            if (!end.designerCs && item.EndsWith(End.designerCsPp))
+                rv = false;
+            if (!end.xamlCs && item.EndsWith(End.xamlCsPp))
+                rv = false;
+            if (!end.sharedCs && item.EndsWith(End.sharedCsPp))
+                rv = false;
+            if (!end.iCs && item.EndsWith(End.iCsPp))
+                rv = false;
+            if (!end.gICs && item.EndsWith(End.gICsPp))
+                rv = false;
+            if (!end.gCs && item.EndsWith(End.gCsPp))
+                rv = false;
+            if (!end.tmp && item.EndsWith(End.tmpPp))
+                rv = false;
+            if (!end.TMP && item.EndsWith(End.TMPPp))
+                rv = false;
+            if (!end.DesignerCs && item.EndsWith(End.DesignerCsPp))
+                rv = false;
+            if (!end.notTranslateAble && item.EndsWith(End.NotTranslateAblePp))
+                rv = false;
         }
-
 
         if (rv.HasValue)
             // Always false
             return rv.Value;
-
         end2 = false;
-
         if (c != null)
         {
-            if (!c.binFp && item.Contains(Contains.binFp)) rv = false;
-
-            if (!c.objFp && item.Contains(Contains.objFp)) rv = false;
-
-            if (!c.tildaRF && item.Contains(Contains.tildaRFFp)) rv = false;
+            if (!c.binFp && item.Contains(Contains.binFp))
+                rv = false;
+            if (!c.objFp && item.Contains(Contains.objFp))
+                rv = false;
+            if (!c.tildaRF && item.Contains(Contains.tildaRFFp))
+                rv = false;
         }
-
 
         if (rv.HasValue)
             // Always false
             return rv.Value;
-
         return true;
     }
 
@@ -114,43 +111,52 @@ public class CsFileFilterRoslyn //: ICsFileFilter
     public void SetDefault()
     {
         //false which not to index, true which to index
-
         e = new EndArgs(false, true, true, false, /*false,*/ false, false, false, false);
-        c = new ContainsArgs(false, false, false/*, false*/);
+        c = new ContainsArgs(false, false, false /*, false*/);
     }
 
     /// <summary>
     ///     A1 = negate
     /// </summary>
-    /// <param name="n"></param>
+    /// <param name = "n"></param>
     /// <returns></returns>
     public List<string> GetContainsByFlags(bool n)
     {
         var list = new List<string>();
-        if (BTS.Is(c.binFp, n)) list.Add(Contains.binFp);
-        if (BTS.Is(c.objFp, n)) list.Add(Contains.objFp);
-        if (BTS.Is(c.tildaRF, n)) list.Add(Contains.tildaRFFp);
-
-
+        if (BTS.Is(c.binFp, n))
+            list.Add(Contains.binFp);
+        if (BTS.Is(c.objFp, n))
+            list.Add(Contains.objFp);
+        if (BTS.Is(c.tildaRF, n))
+            list.Add(Contains.tildaRFFp);
         return list;
     }
 
     public List<string> GetEndingByFlags(bool n)
     {
         var list = new List<string>();
-        if (Is(e.designerCs, n)) list.Add(End.designerCsPp);
-        if (Is(e.xamlCs, n)) list.Add(End.xamlCsPp);
-        if (Is(e.xamlCs, n)) list.Add(End.xamlCsPp);
-        if (Is(e.sharedCs, n)) list.Add(End.sharedCsPp);
-        if (Is(e.iCs, n)) list.Add(End.iCsPp);
-        if (Is(e.gICs, n)) list.Add(End.gICsPp);
-        if (Is(e.gCs, n)) list.Add(End.gCsPp);
-        if (Is(e.tmp, n)) list.Add(End.tmpPp);
-        if (Is(e.TMP, n)) list.Add(End.TMPPp);
-        if (Is(e.DesignerCs, n)) list.Add(End.DesignerCsPp);
-        if (Is(e.notTranslateAble, n)) list.Add("NotTranslateAble");
-
-
+        if (Is(e.designerCs, n))
+            list.Add(End.designerCsPp);
+        if (Is(e.xamlCs, n))
+            list.Add(End.xamlCsPp);
+        if (Is(e.xamlCs, n))
+            list.Add(End.xamlCsPp);
+        if (Is(e.sharedCs, n))
+            list.Add(End.sharedCsPp);
+        if (Is(e.iCs, n))
+            list.Add(End.iCsPp);
+        if (Is(e.gICs, n))
+            list.Add(End.gICsPp);
+        if (Is(e.gCs, n))
+            list.Add(End.gCsPp);
+        if (Is(e.tmp, n))
+            list.Add(End.tmpPp);
+        if (Is(e.TMP, n))
+            list.Add(End.TMPPp);
+        if (Is(e.DesignerCs, n))
+            list.Add(End.DesignerCsPp);
+        if (Is(e.notTranslateAble, n))
+            list.Add("NotTranslateAble");
         return list;
     }
 
@@ -159,18 +165,16 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         return BTS.Is(tMP, n);
     }
 
-    #region Take by method
-
     public static bool AllowOnlyContains(string i, ContainsArgs c)
     {
-        if (!c.objFp && i.Contains(@"\obj\")) return false;
-        if (!c.binFp && i.Contains(@"\bin\")) return false;
-        if (!c.tildaRF && i.Contains(@"RF~")) return false;
-
+        if (!c.objFp && i.Contains(@"\obj\"))
+            return false;
+        if (!c.binFp && i.Contains(@"\bin\"))
+            return false;
+        if (!c.tildaRF && i.Contains(@"RF~"))
+            return false;
         return true;
     }
-
-    #endregion
 
     public class Contains
     {
@@ -178,18 +182,16 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         public static string objFp = @"\obj\";
         public static string binFp = @"\bin\";
         public static string tildaRFFp = "~RF";
-
         public static List<string> u;
-
         /// <summary>
         ///     Into A1 is inserting copy to leave only unindexed
         /// </summary>
-        /// <param name="unindexablePathEnds"></param>
+        /// <param name = "unindexablePathEnds"></param>
         /// <returns></returns>
         public static ContainsArgs FillEndFromFileList(List<string> unindexablePathEnds)
         {
             u = unindexablePathEnds;
-            var ea = new ContainsArgs(c(objFp), c(binFp), c(tildaRFFp)/*, c(notTranslateAbleFp)*/);
+            var ea = new ContainsArgs(c(objFp), c(binFp), c(tildaRFFp) /*, c(notTranslateAbleFp)*/);
             return ea;
         }
 
@@ -204,14 +206,13 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         public bool binFp;
         public bool objFp;
         public bool tildaRF;
-
         /// <summary>
         ///     false which not to index, true which to index
         /// </summary>
-        /// <param name="objFp"></param>
-        /// <param name="binFp"></param>
-        /// <param name="tildaRF"></param>
-        /// <param name="notTranslateAble"></param>
+        /// <param name = "objFp"></param>
+        /// <param name = "binFp"></param>
+        /// <param name = "tildaRF"></param>
+        /// <param name = "notTranslateAble"></param>
         public ContainsArgs(bool objFp, bool binFp, bool tildaRF)
         {
             this.objFp = objFp;
@@ -232,21 +233,17 @@ public class CsFileFilterRoslyn //: ICsFileFilter
         public const string gCsPp = ".g.cs";
         public const string tmpPp = ".tmp";
         public const string TMPPp = ".TMP";
-
         public static List<string> u;
-
         /// <summary>
         ///     Into A1 is inserting copy to leave only unindexed
         /// </summary>
-        /// <param name="unindexablePathEnds"></param>
+        /// <param name = "unindexablePathEnds"></param>
         /// <returns></returns>
         public static EndArgs FillEndFromFileList(List<string> unindexablePathEnds)
         {
             u = unindexablePathEnds;
             var xValue = c(xamlCsPp);
-
-            var ea = new EndArgs(c(designerCsPp), xValue, c(sharedCsPp), c(iCsPp), /*c(gICsPp),*/ c(gCsPp), c(tmpPp), c(TMPPp),
-                c(DesignerCsPp));
+            var ea = new EndArgs(c(designerCsPp), xValue, c(sharedCsPp), c(iCsPp), /*c(gICsPp),*/ c(gCsPp), c(tmpPp), c(TMPPp), c(DesignerCsPp));
             return ea;
         }
 
@@ -262,64 +259,4 @@ public class CsFileFilterRoslyn //: ICsFileFilter
             return true;
         }
     }
-
-    public class EndArgs
-    {
-        public bool designerCs;
-        public bool DesignerCs;
-        public bool gCs;
-        public bool gICs;
-        public bool iCs;
-        public bool notTranslateAble;
-        public bool sharedCs;
-        public bool tmp;
-        public bool TMP;
-        public bool xamlCs;
-
-        /// <summary>
-        ///     false which not to index, true which to index
-        /// </summary>
-        /// <param name="designerCs"></param>
-        /// <param name="xamlCs"></param>
-        /// <param name="sharedCs"></param>
-        /// <param name="iCs"></param>
-        /// <param name="gICs"></param>
-        /// <param name="gCs"></param>
-        /// <param name="tmp"></param>
-        /// <param name="TMP"></param>
-        /// <param name="DesignerCs"></param>
-        public EndArgs(bool designerCs, bool xamlCs, bool sharedCs, bool iCs, /*bool gICs,*/ bool gCs, bool tmp, bool TMP,
-            bool DesignerCs)
-        {
-            this.designerCs = designerCs;
-            this.xamlCs = xamlCs;
-            this.sharedCs = sharedCs;
-            this.iCs = iCs;
-            this.gCs = gCs;
-            this.tmp = tmp;
-            this.TMP = TMP;
-            this.DesignerCs = DesignerCs;
-        }
-    }
-
-
-    #region Take by class variables
-
-    public bool AllowOnly(string item)
-    {
-        return AllowOnly(item, true);
-    }
-
-    public bool AllowOnly(string item, bool alsoEnds)
-    {
-        var end2 = true;
-        return !AllowOnly(item, e, c, ref end2, alsoEnds);
-    }
-
-    public bool AllowOnlyContains(string i)
-    {
-        return !AllowOnlyContains(i, c);
-    }
-
-    #endregion
 }

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>25.6.7.1</Version>
     <Description>Work with Roslyn platform</Description>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
@@ -33,7 +33,8 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="9.0.3" />
     <PackageReference Include="System.Text.Json" Version="9.0.3" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" Pack="True" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3"
+      Pack="True" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NewFolder\" />
