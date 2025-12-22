@@ -1,8 +1,5 @@
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
 namespace SunamoRoslyn;
 
-[ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(RoslynCodeFixProvider)), Shared]
 public class RoslynCodeFixProvider : CodeFixProvider
 {
     private const string title = "Make uppercase";

@@ -1,6 +1,7 @@
+namespace SunamoRoslyn._public;
+
 // EN: Variable names have been checked and replaced with self-descriptive names
 // CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
-namespace SunamoRoslyn._public;
 /// <summary>
 ///     Cant be derived from FiltersNotTranslateAble because easy of finding instances of CsFileFilter
 /// </summary>

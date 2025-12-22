@@ -1,7 +1,5 @@
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
-
 namespace SunamoRoslyn;
+
 /// <summary>
 /// RoslynParser - use roslyn classes
 /// RoslynParserText - no use roslyn classes, only text or indexer
