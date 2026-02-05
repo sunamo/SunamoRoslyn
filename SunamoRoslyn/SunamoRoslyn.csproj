@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-    <Version>26.1.1.186</Version>
+    <Version>26.2.5.1</Version>
     <Description>Work with Roslyn platform</Description>
     <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>
@@ -12,8 +12,14 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <PropertyGroup>
+    <DebugType>embedded</DebugType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <PropertyGroup>
     <Authors>www.sunamo.cz</Authors>
-    <PackageReleaseNotes>feat: Upgrade to net10.0</PackageReleaseNotes>
+    <PackageReleaseNotes>feat: Enable SourceLink and added debug symbols</PackageReleaseNotes>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
   </PropertyGroup>
@@ -29,10 +35,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.0.0">
     </PackageReference>
-    <PackageReference Include="System.Formats.Asn1" Version="10.0.1" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="10.0.1" />
-    <PackageReference Include="System.Text.Json" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" Pack="True" />
+    <PackageReference Include="System.Formats.Asn1" Version="10.0.2" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="10.0.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" Pack="True" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NewFolder\" />
