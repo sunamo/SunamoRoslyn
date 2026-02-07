@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SunamoRoslyn.Tests\\SunamoRoslyn.Tests.csproj" />
+  <Project Path="RunnerRoslyn\\RunnerRoslyn.csproj" />
+  <Project Path="SunamoRoslyn\SunamoRoslyn.csproj" />
+</Solution>
