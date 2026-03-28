@@ -1,13 +1,16 @@
 namespace SunamoRoslyn;
 
 /// <summary>
-/// RoslynParser - use roslyn classes
-/// RoslynParserText - no use roslyn classes, only text or indexer
+/// Parses C# source code using text and indexer-based approaches without Roslyn syntax classes.
+/// RoslynParser handles parsing with Roslyn classes.
 /// </summary>
 public class RoslynParserText
 {
-
-
+    /// <summary>
+    /// Adds page event handler methods from the given files to the string builder.
+    /// </summary>
+    /// <param name="stringBuilder">The string builder to append method names to.</param>
+    /// <param name="files">The list of C# file paths to process.</param>
     private static
 #if ASYNC
         async Task AddPageMethodsAsync
@@ -16,21 +19,18 @@ void AddPageMethods
 #endif
         (StringBuilder stringBuilder, List<string> files)
     {
-        SourceCodeIndexerRoslyn Instance = SourceCodeIndexerRoslyn.Instance;
-
+        SourceCodeIndexerRoslyn indexer = SourceCodeIndexerRoslyn.Instance;
         foreach (var file in files)
         {
-
 #if ASYNC
             await
 #endif
-                Instance.ProcessFile(file, NamespaceCodeElementsType.Nope, ClassCodeElementsType.Method, false, false);
+                indexer.ProcessFile(file, NamespaceCodeElementsType.Nope, ClassCodeElementsType.Method, false, false);
         }
-
-        foreach (var file2 in Instance.classCodeElements)
+        foreach (var fileEntry in indexer.classCodeElements)
         {
-            stringBuilder.AppendLine(file2.Key);
-            foreach (var method in file2.Value)
+            stringBuilder.AppendLine(fileEntry.Key);
+            foreach (var method in fileEntry.Value)
             {
                 if (method.Name.StartsWith("On") || method.Name.StartsWith("Page" + "_"))
                 {
@@ -40,31 +40,31 @@ void AddPageMethods
         }
     }
 
+    /// <summary>
+    /// Finds page event handler methods in all project folders under the given root path.
+    /// </summary>
+    /// <param name="rootPath">The root path containing project folders to scan.</param>
     public
-#if ASYNC 
+#if ASYNC
         async Task FindPageMethodAsync
 #else
 void FindPageMethod
 #endif
-        (string sczRootPath)
+        (string rootPath)
     {
         StringBuilder stringBuilder = new StringBuilder();
-
-        List<string> project = new List<string>();
-
-        var folders = Directory.GetDirectories(sczRootPath, "*", SearchOption.TopDirectoryOnly);
+        List<string> projectNames = new List<string>();
+        var folders = Directory.GetDirectories(rootPath, "*", SearchOption.TopDirectoryOnly);
         foreach (var item in folders)
         {
-            string nameProject = Path.GetFileName(item);
-            if (nameProject.EndsWith("X"))
+            string projectName = Path.GetFileName(item);
+            if (projectName.EndsWith("X"))
             {
-                string project2 = nameProject.Substring(0, nameProject.Length - 1);
-                // General files is in Nope. GeneralX is only for pages in General folder
-                if (project2 != "General")
+                string projectNameWithoutSuffix = projectName.Substring(0, projectName.Length - 1);
+                if (projectNameWithoutSuffix != "General")
                 {
-                    project.Add(project2);
+                    projectNames.Add(projectNameWithoutSuffix);
                 }
-
                 var files = Directory.GetFiles(item, "*.cs", SearchOption.TopDirectoryOnly).ToList();
 #if ASYNC
                 await AddPageMethodsAsync
@@ -74,22 +74,16 @@ AddPageMethods
                         (stringBuilder, files);
             }
         }
-
-        foreach (var item in project)
+        foreach (var item in projectNames)
         {
-            string path = Path.Combine(sczRootPath, item);
-            var pages = Directory.GetFiles(path, "*Page*.cs", SearchOption.TopDirectoryOnly).ToList();
+            string projectPath = Path.Combine(rootPath, item);
+            var pageFiles = Directory.GetFiles(projectPath, "*Page*.cs", SearchOption.TopDirectoryOnly).ToList();
 #if ASYNC
             await AddPageMethodsAsync
 #else
 AddPageMethods
 #endif
-
-                (stringBuilder, pages);
+                (stringBuilder, pageFiles);
         }
-
-        //ClipboardService.SetText(stringBuilder);
     }
-
-
 }

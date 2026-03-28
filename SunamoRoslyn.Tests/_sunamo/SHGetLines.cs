@@ -1,6 +1,3 @@
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,47 +6,55 @@ using System.Threading.Tasks;
 
 namespace SunamoRoslyn.Tests._sunamo;
 
+/// <summary>
+/// String helper for splitting text into lines.
+/// </summary>
 internal class SHGetLines
 {
-    internal static List<string> GetLines(string p)
+    /// <summary>
+    /// Splits the text into lines handling all newline formats.
+    /// </summary>
+    /// <param name="text">The text to split into lines.</param>
+    /// <returns>List of lines.</returns>
+    internal static List<string> GetLines(string text)
     {
-        var parts = p.Split(new[] { "\r\n", "\n\r" }, StringSplitOptions.None).ToList();
+        var parts = text.Split(new[] { "\r\n", "\n\r" }, StringSplitOptions.None).ToList();
         SplitByUnixNewline(parts);
         return parts;
     }
 
-    private static void SplitByUnixNewline(List<string> d)
+    private static void SplitByUnixNewline(List<string> list)
     {
-        SplitBy(d, "\r");
-        SplitBy(d, "\n");
+        SplitBy(list, "\r");
+        SplitBy(list, "\n");
     }
 
-    private static void SplitBy(List<string> d, string v)
+    private static void SplitBy(List<string> list, string delimiter)
     {
-        for (var i = d.Count - 1; i >= 0; i--)
+        for (var i = list.Count - 1; i >= 0; i--)
         {
-            if (v == "\r")
+            if (delimiter == "\r")
             {
-                var rn = d[i].Split(new[] { "\r\n" }, StringSplitOptions.None);
-                var nr = d[i].Split(new[] { "\n\r" }, StringSplitOptions.None);
+                var carriageReturnNewlineParts = list[i].Split(new[] { "\r\n" }, StringSplitOptions.None);
+                var newlineCarriageReturnParts = list[i].Split(new[] { "\n\r" }, StringSplitOptions.None);
 
-                if (rn.Length > 1)
+                if (carriageReturnNewlineParts.Length > 1)
                     ThrowEx.Custom("cannot contain any \r\name, pass already split by this pattern");
-                else if (nr.Length > 1) ThrowEx.Custom("cannot contain any \n\r, pass already split by this pattern");
+                else if (newlineCarriageReturnParts.Length > 1) ThrowEx.Custom("cannot contain any \n\r, pass already split by this pattern");
             }
 
-            var name = d[i].Split(new[] { v }, StringSplitOptions.None);
+            var splitParts = list[i].Split(new[] { delimiter }, StringSplitOptions.None);
 
-            if (name.Length > 1) InsertOnIndex(d, name.ToList(), i);
+            if (splitParts.Length > 1) InsertOnIndex(list, splitParts.ToList(), i);
         }
     }
 
-    private static void InsertOnIndex(List<string> d, List<string> r, int i)
+    private static void InsertOnIndex(List<string> list, List<string> insertList, int index)
     {
-        r.Reverse();
+        insertList.Reverse();
 
-        d.RemoveAt(i);
+        list.RemoveAt(index);
 
-        foreach (var item in r) d.Insert(i, item);
+        foreach (var item in insertList) list.Insert(index, item);
     }
 }

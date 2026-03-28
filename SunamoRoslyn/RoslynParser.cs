@@ -1,50 +1,57 @@
 namespace SunamoRoslyn;
 
 /// <summary>
-/// RoslynParser - use roslyn classes
-/// RoslynParserText - no use roslyn classes, only text or indexer
+/// Parses C# code using Roslyn syntax tree classes.
+/// RoslynParserText handles text/indexer-based parsing without Roslyn classes.
 /// </summary>
 public class RoslynParser
 {
-    // TODO: take also usings
-    static Type type = null;
+    /// <summary>
+    /// Determines whether the given input string is valid C# code.
+    /// </summary>
+    /// <param name="input">The source code text to validate.</param>
+    /// <returns>True if the input can be parsed as C# code; otherwise, false.</returns>
     public static bool IsCSharpCode(string input)
     {
-        SyntaxTree data = null;
+        SyntaxTree? syntaxTree = null;
         try
         {
-            data = CSharpSyntaxTree.ParseText(input);
+            syntaxTree = CSharpSyntaxTree.ParseText(input);
         }
         catch (Exception ex)
         {
-            // throwed Method not found: 'Boolean Microsoft.CodeAnalysis.StackGuard.IsInsufficientExecutionStackException(System.Exception)'.' for non cs code
+            Console.WriteLine(ex.Message);
         }
-        var text = data.GetText().ToString();
-        return data != null;
+        var text = syntaxTree?.GetText().ToString();
+        return syntaxTree != null;
     }
-    public static MethodDeclarationSyntax Method(string item)
+
+    /// <summary>
+    /// Parses a method header string into a <see cref="MethodDeclarationSyntax"/>.
+    /// </summary>
+    /// <param name="methodHeader">The method header text to parse (body will be appended automatically).</param>
+    /// <returns>The parsed method declaration syntax node.</returns>
+    public static MethodDeclarationSyntax Method(string methodHeader)
     {
-        item = item + "{}";
-        //StringReader sr = new StringReader(item);
-        //CSharpSyntaxNode.DeserializeFrom();
-        var tree = CSharpSyntaxTree.ParseText(item);
+        methodHeader = methodHeader + "{}";
+        var tree = CSharpSyntaxTree.ParseText(methodHeader);
         var root = tree.GetRoot();
-        //return (MethodDeclarationSyntax)root.DescendantNodesAndTokensAndSelf().OfType<MethodDeclarationSyntax>().FirstOrNull();
-        // Only root I cannot cast -> cannot cast CSU to MethodDeclSyntax
         var childNodes = root.ChildNodes();
         return (MethodDeclarationSyntax)childNodes.First();
     }
+
     /// <summary>
-    /// Úplně nevím k čemu toto mělo sloužit.
-    /// Read comments inside
+    /// Extracts code elements from classes in ASPX code-behind files and writes them to a target folder.
+    /// Reads comments inside for implementation details.
     /// </summary>
-    /// <param name="folderFrom"></param>
-    /// <param name="folderTo"></param>
+    /// <param name="folderFrom">The source folder containing ASPX code-behind files.</param>
+    /// <param name="folderTo">The destination folder for output files.</param>
+    /// <returns>Always returns null; files are written to the destination folder.</returns>
     public
 #if ASYNC
-async Task<List<string>>
+async Task<List<string>?>
 #else
-List<string>
+List<string>?
 #endif
 GetCodeOfElementsClass(string folderFrom, string folderTo)
     {
@@ -59,82 +66,85 @@ await
 #endif
 File.ReadAllTextAsync(file));
             List<string> result = new List<string>();
-            // Here probable it mean SpaceName, ale když není namespace, uloží třídu
-            SyntaxNode sn;
-            var cl = RoslynHelper.GetClass(tree.GetRoot(), out sn);
-            SyntaxAnnotation saSn = new SyntaxAnnotation();
-            sn = sn.WithAdditionalAnnotations(saSn);
-            SyntaxAnnotation saCl = new SyntaxAnnotation();
-            cl = cl.WithAdditionalAnnotations(saCl);
-            //ClassDeclarationSyntax cl2 = cl.Parent.)
+            SyntaxNode? syntaxNode;
+            var classDeclaration = RoslynHelper.GetClass(tree.GetRoot(), out syntaxNode);
+            if (classDeclaration == null || syntaxNode == null)
+            {
+                continue;
+            }
+            SyntaxAnnotation syntaxNodeAnnotation = new SyntaxAnnotation();
+            syntaxNode = syntaxNode.WithAdditionalAnnotations(syntaxNodeAnnotation);
+            SyntaxAnnotation classAnnotation = new SyntaxAnnotation();
+            classDeclaration = classDeclaration.WithAdditionalAnnotations(classAnnotation);
             var root = tree.GetRoot();
-            int count = cl.Members.Count;
+            int count = classDeclaration.Members.Count;
             for (int i = count - 1; i >= 0; i--)
             {
-                var item = cl.Members[i];
-                //cl.Members.RemoveAt(i);
-                //cl.Members.Remove(item);
-                cl = cl.RemoveNode(item, SyntaxRemoveOptions.KeepEndOfLine);
+                var item = classDeclaration.Members[i];
+                classDeclaration = classDeclaration.RemoveNode(item, SyntaxRemoveOptions.KeepEndOfLine)!;
             }
-            // záměna namespace za class pak dělá problémy tady
-            sn = sn.TrackNodes(cl);
-            root = root.TrackNodes(sn);
-            var data = sn.SyntaxTree.ToString();
+            syntaxNode = syntaxNode.TrackNodes(classDeclaration);
+            root = root.TrackNodes(syntaxNode);
+            var data = syntaxNode.SyntaxTree.ToString();
             var fileTo = file.Replace(folderFrom, folderTo);
             await File.WriteAllTextAsync(fileTo, data);
         }
         return null;
     }
-    private SyntaxNode FindTopParent(SyntaxNode cl)
+
+    /// <summary>
+    /// Finds the top-most parent node in the syntax tree.
+    /// </summary>
+    /// <param name="classDeclaration">The syntax node to traverse upward from.</param>
+    /// <returns>The root syntax node with no parent.</returns>
+    private SyntaxNode FindTopParent(SyntaxNode classDeclaration)
     {
-        var result = cl;
+        var result = classDeclaration;
         while (result.Parent != null)
         {
             result = result.Parent;
         }
         return result;
     }
-    ///// <summary>
-    /////
-    ///// </summary>
-    ///// <param name="root"></param>
-    ///// <param name="wrapIntoClass"></param>
-    //public static ABCRoslyn GetVariablesInCsharp(SyntaxNode root)
-    //{
-    //    List<string> lines = new List<string>();
-    //    List<string> usings;
-    //    return GetVariablesInCsharp(root);
-    //}
+
     /// <summary>
-    /// A1 by mohl být SyntaxNode kdybych nepotřeboval získávat globální usingy
-    /// Prop Usings je pouze ve CompilationUnitSyntax
+    /// Extracts variable declarations from a C# compilation unit.
+    /// The first argument must be CompilationUnitSyntax because global usings
+    /// are only available on that type.
     /// </summary>
-    /// <param name="root"></param>
-    /// <param name="lines"></param>
-    /// <param name="usings"></param>
+    /// <param name="root">The compilation unit syntax root to extract variables from.</param>
+    /// <param name="usings">Output list of using directives found in the compilation unit.</param>
+    /// <returns>A collection of variable type-name pairs found in the class.</returns>
     public static ABCRoslyn GetVariablesInCsharp(CompilationUnitSyntax root, out List<string> usings)
     {
         ABCRoslyn result = new ABCRoslyn();
         usings = CSharpHelper.Usings(root);
-        ClassDeclarationSyntax helloWorldDeclaration = null;
-        helloWorldDeclaration = RoslynHelper.GetClass(root);
-        var variableDeclarations = helloWorldDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>();
+        ClassDeclarationSyntax? classDeclaration = RoslynHelper.GetClass(root);
+        if (classDeclaration == null)
+        {
+            return result;
+        }
+        var variableDeclarations = classDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>();
         foreach (var variableDeclaration in variableDeclarations)
         {
-            //CL.WriteLine(variableDeclaration.Variables.First().Identifier.);
-            //CL.WriteLine(variableDeclaration.Variables.First().Identifier.Value);
             string variableName = variableDeclaration.Declaration.Type.ToString();
             variableName = SHReplace.ReplaceOnce(variableName, "global::", "");
             int lastIndex = variableName.LastIndexOf('.');
-            string ns, cn;
-            SH.GetPartsByLocation(out ns, out cn, variableName, lastIndex);
-            usings.Add(ns);
+            string namespaceName, className;
+            SH.GetPartsByLocation(out namespaceName, out className, variableName, lastIndex);
+            usings.Add(namespaceName);
             // in key type, in value name
-            result.Add(ABRoslyn.Get(cn, variableDeclaration.Declaration.Variables.First().Identifier.Text));
+            result.Add(ABRoslyn.Get(className, variableDeclaration.Declaration.Variables.First().Identifier.Text));
         }
         usings = usings.Distinct().ToList();
         return result;
     }
+
+    /// <summary>
+    /// Gets the access modifier keyword from a list of syntax tokens.
+    /// </summary>
+    /// <param name="modifiers">The list of modifier tokens to search.</param>
+    /// <returns>The access modifier text, or empty string if none found.</returns>
     public static string GetAccessModifiers(SyntaxTokenList modifiers)
     {
         foreach (var item in modifiers)
@@ -150,49 +160,57 @@ File.ReadAllTextAsync(file));
         }
         return string.Empty;
     }
+
     /// <summary>
-    /// return declaredVariables, assignedVariables
-    /// A1 can be string or CompilationUnitSyntax
+    /// Parses declared and assigned variables from a code fragment.
     /// </summary>
-    /// <param name="code"></param>
-    /// <returns></returns>
+    /// <param name="code">The code to parse; can be a string or a <see cref="SyntaxNode"/>.</param>
+    /// <returns>A tuple of (declaredVariables, assignedVariables) lists.</returns>
     public static Tuple<List<string>, List<string>> ParseVariables(object code)
     {
-        SyntaxNode root = null;
-        string code2 = null;
-        //MethodDeclarationSyntax;
-        root = SyntaxNodeFromObjectOrString(code);
-        var variableDeclarations = root.DescendantNodes().OfType<VariableDeclarationSyntax>();
-        var variableAssignments = root.DescendantNodes().OfType<AssignmentExpressionSyntax>();
+        SyntaxNode syntaxRoot = SyntaxNodeFromObjectOrString(code);
+        var variableDeclarations = syntaxRoot.DescendantNodes().OfType<VariableDeclarationSyntax>();
+        var variableAssignments = syntaxRoot.DescendantNodes().OfType<AssignmentExpressionSyntax>();
         List<string> declaredVariables = new List<string>(variableDeclarations.Count());
         List<string> assignedVariables = new List<string>(variableAssignments.Count());
         foreach (var variableDeclaration in variableDeclarations)
-            declaredVariables.Add(variableDeclaration.Variables.First().Identifier.Value.ToString());
+            declaredVariables.Add(variableDeclaration.Variables.First().Identifier.Value?.ToString() ?? string.Empty);
         foreach (var variableAssignment in variableAssignments)
             assignedVariables.Add(variableAssignment.Left.ToString());
         return new Tuple<List<string>, List<string>>(declaredVariables, assignedVariables);
     }
+
+    /// <summary>
+    /// Creates a <see cref="SyntaxNode"/> from either a string of code or an existing SyntaxNode.
+    /// </summary>
+    /// <param name="code">The code to convert; can be a string or a <see cref="SyntaxNode"/>.</param>
+    /// <returns>The resulting syntax node.</returns>
     public static SyntaxNode SyntaxNodeFromObjectOrString(object code)
     {
-        SyntaxNode root = null;
-        if (code is SyntaxNode)
+        if (code is SyntaxNode syntaxNode)
         {
-            root = (SyntaxNode)code;
+            return syntaxNode;
         }
-        else if (code is string)
+        else if (code is string codeText)
         {
-            SyntaxTree tree = CSharpSyntaxTree.ParseText(code.ToString());
-            root = tree.GetRoot();
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(codeText);
+            return tree.GetRoot();
         }
         else
         {
             ThrowEx.NotImplementedCase("else");
+            throw new InvalidOperationException("Unsupported code type");
         }
-        return root;
     }
+
+    /// <summary>
+    /// Gets all variables used in every method within the given source code.
+    /// </summary>
+    /// <param name="text">The C# source code text to analyze.</param>
+    /// <returns>A dictionary mapping method names to their assigned variable names.</returns>
     public static Dictionary<string, List<string>> GetVariablesInEveryMethod(string text)
     {
-        Dictionary<string, List<string>> m = new Dictionary<string, List<string>>();
+        Dictionary<string, List<string>> methodVariables = new Dictionary<string, List<string>>();
         var tree = CSharpSyntaxTree.ParseText(text);
         var root = tree.GetRoot();
         IList<MethodDeclarationSyntax> methods = root
@@ -201,8 +219,8 @@ File.ReadAllTextAsync(file));
         foreach (var method in methods)
         {
             var value = ParseVariables(method);
-            m.Add(method.Identifier.Text, value.Item2);
+            methodVariables.Add(method.Identifier.Text, value.Item2);
         }
-        return m;
+        return methodVariables;
     }
 }

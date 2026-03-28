@@ -1,93 +1,155 @@
 namespace SunamoRoslyn._sunamo;
 
+/// <summary>
+/// String helper methods.
+/// </summary>
 internal class SH
 {
-    internal static string WrapWith(string value, string h)
+    /// <summary>
+    /// Wraps a string value with the specified wrapper on both sides.
+    /// </summary>
+    /// <param name="text">The text to wrap.</param>
+    /// <param name="wrapper">The wrapper text.</param>
+    /// <returns>The wrapped string.</returns>
+    internal static string WrapWith(string text, string wrapper)
     {
-        return h + value + h;
+        return wrapper + text + wrapper;
     }
-    internal static string WrapWithChar(string value, char v, bool _trimWrapping = false,
-        bool alsoIfIsWhitespaceOrEmpty = true)
+
+    /// <summary>
+    /// Wraps a string value with the specified character.
+    /// </summary>
+    /// <param name="text">The text to wrap.</param>
+    /// <param name="wrapCharacter">The character to wrap with.</param>
+    /// <param name="isTrimming">Whether to trim the value before wrapping.</param>
+    /// <param name="isWrappingWhitespaceOrEmpty">Whether to wrap whitespace or empty strings.</param>
+    /// <returns>The wrapped string.</returns>
+    internal static string WrapWithChar(string text, char wrapCharacter, bool isTrimming = false,
+        bool isWrappingWhitespaceOrEmpty = true)
     {
-        if (string.IsNullOrWhiteSpace(value) && !alsoIfIsWhitespaceOrEmpty) return string.Empty;
-        // TODO: Make with StringBuilder, because of WordAfter and so
-        return WrapWith(_trimWrapping ? value.Trim() : value, v.ToString());
+        if (string.IsNullOrWhiteSpace(text) && !isWrappingWhitespaceOrEmpty) return string.Empty;
+        return WrapWith(isTrimming ? text.Trim() : text, wrapCharacter.ToString());
     }
+
+    /// <summary>
+    /// Gets the word after the specified marker word in the input.
+    /// </summary>
+    /// <param name="input">The input text.</param>
+    /// <param name="word">The marker word to search for.</param>
+    /// <returns>The word following the marker.</returns>
     internal static string WordAfter(string input, string word)
     {
         input = WrapWithChar(input, ' ');
-        var dex = input.IndexOf(word);
-        var dex2 = input.IndexOf(' ', dex + 1);
+        var index = input.IndexOf(word);
+        var spaceIndex = input.IndexOf(' ', index + 1);
         var stringBuilder = new StringBuilder();
-        if (dex2 != -1)
+        if (spaceIndex != -1)
         {
-            dex2++;
-            for (var i = dex2; i < input.Length; i++)
+            spaceIndex++;
+            for (var i = spaceIndex; i < input.Length; i++)
             {
-                var ch = input[i];
-                if (ch != ' ')
-                    stringBuilder.Append(ch);
+                var character = input[i];
+                if (character != ' ')
+                    stringBuilder.Append(character);
                 else
                     break;
             }
         }
         return stringBuilder.ToString();
     }
+
     #region SH.FirstCharUpper
-    internal static void FirstCharUpper(ref string nazevPP)
+    /// <summary>
+    /// Converts the first character of the text to uppercase (by reference).
+    /// </summary>
+    /// <param name="text">The text to modify.</param>
+    internal static void FirstCharUpper(ref string text)
     {
-        nazevPP = FirstCharUpper(nazevPP);
+        text = FirstCharUpper(text);
     }
-    internal static string FirstCharUpper(string nazevPP)
+
+    /// <summary>
+    /// Converts the first character of the text to uppercase.
+    /// </summary>
+    /// <param name="text">The text to modify.</param>
+    /// <returns>The text with first character uppercased.</returns>
+    internal static string FirstCharUpper(string text)
     {
-        if (nazevPP.Length == 1)
+        if (text.Length == 1)
         {
-            return nazevPP.ToUpper();
+            return text.ToUpper();
         }
-        string sb = nazevPP.Substring(1);
-        return nazevPP[0].ToString().ToUpper() + sb;
+        string remainder = text.Substring(1);
+        return text[0].ToString().ToUpper() + remainder;
     }
     #endregion
-    internal static void GetPartsByLocation(out string pred, out string za, string text, int pozice)
+
+    /// <summary>
+    /// Splits the text at the specified position into before and after parts.
+    /// </summary>
+    /// <param name="before">Output: text before the position.</param>
+    /// <param name="after">Output: text after the position.</param>
+    /// <param name="text">The text to split.</param>
+    /// <param name="position">The split position.</param>
+    internal static void GetPartsByLocation(out string before, out string after, string text, int position)
     {
-        if (pozice == -1)
+        if (position == -1)
         {
-            pred = text;
-            za = "";
+            before = text;
+            after = "";
         }
         else
         {
-            pred = text.Substring(0, pozice);
-            if (text.Length > pozice + 1)
-                za = text.Substring(pozice + 1);
+            before = text.Substring(0, position);
+            if (text.Length > position + 1)
+                after = text.Substring(position + 1);
             else
-                za = string.Empty;
+                after = string.Empty;
         }
     }
-    internal static List<string> SplitChar(string text, params char[] dot)
+
+    /// <summary>
+    /// Splits the text by the specified character delimiters, removing empty entries.
+    /// </summary>
+    /// <param name="text">The text to split.</param>
+    /// <param name="delimiters">The delimiter characters.</param>
+    /// <returns>List of split parts.</returns>
+    internal static List<string> SplitChar(string text, params char[] delimiters)
     {
-        return text.Split(dot, StringSplitOptions.RemoveEmptyEntries).ToList();
+        return text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).ToList();
     }
-    internal static bool Contains(string input, StringOrStringList termO, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace, bool caseSensitive = false, bool isEnoughPartialContainsOfSplitted = true)
+
+    /// <summary>
+    /// Checks if the input contains the term using the specified search strategy.
+    /// </summary>
+    /// <param name="input">The input text to search.</param>
+    /// <param name="searchTerm">The term to search for.</param>
+    /// <param name="searchStrategy">The search strategy to use.</param>
+    /// <param name="isCaseSensitive">Whether to use case-sensitive comparison.</param>
+    /// <param name="isEnoughPartialContainsOfSplitted">Whether partial contains of split parts is sufficient.</param>
+    /// <returns>True if the input contains the term.</returns>
+    internal static bool Contains(string input, StringOrStringList searchTerm, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace, bool isCaseSensitive = false, bool isEnoughPartialContainsOfSplitted = true)
     {
-        string term = null;
-        if (!caseSensitive)
+        string? term = null;
+        if (!isCaseSensitive)
         {
             input = input.ToLower();
-            term = termO.GetString().ToLower();
+            term = searchTerm.GetString().ToLower();
         }
-        // musel bych dotáhnout min 2 metody a další enumy
+
         if (searchStrategy == SearchStrategyRoslyn.ExactlyName)
         {
             return input == term;
         }
+
         if (searchStrategy == SearchStrategyRoslyn.AnySpaces)
         {
-            var pInput = input.Split(input.Where(ch => !char.IsLetterOrDigit(ch)).ToArray(), StringSplitOptions.RemoveEmptyEntries);
-            var pTerm = termO.GetList();
-            if (pInput.Length == 1)
+            var inputParts = input.Split(input.Where(character => !char.IsLetterOrDigit(character)).ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            var termParts = searchTerm.GetList();
+
+            if (inputParts.Length == 1)
             {
-                foreach (var item in pTerm)
+                foreach (var item in termParts)
                 {
                     if (!input.Contains(item))
                     {
@@ -95,9 +157,10 @@ internal class SH
                     }
                 }
             }
+
             if (isEnoughPartialContainsOfSplitted)
             {
-                foreach (var item in pTerm)
+                foreach (var item in termParts)
                 {
                     if (!input.Contains(item))
                     {
@@ -106,47 +169,61 @@ internal class SH
                 }
                 return true;
             }
-            bool containsAll = true;
-            foreach (var item in pTerm)
+
+            bool isContainingAll = true;
+            foreach (var item in termParts)
             {
-                if (!pInput.Contains(item))
+                if (!inputParts.Contains(item))
                 {
-                    containsAll = false;
+                    isContainingAll = false;
                     break;
                 }
             }
-            return containsAll;
+            return isContainingAll;
         }
-        return input.Contains(term);
+
+        return input.Contains(term!);
     }
-    internal static string RemoveLastLetters(string v1, int v2)
+
+    /// <summary>
+    /// Removes the specified number of characters from the end of the string.
+    /// </summary>
+    /// <param name="text">The text to truncate.</param>
+    /// <param name="count">Number of characters to remove.</param>
+    /// <returns>The truncated string.</returns>
+    internal static string RemoveLastLetters(string text, int count)
     {
-        if (v1.Length > v2) return v1.Substring(0, v1.Length - v2);
-        return v1;
+        if (text.Length > count) return text.Substring(0, text.Length - count);
+        return text;
     }
+
+    /// <summary>
+    /// Indents each line to match the indentation of the previous line.
+    /// </summary>
+    /// <param name="lines">List of lines to process.</param>
     internal static void IndentAsPreviousLine(List<string> lines)
     {
-        var indentPrevious = string.Empty;
-        string line = null;
+        var previousIndent = string.Empty;
+        string? currentLine = null;
         var stringBuilder = new StringBuilder();
         for (var i = 0; i < lines.Count - 1; i++)
         {
-            line = lines[i];
-            if (line.Length > 0)
+            currentLine = lines[i];
+            if (currentLine.Length > 0)
             {
-                if (!char.IsWhiteSpace(line[0]))
+                if (!char.IsWhiteSpace(currentLine[0]))
                 {
-                    lines[i] = indentPrevious + lines[i];
+                    lines[i] = previousIndent + lines[i];
                 }
                 else
                 {
                     stringBuilder.Clear();
-                    foreach (var item in line)
+                    foreach (var item in currentLine)
                         if (char.IsWhiteSpace(item))
                             stringBuilder.Append(item);
                         else
                             break;
-                    indentPrevious = stringBuilder.ToString();
+                    previousIndent = stringBuilder.ToString();
                 }
             }
         }

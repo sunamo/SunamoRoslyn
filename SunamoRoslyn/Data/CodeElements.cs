@@ -1,14 +1,19 @@
 namespace SunamoRoslyn.Data;
 
-    public class CodeElements
-    {
+/// <summary>
+/// Contains collections of namespace and class code elements indexed by name.
+/// </summary>
+public class CodeElements
+{
     /// <summary>
-    /// Používá se 2x v DoSearch v Everyline a poté ji vrací společně s classes SourceCodeIndexerRoslyn.cs
-    /// 
+    /// Gets or sets the dictionary of namespace code elements, keyed by namespace name.
+    /// Used in DoSearch in Everyline and returned together with Classes from SourceCodeIndexerRoslyn.
     /// </summary>
-        public Dictionary<string, NamespaceCodeElements> namespaces = new Dictionary<string, NamespaceCodeElements>();
+    public Dictionary<string, NamespaceCodeElements> Namespaces { get; set; } = new Dictionary<string, NamespaceCodeElements>();
+
     /// <summary>
-    /// Používá se 2x v DoSearch v Everyline a poté ji vrací společně s namespacema SourceCodeIndexerRoslyn.cs
+    /// Gets or sets the dictionary of class code elements, keyed by class name.
+    /// Used in DoSearch in Everyline and returned together with Namespaces from SourceCodeIndexerRoslyn.
     /// </summary>
-        public Dictionary<string, ClassCodeElements> classes = new Dictionary<string, ClassCodeElements>();
-    }
+    public Dictionary<string, ClassCodeElements> Classes { get; set; } = new Dictionary<string, ClassCodeElements>();
+}

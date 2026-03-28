@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using SunamoRoslyn.Services;
 using SunamoRoslyn.Tests._sunamo;
 using System;
@@ -8,8 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SunamoRoslyn.Tests;
+
+/// <summary>
+/// Tests for the RoslynCommentService class.
+/// </summary>
 public class RoslynCommentServiceTests
 {
+    /// <summary>
+    /// Tests that RemoveComments correctly removes single-line, multi-line, and XML doc comments while preserving string literals containing comment-like patterns.
+    /// </summary>
     [Fact]
     public void RemoveCommentsTest()
     {
@@ -20,11 +27,11 @@ d /*e*/
 baf*/
 f
 }";
-        // za d je mezera
+        // after d there is a space
         var expected = "class A { string a = \"https://\"" +
             Environment.NewLine + @"
 c
-d 
+d
 
 f
 }";
@@ -32,5 +39,4 @@ f
         var actual = roslynComment.RemoveComments(input);
         actual.Should().BeEquivalentTo(expected);
     }
-
 }

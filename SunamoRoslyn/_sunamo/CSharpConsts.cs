@@ -1,6 +1,12 @@
 namespace SunamoRoslyn._sunamo;
 
+/// <summary>
+/// C# language constants.
+/// </summary>
 internal class CSharpConsts
 {
-    internal const string lc = "//";
+    /// <summary>
+    /// Single-line comment prefix.
+    /// </summary>
+    internal const string LineComment = "//";
 }

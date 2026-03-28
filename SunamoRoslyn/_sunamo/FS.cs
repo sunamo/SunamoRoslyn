@@ -1,19 +1,22 @@
 namespace SunamoRoslyn._sunamo;
 
+/// <summary>
+/// File system path helper.
+/// </summary>
 internal class FS
 {
     /// <summary>
-    ///     Usage: Exceptions.FileWasntFoundInDirectory
+    /// Ensures the path ends with a backslash and capitalizes the first character.
     /// </summary>
-    /// <param name="v"></param>
-    /// <returns></returns>
-    internal static string WithEndSlash(ref string v)
+    /// <param name="path">The path to modify.</param>
+    /// <returns>The modified path.</returns>
+    internal static string WithEndSlash(ref string path)
     {
-        if (v != string.Empty)
+        if (path != string.Empty)
         {
-            v = v.TrimEnd('\\') + '\\';
+            path = path.TrimEnd('\\') + '\\';
         }
-        SH.FirstCharUpper(ref v);
-        return v;
+        SH.FirstCharUpper(ref path);
+        return path;
     }
 }

@@ -1,123 +1,173 @@
 namespace SunamoRoslyn._sunamo;
 
+/// <summary>
+/// Collection argument helper methods.
+/// </summary>
 internal class CA
 {
     /// <summary>
-    ///     Return A2 if start something in A1
-    ///     A2 can be null
+    /// Returns the line if it starts with any element from the list.
     /// </summary>
-    /// <param name="suMethods"></param>
-    /// <param name="line"></param>
-    /// <returns></returns>
-    internal static string StartWith(List<string> suMethods, string line)
+    /// <param name="list">List of prefixes to check against.</param>
+    /// <param name="text">The text to check.</param>
+    /// <returns>The matching line or null.</returns>
+    internal static string? StartWith(List<string> list, string text)
     {
-        string element = null;
-        return StartWith(suMethods, line, out element);
+        string? foundElement = null;
+        return StartWith(list, text, out foundElement);
     }
+
     /// <summary>
-    ///     Return A2 if start something in A1
-    ///     Really different method than string, List
-    ///     <string>
-    ///         A1 can be null
+    /// Returns the line if it starts with any element from the list, outputting the matched element.
     /// </summary>
-    /// <param name="suMethods"></param>
-    /// <param name="line"></param>
-    internal static string StartWith(List<string> suMethods, string line, out string element)
+    /// <param name="list">List of prefixes to check against.</param>
+    /// <param name="text">The text to check.</param>
+    /// <param name="foundElement">The matched prefix element.</param>
+    /// <returns>The matching line or null.</returns>
+    internal static string? StartWith(List<string> list, string text, out string? foundElement)
     {
-        element = null;
-        if (suMethods != null)
-            foreach (var method in suMethods)
-                if (line.StartsWith(method))
+        foundElement = null;
+        if (list != null)
+            foreach (var item in list)
+                if (text.StartsWith(item))
                 {
-                    element = method;
-                    return line;
+                    foundElement = item;
+                    return text;
                 }
         return null;
     }
-    internal static List<string> ReturnWhichContains(List<string> lines, string term, out List<int> founded,
+
+    /// <summary>
+    /// Returns lines that contain the specified term, along with their indices.
+    /// </summary>
+    /// <param name="lines">Lines to search through.</param>
+    /// <param name="term">The term to search for.</param>
+    /// <param name="foundIndices">Output list of matching indices.</param>
+    /// <param name="parseNegations">The comparison method to use.</param>
+    /// <returns>List of matching lines.</returns>
+    internal static List<string> ReturnWhichContains(List<string> lines, string term, out List<int> foundIndices,
     ContainsCompareMethodRoslyn parseNegations = ContainsCompareMethodRoslyn.WholeInput)
     {
-        founded = new List<int>();
+        foundIndices = new List<int>();
         var result = new List<string>();
-        var i = 0;
-        List<string> w = null;
+        var currentIndex = 0;
+        List<string>? words = null;
+
         if (parseNegations == ContainsCompareMethodRoslyn.SplitToWords ||
             parseNegations == ContainsCompareMethodRoslyn.Negations)
         {
             WhitespaceCharService whitespaceChar = new();
-            w = SHSplit.SplitNone(term, whitespaceChar.whiteSpaceChars.ConvertAll(d => d.ToString()).ToArray());
+            words = SHSplit.SplitNone(term, whitespaceChar.WhiteSpaceChars.ConvertAll(character => character.ToString()).ToArray());
         }
+
         if (parseNegations == ContainsCompareMethodRoslyn.WholeInput)
             foreach (var item in lines)
             {
                 if (item.Contains(term))
                 {
-                    founded.Add(i);
+                    foundIndices.Add(currentIndex);
                     result.Add(item);
                 }
-                i++;
+                currentIndex++;
             }
         else if (parseNegations == ContainsCompareMethodRoslyn.SplitToWords ||
                  parseNegations == ContainsCompareMethodRoslyn.Negations)
             foreach (var item in lines)
             {
-                if (w.All(d => item.Contains(d))) //SH.ContainsAll(item, w, parseNegations))
+                if (words!.All(word => item.Contains(word)))
                 {
-                    founded.Add(i);
+                    foundIndices.Add(currentIndex);
                     result.Add(item);
                 }
-                i++;
+                currentIndex++;
             }
         else
             ThrowEx.NotImplementedCase(parseNegations);
+
         return result;
     }
-    internal static List<string> WrapWith(List<string> whereIsUsed2, string v)
-    {
-        return WrapWith(whereIsUsed2, v, v);
-    }
+
     /// <summary>
-    ///     direct edit
+    /// Wraps each element in the list with the specified text on both sides.
     /// </summary>
-    /// <param name="whereIsUsed2"></param>
-    /// <param name="v"></param>
-    internal static List<string> WrapWith(List<string> whereIsUsed2, string before, string after)
+    /// <param name="list">List to wrap.</param>
+    /// <param name="wrapper">Text to wrap with.</param>
+    /// <returns>The modified list.</returns>
+    internal static List<string> WrapWith(List<string> list, string wrapper)
     {
-        for (var i = 0; i < whereIsUsed2.Count; i++) whereIsUsed2[i] = before + whereIsUsed2[i] + after;
-        return whereIsUsed2;
+        return WrapWith(list, wrapper, wrapper);
     }
-    internal static bool EndsWith(string fn, List<string> allowedExtension)
+
+    /// <summary>
+    /// Wraps each element in the list with before and after text. Direct edit.
+    /// </summary>
+    /// <param name="list">List to wrap.</param>
+    /// <param name="before">Text to prepend.</param>
+    /// <param name="after">Text to append.</param>
+    /// <returns>The modified list.</returns>
+    internal static List<string> WrapWith(List<string> list, string before, string after)
     {
-        foreach (var item in allowedExtension)
-            if (fn.EndsWith(item))
+        for (var i = 0; i < list.Count; i++) list[i] = before + list[i] + after;
+        return list;
+    }
+
+    /// <summary>
+    /// Checks if the text ends with any of the specified suffixes.
+    /// </summary>
+    /// <param name="text">The text to check.</param>
+    /// <param name="suffixes">List of suffixes to check against.</param>
+    /// <returns>True if the text ends with any suffix.</returns>
+    internal static bool EndsWith(string text, List<string> suffixes)
+    {
+        foreach (var item in suffixes)
+            if (text.EndsWith(item))
                 return true;
         return false;
     }
-    internal static List<int> ReturnWhichContainsIndexes(IList<string> value, string term/*,
-        SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace*/)
+
+    /// <summary>
+    /// Returns indices of elements that contain the specified term.
+    /// </summary>
+    /// <param name="list">List to search.</param>
+    /// <param name="term">The term to search for.</param>
+    /// <returns>List of matching indices.</returns>
+    internal static List<int> ReturnWhichContainsIndexes(IList<string> list, string term)
     {
         var result = new List<int>();
-        var i = 0;
-        if (value != null)
-            foreach (var item in value)
+        var currentIndex = 0;
+        if (list != null)
+            foreach (var item in list)
             {
-                if (item.Contains(term) /*.Contains(item, term, searchStrategy)*/) result.Add(i);
-                i++;
+                if (item.Contains(term)) result.Add(currentIndex);
+                currentIndex++;
             }
         return result;
     }
-    internal static List<string> Prepend(string v, List<string> toReplace)
+
+    /// <summary>
+    /// Prepends the specified prefix to each element that does not already start with it.
+    /// </summary>
+    /// <param name="prefix">The prefix to prepend.</param>
+    /// <param name="list">List to modify.</param>
+    /// <returns>The modified list.</returns>
+    internal static List<string> Prepend(string prefix, List<string> list)
     {
-        for (var i = 0; i < toReplace.Count; i++)
-            if (!toReplace[i].StartsWith(v))
-                toReplace[i] = v + toReplace[i];
-        return toReplace;
+        for (var i = 0; i < list.Count; i++)
+            if (!list[i].StartsWith(prefix))
+                list[i] = prefix + list[i];
+        return list;
     }
-    internal static List<string> RemoveStringsEmptyTrimBefore(List<string> mySites)
+
+    /// <summary>
+    /// Removes empty or whitespace-only strings from the list after trimming.
+    /// </summary>
+    /// <param name="list">List to filter.</param>
+    /// <returns>The filtered list.</returns>
+    internal static List<string> RemoveStringsEmptyTrimBefore(List<string> list)
     {
-        for (var i = mySites.Count - 1; i >= 0; i--)
-            if (mySites[i].Trim() == string.Empty)
-                mySites.RemoveAt(i);
-        return mySites;
+        for (var i = list.Count - 1; i >= 0; i--)
+            if (list[i].Trim() == string.Empty)
+                list.RemoveAt(i);
+        return list;
     }
 }

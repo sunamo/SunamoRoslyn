@@ -1,10 +1,17 @@
 namespace SunamoRoslyn;
 
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+/// <summary>
+/// Provides helper methods for working with Roslyn syntax trees, including variable analysis,
+/// project loading, code wrapping, and syntax node operations.
+/// </summary>
 public partial class RoslynHelper
 {
-    static Type type = typeof(RoslynHelper);
+    /// <summary>
+    /// Returns all types in the specified assembly whose names contain the given substring.
+    /// </summary>
+    /// <param name="assembly">The assembly to search for types.</param>
+    /// <param name="contains">The substring to match against type names.</param>
+    /// <returns>A list of types whose names contain the specified substring.</returns>
     public static List<Type> GetTypesInAssembly(Assembly assembly, string contains)
     {
         var types = assembly.GetTypes();
@@ -12,95 +19,42 @@ public partial class RoslynHelper
     }
 
     /// <summary>
-    /// A1 can be SyntaxNode or string
+    /// Analyzes global variables in the given code and adds XML documentation comments
+    /// listing which methods use each variable.
+    /// The argument can be a <see cref="SyntaxNode"/> or a string of C# code.
     /// </summary>
-    /// <param name = "o"></param>
-    /// <returns></returns>
-    public static string AddWhereIsUsedVariablesInMethods(object o)
+    /// <param name="codeObject">A SyntaxNode or string representing the C# code to analyze.</param>
+    /// <returns>The modified source code with usage documentation added to global variables.</returns>
+    public static string AddWhereIsUsedVariablesInMethods(object codeObject)
     {
-        SyntaxNode root = RoslynParser.SyntaxNodeFromObjectOrString(o);
+        SyntaxNode root = RoslynParser.SyntaxNodeFromObjectOrString(codeObject);
         var methods = ChildNodes.MethodsDescendant(root);
         var fields = ChildNodes.FieldsDescendant(root);
-        string before = null;
-        string after = null;
+        string before;
+        string after;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.Append(root.ToFullString());
-        Tuple<List<string>, List<string>> ls = null;
-        Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
-        string methodName = null;
+        Tuple<List<string>, List<string>> parsedVariables;
+        Dictionary<string, List<string>> variableUsageMap = new Dictionary<string, List<string>>();
+        string methodName;
         foreach (MethodDeclarationSyntax oldMethodNode in methods)
         {
-            ls = RoslynParser.ParseVariables(oldMethodNode);
+            parsedVariables = RoslynParser.ParseVariables(oldMethodNode);
             methodName = oldMethodNode.Identifier.Text;
-            foreach (var item in ls.Item2)
+            foreach (var item in parsedVariables.Item2)
             {
-                DictionaryHelper.AddOrCreate<string, string, object>(dict, item, methodName);
+                DictionaryHelper.AddOrCreate<string, string, object>(variableUsageMap, item, methodName);
             }
-#region MyRegion
-        //        var testDocumentation = SyntaxFactory.DocumentationCommentTrivia(
-        //        SyntaxKind.SingleLineDocumentationCommentTrivia,
-        //        SyntaxFactory.List<XmlNodeSyntax>(
-        //            new XmlNodeSyntax[]{
-        //    SyntaxFactory.XmlText()
-        //    .WithTextTokens(
-        //        SyntaxFactory.TokenList(
-        //            SyntaxFactory.XmlTextLiteral(
-        //                SyntaxFactory.TriviaList(
-        //                    SyntaxFactory.DocumentationCommentExterior("///")),
-        //                " ",
-        //                " ",
-        //                SyntaxFactory.TriviaList()))),
-        //    SyntaxFactory.XmlElement(
-        //        SyntaxFactory.XmlElementStartTag(
-        //            SyntaxFactory.XmlName(
-        //                SyntaxFactory.Identifier("summary"))),
-        //        SyntaxFactory.XmlElementEndTag(
-        //            SyntaxFactory.XmlName(
-        //                SyntaxFactory.Identifier("summary"))))
-        //    .WithContent(
-        //        SyntaxFactory.SingletonList<XmlNodeSyntax>(
-        //            SyntaxFactory.XmlText()
-        //            .WithTextTokens(
-        //                SyntaxFactory.TokenList(
-        //                    SyntaxFactory.XmlTextLiteral(
-        //                        SyntaxFactory.TriviaList(),
-        //                        "test",
-        //                        "test",
-        //                        SyntaxFactory.TriviaList()))))),
-        //    SyntaxFactory.XmlText()
-        //    .WithTextTokens(
-        //        SyntaxFactory.TokenList(
-        //            SyntaxFactory.XmlTextNewLine(
-        //                SyntaxFactory.TriviaList(),
-        //                "\n",
-        //                "\n",
-        //                SyntaxFactory.TriviaList())))}));
-        //        var newMethodNode = oldMethodNode.WithModifiers(
-        //SyntaxFactory.TokenList(
-        //    new[]{
-        //    SyntaxFactory.Token(
-        //        SyntaxFactory.TriviaList(
-        //            SyntaxFactory.Trivia(testDocumentation)), // xmldoc
-        //            SyntaxKind.PublicKeyword, // original 1st token
-        //            SyntaxFactory.TriviaList())
-        //        //SyntaxFactory.Token(SyntaxKind.StaticKeyword)
-        //    }));
-        //var leadingTrivia = oldMethodNode.GetLeadingTrivia();
-        //for (i = leadingTrivia.Count - 1; i >= 0; i--)
-        //{
-        //    leadingTrivia.RemoveAt(i);
-        //}
-#endregion
         }
 
-        string variableName = null;
-        List<string> usedIn = null;
+        string variableName;
+        List<string> usedIn;
         foreach (var oldMethodNode in fields)
         {
             variableName = oldMethodNode.Declaration.Variables.First().Identifier.Text;
-            if (dict.ContainsKey(variableName))
+            if (variableUsageMap.ContainsKey(variableName))
             {
-                usedIn = dict[variableName];
+                usedIn = variableUsageMap[variableName];
             }
             else
             {
@@ -113,31 +67,32 @@ public partial class RoslynHelper
 " + string.Join(Environment.NewLine, usedIn) + @"
 /// </summary>
 ";
-            var parameter = oldMethodNode.Parent;
+            var parentNode = oldMethodNode.Parent;
             if (IsGlobalVariable(oldMethodNode))
             {
                 var lt = SyntaxFactory.Comment(doc);
                 var oldMethodNode2 = oldMethodNode.WithLeadingTrivia(SyntaxTriviaList.Create(lt));
                 before = oldMethodNode.ToFullString();
-                //root = root.ReplaceNode(oldMethodNode, oldMethodNode2);
                 after = oldMethodNode2.ToFullString();
                 stringBuilder = stringBuilder.Replace(before, after);
             }
         }
 
-        var result = stringBuilder.ToString(); // root.ToFullString();
+        var result = stringBuilder.ToString();
         return result;
     }
 
     /// <summary>
+    /// Determines whether the given syntax node represents a global (class-level) variable
+    /// rather than a local variable inside a method body.
     /// VariableDeclarationSyntax->CSharpSyntaxNode
     /// FieldDeclarationSyntax->BaseFieldDeclarationSyntax->MemberDeclarationSyntax->CSharpSyntaxNode
     /// </summary>
-    /// <param name = "oldMethodNode"></param>
-    /// <returns></returns>
-    private static bool IsGlobalVariable(CSharpSyntaxNode oldMethodNode)
+    /// <param name="syntaxNode">The syntax node to check.</param>
+    /// <returns>True if the node is a class-level field; false if it is inside a method block.</returns>
+    private static bool IsGlobalVariable(CSharpSyntaxNode syntaxNode)
     {
-        var parent = oldMethodNode.Parent;
+        var parent = syntaxNode.Parent;
         while (parent != null)
         {
             if (parent is BlockSyntax)
@@ -156,56 +111,53 @@ public partial class RoslynHelper
     }
 
     /// <summary>
-    /// Return also referenced projects (sunamo return also duo and Resources, although is not in sunamo)
-    /// If I want what is only in sln, use AP.GetProjectsInSlnFile
+    /// Returns all projects in the specified solution, including referenced projects.
+    /// If you want only projects listed directly in the .sln file, use AP.GetProjectsInSlnFile instead.
     /// </summary>
-    /// <param name = "slnPath"></param>
-    /// <param name = "SkipUnrecognizedProjects"></param>
-    public static 
+    /// <param name="slnPath">The file path to the solution (.sln) file.</param>
+    /// <param name="isSkippingUnrecognizedProjects">Whether to skip projects that cannot be recognized by MSBuild.</param>
+    /// <returns>A list of all projects in the solution.</returns>
+    public static
 #if ASYNC
         async Task<List<Project>>
 #else
-    List<Project> 
+    List<Project>
 #endif
-    GetAllProjectsInSolution(string slnPath, bool SkipUnrecognizedProjects = false)
+    GetAllProjectsInSolution(string slnPath, bool isSkippingUnrecognizedProjects = false)
     {
-        var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
+        var formattingOptions = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
         var msWorkspace = MSBuildWorkspace.Create();
-        // Will include also referenced file
-        msWorkspace.SkipUnrecognizedProjects = SkipUnrecognizedProjects;
+        msWorkspace.SkipUnrecognizedProjects = isSkippingUnrecognizedProjects;
         msWorkspace.LoadMetadataForReferencedProjects = false;
-        //msWorkspace.Options.WithChangedOption(OptionKey.)
-        //msWorkspace.Properties.
-        //msWorkspace.Services.
-        var solution = 
+        var solution =
 #if ASYNC
             await msWorkspace.OpenSolutionAsync(slnPath);
 #else
-        // not have non async
         msWorkspace.OpenSolutionAsync(slnPath).Result;
 #endif
-        // Solution or project cant be dumped with Yaml
-        //////DebugLogger.Instance.DumpObject("solution", solution, DumpProvider.Yaml);
-        //foreach (var project in solution.Projects)
-        //{
-        //    ////DebugLogger.Instance.DumpObject("", project, DumpProvider.Yaml);
-        //}
         return solution.Projects.ToList();
     }
 
+    /// <summary>
+    /// Wraps the given code snippet inside a dummy class declaration.
+    /// </summary>
+    /// <param name="code">The C# code to wrap.</param>
+    /// <returns>The code wrapped in a class declaration block.</returns>
     public static string WrapIntoClass(string code)
     {
-        return RoslynNotTranslateAble.classDummy + " {" + code + "}";
+        return RoslynNotTranslateAble.ClassDummy + " {" + code + "}";
     }
 
     /// <summary>
-    /// A2 - first must be class or namespace
+    /// Parses the given C# code into a syntax tree.
+    /// The code must start with a class or namespace declaration unless wrapped.
     /// </summary>
-    /// <param name = "code"></param>
-    /// <param name = "wrapIntoClass"></param>
-    public static SyntaxTree GetSyntaxTree(string code, bool wrapIntoClass = false)
+    /// <param name="code">The C# code to parse.</param>
+    /// <param name="isWrappingIntoClass">Whether to wrap the code in a dummy class before parsing.</param>
+    /// <returns>The parsed syntax tree.</returns>
+    public static SyntaxTree GetSyntaxTree(string code, bool isWrappingIntoClass = false)
     {
-        if (wrapIntoClass)
+        if (isWrappingIntoClass)
         {
             code = WrapIntoClass(code);
         }
@@ -213,15 +165,27 @@ public partial class RoslynHelper
         return CSharpSyntaxTree.ParseText(code);
     }
 
-    public static ClassDeclarationSyntax GetClass(SyntaxNode root)
+    /// <summary>
+    /// Gets the first class declaration from the given root syntax node.
+    /// </summary>
+    /// <param name="root">The root syntax node to search.</param>
+    /// <returns>The class declaration syntax node, or null if multiple classes exist.</returns>
+    public static ClassDeclarationSyntax? GetClass(SyntaxNode root)
     {
-        SyntaxNode sn;
-        return GetClass(root, out sn);
+        SyntaxNode? syntaxNode;
+        return GetClass(root, out syntaxNode);
     }
 
-    public static SyntaxNode FindNode(SyntaxNode parent, SyntaxNode child, bool onlyDirectSub)
+    /// <summary>
+    /// Finds a syntax node within a parent that matches the given child node, searching only direct children.
+    /// </summary>
+    /// <param name="parent">The parent syntax node to search within.</param>
+    /// <param name="child">The child syntax node to find.</param>
+    /// <param name="isOnlyDirectSub">Whether to search only direct child nodes.</param>
+    /// <returns>The found syntax node, or null if not found.</returns>
+    public static SyntaxNode? FindNode(SyntaxNode parent, SyntaxNode child, bool isOnlyDirectSub)
     {
-        int dx;
-        return FindNode(parent, child, onlyDirectSub, out dx);
+        int foundIndex;
+        return FindNode(parent, child, isOnlyDirectSub, out foundIndex);
     }
 }

@@ -1,38 +1,36 @@
 namespace SunamoRoslyn;
 
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
+/// <summary>
+/// Contains the core file processing logic for SourceCodeIndexerRoslyn.
+/// </summary>
 public partial class SourceCodeIndexerRoslyn
 {
     /// <summary>
-    /// SourceCodeIndexerRoslyn.ProcessFile
-    ///
-    /// True if file wasnt indexed yet
-    /// False is file was already indexed
+    /// Processes a file and determines if it should be indexed.
+    /// Returns true if file was not indexed yet, false if already indexed.
     /// </summary>
-    /// <param name = "pathFile"></param>
-    /// <param name = "namespaceCodeElementsType"></param>
-    /// <param name = "classCodeElementsType"></param>
-    /// <param name = "tree"></param>
-    /// <param name = "root"></param>
-    /// <param name = "removeRegions"></param>
-    private 
+    /// <param name="pathFile">Full path to the source file.</param>
+    /// <param name="namespaceCodeElementsType">Types of namespace-level code elements to extract.</param>
+    /// <param name="classCodeElementsType">Types of class-level code elements to extract.</param>
+    /// <param name="isRemovingRegions">Whether to remove region directives during processing.</param>
+    /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
+    /// <returns>Result indicating whether the file was indexed and providing the syntax tree.</returns>
+    private
 #if ASYNC
         async Task<ProcessFileBoolResult> ProcessFileBool
 #else
     ProcessFileBoolResult ProcessFileBool
 #endif
-    (string pathFile, NamespaceCodeElementsType namespaceCodeElementsType, ClassCodeElementsType classCodeElementsType, bool removeRegions, bool fromFileSystemWatcher)
+    (string pathFile, NamespaceCodeElementsType namespaceCodeElementsType, ClassCodeElementsType classCodeElementsType, bool isRemovingRegions, bool isFromFileSystemWatcher)
     {
-        SyntaxTree tree = null;
-        CompilationUnitSyntax root = null;
-        // A2 must be false otherwise read file twice
+        SyntaxTree? tree = null;
+        CompilationUnitSyntax? root = null;
         if (!File.Exists(pathFile))
         {
             return new ProcessFileBoolResult();
         }
 
-        if (!isCallingIsToIndexed)
+        if (!IsCallingIsToIndexed)
         {
             if (!IsToIndexed(pathFile))
             {
@@ -40,18 +38,17 @@ public partial class SourceCodeIndexerRoslyn
             }
         }
 
-        if (!linesWithContent.ContainsKey(pathFile) || isLoadingFromFile)
+        if (!LinesWithContent.ContainsKey(pathFile) || IsLoadingFromFile)
         {
             IList<NamespaceCodeElementsType> namespaceCodeElementsAll = EnumHelper.GetValues<NamespaceCodeElementsType>();
-            IList<ClassCodeElementsType> classodeElementsAll = EnumHelper.GetValues<ClassCodeElementsType>();
+            IList<ClassCodeElementsType> classCodeElementsAll = EnumHelper.GetValues<ClassCodeElementsType>();
             List<string> namespaceCodeElementsKeywords = new List<string>();
             List<string> classCodeElementsKeywords = new List<string>();
             string fileContent = string.Empty;
-            var linesWithContent = SourceCodeIndexerRoslyn.Instance.linesWithContent;
-            //var linesWithNonTextContent = SourceCodeIndexerRoslyn.Instance.linesWithNonTextContent;
-            var linesWithIndexes = SourceCodeIndexerRoslyn.Instance.linesWithIndexes;
-            List<string> lines = null;
-            if (fromFileSystemWatcher)
+            var linesWithContent = SourceCodeIndexerRoslyn.Instance.LinesWithContent;
+            var linesWithIndexes = SourceCodeIndexerRoslyn.Instance.LinesWithIndexes;
+            List<string>? lines = null;
+            if (isFromFileSystemWatcher)
             {
                 lines = (
 #if ASYNC
@@ -66,9 +63,6 @@ public partial class SourceCodeIndexerRoslyn
                     if (linesWithContent.ContainsKey(pathFile))
                     {
                         lines = linesWithContent[pathFile];
-                        if (pathFile.EndsWith("\\.cs"))
-                        {
-                        }
 
                         var between = GetLinesBetween(linesWithIndexes[pathFile], true);
                         for (int i = 0; i < between.Count; i++)
@@ -78,7 +72,7 @@ public partial class SourceCodeIndexerRoslyn
                     }
                     else
                     {
-                        (
+                        lines = (
 #if ASYNC
                         await
 #endif
@@ -87,59 +81,37 @@ public partial class SourceCodeIndexerRoslyn
                 }
             }
 
-            fileContent = string.Join(Environment.NewLine, lines);
-            //if (pathFile.EndsWith(@"\RunAutomatically2.cs"))
-            //{
-            //    var gf = CompareFilesPaths.GetFile(CompareExt.cs, 1);
-            //    await File.WriteAllTextAsync(gf, fileContent);
-            //}
-            List<string> linesAll = lines; // SHGetLines.GetLines(fileContent);
-            // nechápu proč to obaluji mezerou ale nevadí
+            fileContent = string.Join(Environment.NewLine, lines!);
+            List<string> linesAll = lines!;
             linesAll = CA.WrapWith(linesAll, " ").ToList();
-            List<int> FullFileIndex = new List<int>();
+            List<int> fullFileIndex = new List<int>();
             for (int i = linesAll.Count - 1; i >= 0; i--)
             {
-                if (linesAll[i].Contains("dates.Clear()"))
-                {
-                }
-
-                string item = linesAll[i];
-                // nemůžu kontrolovat jen pokud nemá písmeno - do FasterStartup musím vložit i zárovky jinak bez nich nejsem schopen poskládat opět vstupní soubor
-                //) //
-                /*
-Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
-                 */
-                if (item.Trim() == String.Empty) //!SH.HasLetter(item))
+                string lineText = linesAll[i];
+                if (lineText.Trim() == String.Empty)
                 {
                     linesAll.RemoveAt(i);
                 }
                 else
                 {
-                    //var b1 = item.Trim() != String.Empty;
-                    //if(b1)
-                    //{
-                    //}
-                    // Přidám pokud má nějaké písmeno
-                    FullFileIndex.Add(i);
+                    fullFileIndex.Add(i);
                 }
             }
 
-            FullFileIndex.Reverse();
-            ThrowEx.DifferentCountInLists("lines", linesAll.Count, "FullFileIndex", FullFileIndex.Count);
-            // Probably was add on background again due to watch for changes
-            if (this.linesWithContent.ContainsKey(pathFile))
+            fullFileIndex.Reverse();
+            ThrowEx.DifferentCountInLists("lines", linesAll.Count, "fullFileIndex", fullFileIndex.Count);
+            if (this.LinesWithContent.ContainsKey(pathFile))
             {
-                this.linesWithContent.Remove(pathFile);
+                this.LinesWithContent.Remove(pathFile);
             }
 
-            this.linesWithContent.Add(pathFile, linesAll);
+            this.LinesWithContent.Add(pathFile, linesAll);
             if (linesWithIndexes.ContainsKey(pathFile))
             {
                 linesWithIndexes.Remove(pathFile);
             }
 
-            // Přidám řádky jež mají nějaké písmeno
-            linesWithIndexes.AddIfNotExists(pathFile, FullFileIndex);
+            linesWithIndexes.AddIfNotExists(pathFile, fullFileIndex);
             foreach (var item in namespaceCodeElementsAll)
             {
                 if (namespaceCodeElementsType.HasFlag(item))
@@ -151,20 +123,20 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             foreach (var item in namespaceCodeElementsKeywords)
             {
                 string elementTypeString = item.Trim();
-                NamespaceCodeElementsType namespaceCodeElementType = (NamespaceCodeElementsType)Enum.Parse(namespaceCodeElementsType2, item, true);
+                NamespaceCodeElementsType namespaceCodeElementType = (NamespaceCodeElementsType)Enum.Parse(NamespaceCodeElementsTypeType, item, true);
                 List<int> indexes;
                 List<string> linesCodeElements = CA.ReturnWhichContains(linesAll, item, out indexes);
                 for (int i = 0; i < linesCodeElements.Count; i++)
                 {
                     var lineCodeElements = linesCodeElements[i];
-                    string namespaceElementName = SH.WordAfter(lineCodeElements, e2sNamespaceCodeElements[namespaceCodeElementType]);
+                    string namespaceElementName = SH.WordAfter(lineCodeElements, E2sNamespaceCodeElements[namespaceCodeElementType]);
                     if (namespaceElementName.Length > 1)
                     {
                         if (char.IsUpper(namespaceElementName[0]))
                         {
                             NamespaceCodeElement element = new NamespaceCodeElement()
                             {
-                                Index = FullFileIndex[indexes[i]],
+                                Index = fullFileIndex[indexes[i]],
                                 Name = namespaceElementName,
                                 Type = namespaceCodeElementType
                             };
@@ -182,9 +154,9 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
 
             tree = CSharpSyntaxTree.ParseText(fileContent);
             root = (CompilationUnitSyntax)tree.GetRoot();
-            var count = classCodeElements;
-            var ns = root.DescendantNodes();
-            IList<NamespaceDeclarationSyntax> namespaces = ns.OfType<NamespaceDeclarationSyntax>().ToList();
+            var classCodeElementsDict = classCodeElements;
+            var descendantNodes = root.DescendantNodes();
+            IList<NamespaceDeclarationSyntax> namespaces = descendantNodes.OfType<NamespaceDeclarationSyntax>().ToList();
             foreach (var nameSpace in namespaces)
             {
                 if (classCodeElementsTypeToFind.HasFlag(ClassCodeElementsType.Method))
@@ -197,36 +169,42 @@ Na jednu stranu potřebuji uložit výstupní soubor i se závorkami
             AddMethodsFrom(root, pathFile);
             return new ProcessFileBoolResult
             {
-                indexed = true,
-                tree = tree,
-                root = root
+                Indexed = true,
+                Tree = tree,
+                Root = root
             };
         }
 
         return new ProcessFileBoolResult();
     }
 
-    private List<int> GetLinesBetween(List<int> i2, bool fromZeroIndex)
+    /// <summary>
+    /// Gets the line indices between the given sorted indices, used for reconstructing empty lines.
+    /// </summary>
+    /// <param name="indices">List of line indices to find gaps between.</param>
+    /// <param name="isFromZeroIndex">Whether to include index 0 as the starting point.</param>
+    /// <returns>List of line indices that fall between the provided indices.</returns>
+    private List<int> GetLinesBetween(List<int> indices, bool isFromZeroIndex)
     {
         List<int> list = new List<int>();
-        i2.Sort();
-        if (fromZeroIndex)
+        indices.Sort();
+        if (isFromZeroIndex)
         {
-            if (i2[0] != 0)
+            if (indices[0] != 0)
             {
-                i2.Insert(0, 0);
+                indices.Insert(0, 0);
             }
         }
 
-        for (int i = 0; i < i2.Count - 1; i++)
+        for (int i = 0; i < indices.Count - 1; i++)
         {
-            var a1 = i2[i] + 1;
-            var a2 = i2[i + 1];
-            if (a1 != a2)
+            var currentIndex = indices[i] + 1;
+            var nextIndex = indices[i + 1];
+            if (currentIndex != nextIndex)
             {
-                for (int y = a1; y < a2; y++)
+                for (int j = currentIndex; j < nextIndex; j++)
                 {
-                    list.Add(y);
+                    list.Add(j);
                 }
             }
         }

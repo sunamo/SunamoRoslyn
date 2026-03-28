@@ -1,288 +1,166 @@
 namespace SunamoRoslyn;
 
-// EN: Variable names have been checked and replaced with self-descriptive names
-// CZ: Názvy proměnných byly zkontrolovány a nahrazeny samopopisnými názvy
 public partial class RoslynHelper
 {
     /// <summary>
-    /// Because of searching is very unreliable
-    /// Into A1 I have to insert class when I search in classes. If I insert root/ns/etc, method will be return to me whole class, because its contain method
+    /// Finds a syntax node within a parent that matches the given child node.
+    /// When searching in classes, insert the class as the parent. If the root/namespace is inserted,
+    /// the method will return the whole class because it contains the method.
     /// </summary>
-    /// <param name = "parent"></param>
-    /// <param name = "child"></param>
-    public static SyntaxNode FindNode(SyntaxNode parent, SyntaxNode child, bool onlyDirectSub, out int dx)
+    /// <param name="parent">The parent syntax node to search within.</param>
+    /// <param name="child">The child syntax node to find.</param>
+    /// <param name="isOnlyDirectSub">Whether to search only direct child nodes or use span-based matching.</param>
+    /// <param name="foundIndex">The index of the found node within its parent's members.</param>
+    /// <returns>The found syntax node, or null if not found.</returns>
+    public static SyntaxNode? FindNode(SyntaxNode parent, SyntaxNode child, bool isOnlyDirectSub, out int foundIndex)
     {
-        dx = -1;
-#region MyRegion
-        if (true)
+        foundIndex = -1;
+        if (isOnlyDirectSub)
         {
-            if (onlyDirectSub)
+            foreach (var item in parent.ChildNodes())
             {
-                // toto mi vratí např. jen public, nikoliv celou stránku
-                //var ss = cl.ChildThatContainsPosition(cl.GetLocation().SourceSpan.Start);
-                foreach (var item in parent.ChildNodes())
+                string firstLocation = item.GetLocation().ToString();
+                string secondLocation = child.GetLocation().ToString();
+                if (firstLocation == secondLocation)
                 {
-                    // Má tu lokaci trochu dál protože obsahuje zároveň celou třídu
-                    string l1 = item.GetLocation().ToString();
-                    string l2 = child.GetLocation().ToString();
-                    var text = child.Span;
-                    var s2 = child.FullSpan;
-                    var s3 = child.GetReference();
-                    if (l1 == l2)
-                    {
-                        return item;
-                    }
-                }
-            }
-            else
-            {
-                return parent.FindNode(child.FullSpan, false, true).WithoutLeadingTrivia().WithoutTrailingTrivia();
-            }
-
-            return null;
-        }
-
-#endregion
-        var childType = child.GetType().FullName;
-        var parentType = parent.GetType().FullName;
-        SyntaxNode result = null;
-        if (child is MethodDeclarationSyntax && parent is ClassDeclarationSyntax)
-        {
-            ClassDeclarationSyntax cl = (ClassDeclarationSyntax)parent;
-            MethodDeclarationSyntax method = (MethodDeclarationSyntax)child;
-            foreach (var item in cl.Members)
-            {
-                dx++;
-                if (item is MethodDeclarationSyntax)
-                {
-                    var method2 = (MethodDeclarationSyntax)item;
-                    bool same = true;
-                    if (method.Identifier.Text != method2.Identifier.Text)
-                    {
-                        same = false;
-                    }
-
-                    if (same)
-                    {
-                        if (!RoslynComparer.Modifiers(method.Modifiers, method2.Modifiers))
-                        {
-                            same = false;
-                        }
-                    }
-
-                    if (same)
-                    {
-                        string p1 = GetParameters(method.ParameterList);
-                        string p2 = GetParameters(method2.ParameterList);
-                        if (p1 != p2)
-                        {
-                            same = false;
-                        }
-                    }
-
-                    if (same)
-                    {
-                        result = method2;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (child is BaseTypeDeclarationSyntax && parent is NamespaceDeclarationSyntax)
-        {
-            var ns = (NamespaceDeclarationSyntax)parent;
-            var method = (BaseTypeDeclarationSyntax)child;
-            foreach (BaseTypeDeclarationSyntax item in ns.Members)
-            {
-                dx++;
-                if (method.Identifier.Value == item.Identifier.Value)
-                {
-                    result = method;
-                    break;
-                }
-            }
-        }
-        else if (child is NamespaceDeclarationSyntax && parent is CompilationUnitSyntax)
-        {
-            var ns = (CompilationUnitSyntax)parent;
-            var method = (NamespaceDeclarationSyntax)child;
-            foreach (NamespaceDeclarationSyntax item in ns.Members)
-            {
-                dx++;
-                string fs1 = method.Name.ToFullString();
-                string fs2 = item.Name.ToFullString();
-                if (fs1 == fs2)
-                {
-                    result = method;
-                    break;
-                }
-            }
-        }
-        else if (child is ClassDeclarationSyntax && parent is CompilationUnitSyntax)
-        {
-            var ns = (CompilationUnitSyntax)parent;
-            var method = (ClassDeclarationSyntax)child;
-            foreach (ClassDeclarationSyntax item in ns.Members)
-            {
-                dx++;
-                string fs1 = method.Identifier.ToFullString();
-                string fs2 = item.Identifier.ToFullString();
-                if (fs1 == fs2)
-                {
-                    result = method;
-                    break;
+                    return item;
                 }
             }
         }
         else
         {
-            ThrowEx.NotImplementedCase(SHJoinPairs.JoinPairs("Parent", parent.ToFullString(), "Child", child.ToFullString()));
+            return parent.FindNode(child.FullSpan, false, true).WithoutLeadingTrivia().WithoutTrailingTrivia();
         }
 
-        return result;
-    //return nsShared.FindNode(cl.FullSpan, false, true).WithoutLeadingTrivia().WithoutTrailingTrivia();
+        return null;
     }
 
     /// <summary>
-    /// IUN
+    /// Removes a syntax node from a class declaration. Currently not implemented.
     /// </summary>
-    /// <param name = "cl2"></param>
-    /// <param name = "method"></param>
-    /// <param name = "keepDirectives"></param>
-    
-#pragma warning disable
-    public static ClassDeclarationSyntax RemoveNode(ClassDeclarationSyntax cl2, SyntaxNode method, SyntaxRemoveOptions keepDirectives)
-#pragma warning restore
+    /// <param name="classDeclaration">The class declaration to remove the node from.</param>
+    /// <param name="nodeToRemove">The syntax node to remove.</param>
+    /// <param name="keepDirectives">Options controlling how directives and trivia are handled during removal.</param>
+    /// <returns>The modified class declaration.</returns>
+    public static ClassDeclarationSyntax? RemoveNode(ClassDeclarationSyntax classDeclaration, SyntaxNode nodeToRemove, SyntaxRemoveOptions keepDirectives)
     {
         ThrowEx.NotImplementedMethod();
-#region MyRegion
-        //var children = method.ChildNodesAndTokens().ToList();
-        //for (int i = children.Count() - 1; i >= 0; i--)
-        //{
-        //    var temp = children[i].GetType().FullName;
-        //    if (!(children[i] is MethodDeclarationSyntax))
-        //    {
-        //        int i2 = 0;
-        //    }
-        //    else
-        //    {
-        //        children.RemoveAt(i);
-        //    }
-        //}
-        //return null;
-        //FindNode()
-        //cl2.Members.
         return null;
-#endregion
     }
 
     /// <summary>
-    /// Return null if
-    /// Into A2 insert first member of A1 - Namespace/Class
-    /// A1 should be rather Tree/CompilationUnitSyntax than Node because of Members - Node.ChildNodes.First is usings
+    /// Gets the first class declaration from a syntax tree root, also outputting the namespace node.
+    /// Returns null if more than one class declaration exists at the top level.
+    /// The root should be a CompilationUnitSyntax rather than a plain SyntaxNode
+    /// because Members on a SyntaxNode via ChildNodes includes usings.
     /// </summary>
-    /// <param name = "root"></param>
-    /// <param name = "ns"></param>
-    public static ClassDeclarationSyntax GetClass(SyntaxNode root2, out SyntaxNode ns)
+    /// <param name="rootNode">The root syntax node (typically CompilationUnitSyntax).</param>
+    /// <param name="namespaceNode">Outputs the namespace syntax node, or null if the class is at root level.</param>
+    /// <returns>The class declaration syntax node, or null if multiple classes exist.</returns>
+    public static ClassDeclarationSyntax? GetClass(SyntaxNode rootNode, out SyntaxNode? namespaceNode)
     {
-        ns = null;
-        ClassDeclarationSyntax helloWorldDeclaration = null;
-        //(CompilationUnitSyntax)
-        var root = root2;
-        //var root = (CompilationUnitSyntax)tree.GetRoot();
-        // Returns usings and ns
+        namespaceNode = null;
+        ClassDeclarationSyntax? classDeclaration = null;
+        var root = rootNode;
         var childNodes = root.ChildNodes();
         if (childNodes.OfType<ClassDeclarationSyntax>().Count() > 1)
         {
             return null;
         }
 
-        SyntaxNode firstMember = null;
-        firstMember = ChildNodes.NamespaceOrClass(root);
-        //firstMember = (SyntaxNode)root.ChildNodes().OfType<NamespaceDeclarationSyntax>().FirstOrNull();
-        //if (firstMember == null)
-        //{
-        //    firstMember = root.ChildNodes().OfType<ClassDeclarationSyntax>().First();
-        //}
+        SyntaxNode? firstMember = ChildNodes.NamespaceOrClass(root);
         if (firstMember is NamespaceDeclarationSyntax)
         {
-            ns = (NamespaceDeclarationSyntax)firstMember;
+            namespaceNode = (NamespaceDeclarationSyntax)firstMember;
             int i = 0;
-            var fm = ((NamespaceDeclarationSyntax)ns).Members[i++];
-            while (fm.GetType() != typeof(ClassDeclarationSyntax))
+            var currentMember = ((NamespaceDeclarationSyntax)namespaceNode).Members[i++];
+            while (currentMember.GetType() != typeof(ClassDeclarationSyntax))
             {
-                fm = ((NamespaceDeclarationSyntax)ns).Members[i++];
+                currentMember = ((NamespaceDeclarationSyntax)namespaceNode).Members[i++];
             }
 
-            helloWorldDeclaration = (ClassDeclarationSyntax)fm;
+            classDeclaration = (ClassDeclarationSyntax)currentMember;
         }
         else if (firstMember is ClassDeclarationSyntax)
         {
-            helloWorldDeclaration = (ClassDeclarationSyntax)firstMember;
-        // keep ns as null
-        //ns = nu;
+            classDeclaration = (ClassDeclarationSyntax)firstMember;
         }
         else
         {
-            ThrowEx.NotImplementedCase(firstMember);
+            ThrowEx.NotImplementedCase(firstMember!);
         }
 
-        return helloWorldDeclaration;
-    }
-
-    public static List<string> HeadersOfMethod(IList<SyntaxNode> enumerable, bool alsoModifier = true)
-    {
-        List<string> clMethodsSharedNew = new List<string>();
-        foreach (MethodDeclarationSyntax m in enumerable)
-        {
-            string h = GetHeaderOfMethod(m, alsoModifier);
-            clMethodsSharedNew.Add(h);
-        }
-
-        return clMethodsSharedNew;
-    }
-
-    public static SyntaxNode WithoutAllTrivia(SyntaxNode sn)
-    {
-        return sn.WithoutLeadingTrivia().WithoutTrailingTrivia();
-    }
-
-    public static string GetHeaderOfMethod(MethodDeclarationSyntax m, bool alsoModifier = true)
-    {
-        m = m.WithoutTrivia();
-        string addAfter = " ";
-        StringBuilder stringBuilder = new();
-        if (alsoModifier)
-        {
-            stringBuilder.AddItem(addAfter, RoslynParser.GetAccessModifiers(m.Modifiers));
-        }
-
-        bool isStatic = IsStatic(m.Modifiers);
-        if (isStatic)
-        {
-            stringBuilder.AddItem(addAfter, "static");
-        }
-
-        stringBuilder.AddItem(addAfter, m.ReturnType.WithoutTrivia().ToFullString());
-        stringBuilder.AddItem(addAfter, m.Identifier.WithoutTrivia().Text);
-        // in brackets, newline
-        //string parameters = m.ParameterList.ToFullString();
-        // only text
-        string p2 = GetParameters(m.ParameterList);
-        stringBuilder.AddItem(addAfter, "(" + p2 + ")");
-        string text = stringBuilder.ToString();
-        return text;
+        return classDeclaration;
     }
 
     /// <summary>
-    /// CompilationUnitSyntax is also SyntaxNode
-    /// After line must be A1 = A2 or some RoslynHelper.Get* methods
+    /// Returns the method header strings for a list of method declaration syntax nodes.
     /// </summary>
-    /// <param name = "cl"></param>
-    /// <param name = "cl2"></param>
-    /// <param name = "root"></param>
-    public static void ReplaceNode(SyntaxNode cl, SyntaxNode cl2, out SyntaxNode root)
+    /// <param name="syntaxNodes">The list of syntax nodes (must be MethodDeclarationSyntax).</param>
+    /// <param name="alsoModifier">Whether to include access modifiers in the header.</param>
+    /// <returns>A list of method header strings.</returns>
+    public static List<string> HeadersOfMethod(IList<SyntaxNode> syntaxNodes, bool alsoModifier = true)
     {
-        ReplaceNode<SyntaxNode>(cl, cl2, out root);
+        List<string> methodHeaders = new List<string>();
+        foreach (MethodDeclarationSyntax methodDeclaration in syntaxNodes)
+        {
+            string header = GetHeaderOfMethod(methodDeclaration, alsoModifier);
+            methodHeaders.Add(header);
+        }
+
+        return methodHeaders;
+    }
+
+    /// <summary>
+    /// Removes all leading and trailing trivia from a syntax node.
+    /// </summary>
+    /// <param name="syntaxNode">The syntax node to strip trivia from.</param>
+    /// <returns>The syntax node without any leading or trailing trivia.</returns>
+    public static SyntaxNode WithoutAllTrivia(SyntaxNode syntaxNode)
+    {
+        return syntaxNode.WithoutLeadingTrivia().WithoutTrailingTrivia();
+    }
+
+    /// <summary>
+    /// Builds a method header string from a method declaration syntax node,
+    /// including optional access modifiers, static keyword, return type, name, and parameters.
+    /// </summary>
+    /// <param name="methodDeclaration">The method declaration syntax node.</param>
+    /// <param name="alsoModifier">Whether to include access modifiers in the header.</param>
+    /// <returns>The method header string.</returns>
+    public static string GetHeaderOfMethod(MethodDeclarationSyntax methodDeclaration, bool alsoModifier = true)
+    {
+        methodDeclaration = methodDeclaration.WithoutTrivia();
+        string separator = " ";
+        StringBuilder stringBuilder = new();
+        if (alsoModifier)
+        {
+            stringBuilder.AddItem(separator, RoslynParser.GetAccessModifiers(methodDeclaration.Modifiers));
+        }
+
+        bool isStatic = IsStatic(methodDeclaration.Modifiers);
+        if (isStatic)
+        {
+            stringBuilder.AddItem(separator, "static");
+        }
+
+        stringBuilder.AddItem(separator, methodDeclaration.ReturnType.WithoutTrivia().ToFullString());
+        stringBuilder.AddItem(separator, methodDeclaration.Identifier.WithoutTrivia().Text);
+        string parametersText = GetParameters(methodDeclaration.ParameterList);
+        stringBuilder.AddItem(separator, "(" + parametersText + ")");
+        string headerText = stringBuilder.ToString();
+        return headerText;
+    }
+
+    /// <summary>
+    /// Replaces a syntax node in the tree and walks up to the root, returning the new root.
+    /// After calling this method, the caller must reassign the result because the old references are invalidated.
+    /// </summary>
+    /// <param name="originalNode">The original syntax node to replace.</param>
+    /// <param name="replacementNode">The replacement syntax node.</param>
+    /// <param name="root">Outputs the new root syntax node after replacement.</param>
+    public static void ReplaceNode(SyntaxNode originalNode, SyntaxNode replacementNode, out SyntaxNode root)
+    {
+        ReplaceNode<SyntaxNode>(originalNode, replacementNode, out root);
     }
 }

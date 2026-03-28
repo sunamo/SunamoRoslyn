@@ -1,61 +1,83 @@
 namespace SunamoRoslyn._sunamo;
 
+/// <summary>
+/// Helper methods for enum operations.
+/// </summary>
 internal class EnumHelper
 {
+    /// <summary>
+    /// Gets all enum values excluding Nope and None.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <returns>List of enum values.</returns>
     internal static List<T> GetValues<T>()
       where T : struct
     {
         return GetValues<T>(false, true);
     }
+
     /// <summary>
-    /// Get all values expect of Nope/None
+    /// Gets enum values with optional inclusion of Nope/Shared.
     /// </summary>
-    /// <typeparam name = "T"></typeparam>
-    /// <param name = "type"></param>
-    internal static List<T> GetValues<T>(bool IncludeNope, bool IncludeShared)
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="isIncludingNope">Whether to include the Nope value.</param>
+    /// <param name="isIncludingShared">Whether to include the Shared value.</param>
+    /// <returns>List of enum values.</returns>
+    internal static List<T> GetValues<T>(bool isIncludingNope, bool isIncludingShared)
         where T : struct
     {
-        var type = typeof(T);
-        var values = Enum.GetValues(type).Cast<T>().ToList();
-        T nope;
-        if (!IncludeNope)
+        var enumType = typeof(T);
+        var values = Enum.GetValues(enumType).Cast<T>().ToList();
+        T parsedValue;
+
+        if (!isIncludingNope)
         {
-            if (Enum.TryParse<T>(CodeElementsConstants.NopeValue, out nope))
+            if (Enum.TryParse<T>(CodeElementsConstants.NopeValue, out parsedValue))
             {
-                values.Remove(nope);
+                values.Remove(parsedValue);
             }
         }
-        if (!IncludeShared)
+
+        if (!isIncludingShared)
         {
-            if (type.Name == "MySites")
+            if (enumType.Name == "MySites")
             {
-                if (Enum.TryParse<T>("Shared", out nope))
+                if (Enum.TryParse<T>("Shared", out parsedValue))
                 {
-                    values.Remove(nope);
+                    values.Remove(parsedValue);
                 }
             }
             else
             {
-                if (Enum.TryParse<T>("Sha", out nope))
+                if (Enum.TryParse<T>("Sha", out parsedValue))
                 {
-                    values.Remove(nope);
+                    values.Remove(parsedValue);
                 }
             }
         }
-        if (Enum.TryParse<T>(CodeElementsConstants.NoneValue, out nope))
+
+        if (Enum.TryParse<T>(CodeElementsConstants.NoneValue, out parsedValue))
         {
-            values.Remove(nope);
+            values.Remove(parsedValue);
         }
+
         return values;
     }
+
+    /// <summary>
+    /// Converts enum values to a dictionary with lowercase string representations.
+    /// </summary>
+    /// <typeparam name="T">The enum type.</typeparam>
+    /// <param name="enumType">The type of the enum.</param>
+    /// <returns>Dictionary mapping enum values to their lowercase names.</returns>
     internal static Dictionary<T, string> EnumToString<T>(Type enumType)
+        where T : notnull
     {
-        return Enum.GetValues(enumType).Cast<T>().Select(t => new
+        return Enum.GetValues(enumType).Cast<T>().Select(enumValue => new
         {
-            Key = t,
-            // Must be lower due to EveryLine and e2sNamespaceCodeElements
-            Value = t.ToString().ToLower()
+            Key = enumValue,
+            Value = (enumValue.ToString() ?? string.Empty).ToLower()
         }
-        ).ToDictionary(r => r.Key, r => r.Value);
+        ).ToDictionary(entry => entry.Key, entry => entry.Value);
     }
 }

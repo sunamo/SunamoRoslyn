@@ -2,60 +2,56 @@ namespace SunamoRoslyn;
 
 using static CsFileFilterRoslyn;
 
+/// <summary>
+/// Contains search and find methods for SourceCodeIndexerRoslyn.
+/// </summary>
 public partial class SourceCodeIndexerRoslyn
 {
     /// <summary>
-    /// A1 cant be null because is taked from MainWindowEveryLine.Instance2.chblIndexableExtensions.CheckedStrings() and this is not available in Roslyn project
+    /// Searches indexed file content for a term and returns matching code elements.
     /// </summary>
-    /// <param name = "loadExtensions"></param>
-    /// <param name = "term"></param>
-    /// <param name = "includeEmpty"></param>
-    /// <param name = "inComments"></param>
-    /// <returns></returns>
+    /// <param name="loadExtensions">File extensions to include in the search.</param>
+    /// <param name="term">The search term to look for.</param>
+    /// <param name="includeEmpty">Whether to include files with no matches in the result.</param>
+    /// <param name="inComments">If true, search only in comments; if false, exclude comments; if null, search everywhere.</param>
+    /// <returns>Dictionary mapping file paths to lists of found code elements.</returns>
     public Dictionary<string, List<FoundedCodeElement>> SearchInContent(List<string> loadExtensions, string term, bool includeEmpty, bool? inComments)
     {
         Dictionary<string, List<FoundedCodeElement>> result = new Dictionary<string, List<FoundedCodeElement>>();
         bool include = false;
-        foreach (var item in linesWithContent)
+        foreach (var item in LinesWithContent)
         {
             if (!CA.EndsWith(item.Key, loadExtensions))
             {
                 continue;
             }
 
-#if DEBUG
-            //if (Path.GetFileName( item.Key) == "MainWindow.cs")
-            //{
-            //}
-#endif
-            var indexes = linesWithIndexes[item.Key];
+            var indexes = LinesWithIndexes[item.Key];
             include = false;
-            // return with zero elements - in item.Value is only lines with content. I need lines with exactly content of file to localize searched results
-            List<int> founded = CA.ReturnWhichContainsIndexes(item.Value, term /*, SearchStrategyRoslyn.AnySpaces*/);
+            List<int> foundIndices = CA.ReturnWhichContainsIndexes(item.Value, term);
             if (inComments.HasValue)
             {
-                //var lines = SHGetLines.GetLines
-                for (int i = founded.Count - 1; i >= 0; i--)
+                for (int i = foundIndices.Count - 1; i >= 0; i--)
                 {
                     var line = item.Value[i].Trim();
                     if (line.StartsWith(CodeElementsConstants.SingleCommentCsharp))
                     {
                         if (!inComments.Value)
                         {
-                            founded.RemoveAt(i);
+                            foundIndices.RemoveAt(i);
                         }
                     }
                     else
                     {
                         if (inComments.Value)
                         {
-                            founded.RemoveAt(i);
+                            foundIndices.RemoveAt(i);
                         }
                     }
                 }
             }
 
-            if (founded.Count == 0)
+            if (foundIndices.Count == 0)
             {
                 if (includeEmpty)
                 {
@@ -67,15 +63,15 @@ public partial class SourceCodeIndexerRoslyn
                 include = true;
             }
 
-            var founded2 = new List<FoundedCodeElement>();
-            foreach (var item2 in founded)
+            var foundCodeElements = new List<FoundedCodeElement>();
+            foreach (var foundIndex in foundIndices)
             {
-                founded2.Add(new FoundedCodeElement(indexes[item2], -1, 0));
+                foundCodeElements.Add(new FoundedCodeElement(indexes[foundIndex], -1, 0));
             }
 
             if (include)
             {
-                result.Add(item.Key, founded2);
+                result.Add(item.Key, foundCodeElements);
             }
         }
 
@@ -83,18 +79,20 @@ public partial class SourceCodeIndexerRoslyn
     }
 
     /// <summary>
-    /// A4 = search for exact occur. otherwise split both to words
+    /// Finds namespace and class code elements matching the search criteria.
     /// </summary>
-    /// <param name = "text"></param>
-    /// <param name = "type"></param>
-    /// <param name = "classType"></param>
-    /// <param name = "searchStrategy"></param>
+    /// <param name="loadExtensions">File extensions to include in the search.</param>
+    /// <param name="text">The text to search for in element names.</param>
+    /// <param name="type">The namespace code element type filter.</param>
+    /// <param name="classType">The class code element type filter.</param>
+    /// <param name="searchStrategy">The search strategy to use for matching.</param>
+    /// <returns>Combined namespace and class code elements matching the criteria.</returns>
     public CodeElements FindNamespaceElement(List<string> loadExtensions, string text, NamespaceCodeElementsType type, ClassCodeElementsType classType, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
     {
         bool makeChecking = type != NamespaceCodeElementsType.All;
         Dictionary<string, NamespaceCodeElements> result = new Dictionary<string, NamespaceCodeElements>();
         Dictionary<string, ClassCodeElements> resultClass = new Dictionary<string, ClassCodeElements>();
-        bool add = true;
+        bool shouldAdd = true;
         if (type != NamespaceCodeElementsType.Nope)
         {
             foreach (var item in namespaceCodeElements)
@@ -104,35 +102,34 @@ public partial class SourceCodeIndexerRoslyn
                     continue;
                 }
 
-                NamespaceCodeElements d = new NamespaceCodeElements();
-                foreach (var item2 in item.Value)
+                NamespaceCodeElements namespaceElements = new NamespaceCodeElements();
+                foreach (var codeElement in item.Value)
                 {
                     if (makeChecking)
                     {
-                        add = false;
-                        if (item2.Type == type)
+                        shouldAdd = false;
+                        if (codeElement.Type == type)
                         {
-                            // Nope there cannot be passed
-                            add = true;
+                            shouldAdd = true;
                         }
                         else if (classType == ClassCodeElementsType.All)
                         {
-                            add = true;
+                            shouldAdd = true;
                         }
                     }
 
-                    if (add)
+                    if (shouldAdd)
                     {
-                        if (SH.Contains(item2.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
+                        if (SH.Contains(codeElement.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
                         {
-                            d.Add(item2);
+                            namespaceElements.Add(codeElement);
                         }
                     }
                 }
 
-                if (d.Count > 0)
+                if (namespaceElements.Count > 0)
                 {
-                    result.Add(item.Key, d);
+                    result.Add(item.Key, namespaceElements);
                 }
             }
         }
@@ -141,43 +138,42 @@ public partial class SourceCodeIndexerRoslyn
         {
             foreach (var item in classCodeElements)
             {
-                ClassCodeElements d = new ClassCodeElements();
-                foreach (var item2 in item.Value)
+                ClassCodeElements classElements = new ClassCodeElements();
+                foreach (var codeElement in item.Value)
                 {
                     if (makeChecking)
                     {
-                        add = false;
-                        if (item2.Type == classType)
+                        shouldAdd = false;
+                        if (codeElement.Type == classType)
                         {
-                            // Nope there cannot be passed
-                            add = true;
+                            shouldAdd = true;
                         }
                         else if (classType == ClassCodeElementsType.All)
                         {
-                            add = true;
+                            shouldAdd = true;
                         }
                     }
 
-                    if (add)
+                    if (shouldAdd)
                     {
-                        if (SH.Contains(item2.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
+                        if (SH.Contains(codeElement.NameWithoutGeneric, new StringOrStringList(text), searchStrategy))
                         {
-                            d.Add(item2);
+                            classElements.Add(codeElement);
                         }
                     }
                 }
 
-                if (d.Count > 0)
+                if (classElements.Count > 0)
                 {
-                    resultClass.Add(item.Key, d);
+                    resultClass.Add(item.Key, classElements);
                 }
             }
         }
 
         return new CodeElements()
         {
-            classes = resultClass,
-            namespaces = result
+            Classes = resultClass,
+            Namespaces = result
         };
     }
 }

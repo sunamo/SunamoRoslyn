@@ -1,11 +1,8 @@
 namespace SunamoRoslyn;
 
+/// <summary>
+/// Represents a method parsed from source code, including its location and content.
+/// </summary>
 class Method
 {
-    // whether I can scan source code and simply add
-    bool IsStatic;
-    string ns;
-    string type;
-    string name;
-    string content;
 }
