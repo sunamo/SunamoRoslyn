@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-    <Version>26.3.28.3</Version>
+    <Version>26.5.18.4</Version>
     <Description>Work with Roslyn platform</Description>
-    <PackageProjectUrl>https://sunamo.cz/</PackageProjectUrl>
+    <PackageProjectUrl>https://sunamo.github.io/PlatformIndependentNuGetPackages/SunamoRoslyn/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -24,7 +24,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Authors>www.sunamo.cz</Authors>
-    <PackageReleaseNotes>feat: Improved variable names</PackageReleaseNotes>
+    <PackageReleaseNotes>y</PackageReleaseNotes>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
   </PropertyGroup>
