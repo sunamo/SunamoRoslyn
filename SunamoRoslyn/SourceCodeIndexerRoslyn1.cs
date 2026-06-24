@@ -2,19 +2,8 @@ namespace SunamoRoslyn;
 
 using static CsFileFilterRoslyn;
 
-/// <summary>
-/// Contains search and find methods for SourceCodeIndexerRoslyn.
-/// </summary>
 public partial class SourceCodeIndexerRoslyn
 {
-    /// <summary>
-    /// Searches indexed file content for a term and returns matching code elements.
-    /// </summary>
-    /// <param name="loadExtensions">File extensions to include in the search.</param>
-    /// <param name="term">The search term to look for.</param>
-    /// <param name="includeEmpty">Whether to include files with no matches in the result.</param>
-    /// <param name="inComments">If true, search only in comments; if false, exclude comments; if null, search everywhere.</param>
-    /// <returns>Dictionary mapping file paths to lists of found code elements.</returns>
     public Dictionary<string, List<FoundedCodeElement>> SearchInContent(List<string> loadExtensions, string term, bool includeEmpty, bool? inComments)
     {
         Dictionary<string, List<FoundedCodeElement>> result = new Dictionary<string, List<FoundedCodeElement>>();
@@ -78,15 +67,6 @@ public partial class SourceCodeIndexerRoslyn
         return result;
     }
 
-    /// <summary>
-    /// Finds namespace and class code elements matching the search criteria.
-    /// </summary>
-    /// <param name="loadExtensions">File extensions to include in the search.</param>
-    /// <param name="text">The text to search for in element names.</param>
-    /// <param name="type">The namespace code element type filter.</param>
-    /// <param name="classType">The class code element type filter.</param>
-    /// <param name="searchStrategy">The search strategy to use for matching.</param>
-    /// <returns>Combined namespace and class code elements matching the criteria.</returns>
     public CodeElements FindNamespaceElement(List<string> loadExtensions, string text, NamespaceCodeElementsType type, ClassCodeElementsType classType, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
     {
         bool makeChecking = type != NamespaceCodeElementsType.All;

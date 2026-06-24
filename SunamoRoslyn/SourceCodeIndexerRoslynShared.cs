@@ -1,35 +1,15 @@
 namespace SunamoRoslyn;
 
-/// <summary>
-/// Shared methods for SourceCodeIndexerRoslyn including file filtering and enum value helpers.
-/// </summary>
 public partial class SourceCodeIndexerRoslyn
 {
-    /// <summary>
-    /// Processes a file triggered by a FileSystemWatcher event.
-    /// </summary>
-    /// <param name="file">Full path to the source file.</param>
-    /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
     public
-#if ASYNC
             async Task ProcessFileAsync
-#else
-    void ProcessFile
-#endif
     (string file, bool isFromFileSystemWatcher)
     {
-#if ASYNC
         await
-#endif
         ProcessFile(file, NamespaceCodeElementsType.All, ClassCodeElementsType.All, false, isFromFileSystemWatcher);
     }
 
-    /// <summary>
-    /// Determines whether a file's folder path should be indexed based on filter rules.
-    /// </summary>
-    /// <param name="pathFile">Full path to the file.</param>
-    /// <param name="alsoEnds">Whether to also check path endings.</param>
-    /// <returns>True if the file's folder is indexable.</returns>
     public bool IsToIndexedFolder(string pathFile, bool alsoEnds)
     {
         var unindexableFiles = UnindexableFiles.Instance;
@@ -57,11 +37,6 @@ public partial class SourceCodeIndexerRoslyn
         return true;
     }
 
-    /// <summary>
-    /// Determines whether a file should be indexed based on all filter criteria.
-    /// </summary>
-    /// <param name="pathFile">Full path to the file.</param>
-    /// <returns>True if the file should be indexed.</returns>
     public bool IsToIndexed(string pathFile)
     {
 #region All 4 for which is checked
@@ -82,29 +57,14 @@ public partial class SourceCodeIndexerRoslyn
         return IsToIndexedFolder(pathFile, true);
     }
 
-    /// <summary>
-    /// Whether IsToIndexed is currently being called (prevents recursive checks).
-    /// </summary>
     public bool IsCallingIsToIndexed { get; set; } = false;
 
-    /// <summary>
-    /// Gets all enum values excluding Nope/None.
-    /// </summary>
-    /// <typeparam name="T">The enum type.</typeparam>
-    /// <returns>List of enum values without Nope/None.</returns>
     internal static List<T> GetValues<T>()
         where T : struct
     {
         return GetValues<T>(false, true);
     }
 
-    /// <summary>
-    /// Gets enum values with optional inclusion of Nope and Shared values.
-    /// </summary>
-    /// <typeparam name="T">The enum type.</typeparam>
-    /// <param name="isIncludingNope">Whether to include the Nope value.</param>
-    /// <param name="isIncludingShared">Whether to include the Shared value.</param>
-    /// <returns>Filtered list of enum values.</returns>
     internal static List<T> GetValues<T>(bool isIncludingNope, bool isIncludingShared)
         where T : struct
     {

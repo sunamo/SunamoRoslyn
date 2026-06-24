@@ -1,16 +1,7 @@
 namespace SunamoRoslyn;
 
-/// <summary>
-/// Parses C# code using Roslyn syntax tree classes.
-/// RoslynParserText handles text/indexer-based parsing without Roslyn classes.
-/// </summary>
 public class RoslynParser
 {
-    /// <summary>
-    /// Determines whether the given input string is valid C# code.
-    /// </summary>
-    /// <param name="input">The source code text to validate.</param>
-    /// <returns>True if the input can be parsed as C# code; otherwise, false.</returns>
     public static bool IsCSharpCode(string input)
     {
         SyntaxTree? syntaxTree = null;
@@ -22,15 +13,10 @@ public class RoslynParser
         {
             Console.WriteLine(ex.Message);
         }
-        var text = syntaxTree?.GetText().ToString();
+        var _ = syntaxTree?.GetText().ToString();
         return syntaxTree != null;
     }
 
-    /// <summary>
-    /// Parses a method header string into a <see cref="MethodDeclarationSyntax"/>.
-    /// </summary>
-    /// <param name="methodHeader">The method header text to parse (body will be appended automatically).</param>
-    /// <returns>The parsed method declaration syntax node.</returns>
     public static MethodDeclarationSyntax Method(string methodHeader)
     {
         methodHeader = methodHeader + "{}";
@@ -40,19 +26,8 @@ public class RoslynParser
         return (MethodDeclarationSyntax)childNodes.First();
     }
 
-    /// <summary>
-    /// Extracts code elements from classes in ASPX code-behind files and writes them to a target folder.
-    /// Reads comments inside for implementation details.
-    /// </summary>
-    /// <param name="folderFrom">The source folder containing ASPX code-behind files.</param>
-    /// <param name="folderTo">The destination folder for output files.</param>
-    /// <returns>Always returns null; files are written to the destination folder.</returns>
     public
-#if ASYNC
 async Task<List<string>?>
-#else
-List<string>?
-#endif
 GetCodeOfElementsClass(string folderFrom, string folderTo)
     {
         FS.WithEndSlash(ref folderFrom);
@@ -61,10 +36,8 @@ GetCodeOfElementsClass(string folderFrom, string folderTo)
         foreach (var file in files)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(
-#if ASYNC
 await
-#endif
-File.ReadAllTextAsync(file));
+FileAsync.ReadAllTextAsync(file));
             List<string> result = new List<string>();
             SyntaxNode? syntaxNode;
             var classDeclaration = RoslynHelper.GetClass(tree.GetRoot(), out syntaxNode);
@@ -87,16 +60,11 @@ File.ReadAllTextAsync(file));
             root = root.TrackNodes(syntaxNode);
             var data = syntaxNode.SyntaxTree.ToString();
             var fileTo = file.Replace(folderFrom, folderTo);
-            await File.WriteAllTextAsync(fileTo, data);
+            await FileAsync.WriteAllTextAsync(fileTo, data);
         }
         return null;
     }
 
-    /// <summary>
-    /// Finds the top-most parent node in the syntax tree.
-    /// </summary>
-    /// <param name="classDeclaration">The syntax node to traverse upward from.</param>
-    /// <returns>The root syntax node with no parent.</returns>
     private SyntaxNode FindTopParent(SyntaxNode classDeclaration)
     {
         var result = classDeclaration;
@@ -107,14 +75,6 @@ File.ReadAllTextAsync(file));
         return result;
     }
 
-    /// <summary>
-    /// Extracts variable declarations from a C# compilation unit.
-    /// The first argument must be CompilationUnitSyntax because global usings
-    /// are only available on that type.
-    /// </summary>
-    /// <param name="root">The compilation unit syntax root to extract variables from.</param>
-    /// <param name="usings">Output list of using directives found in the compilation unit.</param>
-    /// <returns>A collection of variable type-name pairs found in the class.</returns>
     public static ABCRoslyn GetVariablesInCsharp(CompilationUnitSyntax root, out List<string> usings)
     {
         ABCRoslyn result = new ABCRoslyn();
@@ -140,11 +100,6 @@ File.ReadAllTextAsync(file));
         return result;
     }
 
-    /// <summary>
-    /// Gets the access modifier keyword from a list of syntax tokens.
-    /// </summary>
-    /// <param name="modifiers">The list of modifier tokens to search.</param>
-    /// <returns>The access modifier text, or empty string if none found.</returns>
     public static string GetAccessModifiers(SyntaxTokenList modifiers)
     {
         foreach (var item in modifiers)
@@ -161,11 +116,6 @@ File.ReadAllTextAsync(file));
         return string.Empty;
     }
 
-    /// <summary>
-    /// Parses declared and assigned variables from a code fragment.
-    /// </summary>
-    /// <param name="code">The code to parse; can be a string or a <see cref="SyntaxNode"/>.</param>
-    /// <returns>A tuple of (declaredVariables, assignedVariables) lists.</returns>
     public static Tuple<List<string>, List<string>> ParseVariables(object code)
     {
         SyntaxNode syntaxRoot = SyntaxNodeFromObjectOrString(code);
@@ -180,11 +130,6 @@ File.ReadAllTextAsync(file));
         return new Tuple<List<string>, List<string>>(declaredVariables, assignedVariables);
     }
 
-    /// <summary>
-    /// Creates a <see cref="SyntaxNode"/> from either a string of code or an existing SyntaxNode.
-    /// </summary>
-    /// <param name="code">The code to convert; can be a string or a <see cref="SyntaxNode"/>.</param>
-    /// <returns>The resulting syntax node.</returns>
     public static SyntaxNode SyntaxNodeFromObjectOrString(object code)
     {
         if (code is SyntaxNode syntaxNode)
@@ -203,11 +148,6 @@ File.ReadAllTextAsync(file));
         }
     }
 
-    /// <summary>
-    /// Gets all variables used in every method within the given source code.
-    /// </summary>
-    /// <param name="text">The C# source code text to analyze.</param>
-    /// <returns>A dictionary mapping method names to their assigned variable names.</returns>
     public static Dictionary<string, List<string>> GetVariablesInEveryMethod(string text)
     {
         Dictionary<string, List<string>> methodVariables = new Dictionary<string, List<string>>();

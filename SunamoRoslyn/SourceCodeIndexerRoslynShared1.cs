@@ -1,26 +1,9 @@
 namespace SunamoRoslyn;
 
-/// <summary>
-/// Contains the core file processing logic for SourceCodeIndexerRoslyn.
-/// </summary>
 public partial class SourceCodeIndexerRoslyn
 {
-    /// <summary>
-    /// Processes a file and determines if it should be indexed.
-    /// Returns true if file was not indexed yet, false if already indexed.
-    /// </summary>
-    /// <param name="pathFile">Full path to the source file.</param>
-    /// <param name="namespaceCodeElementsType">Types of namespace-level code elements to extract.</param>
-    /// <param name="classCodeElementsType">Types of class-level code elements to extract.</param>
-    /// <param name="isRemovingRegions">Whether to remove region directives during processing.</param>
-    /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
-    /// <returns>Result indicating whether the file was indexed and providing the syntax tree.</returns>
     private
-#if ASYNC
         async Task<ProcessFileBoolResult> ProcessFileBool
-#else
-    ProcessFileBoolResult ProcessFileBool
-#endif
     (string pathFile, NamespaceCodeElementsType namespaceCodeElementsType, ClassCodeElementsType classCodeElementsType, bool isRemovingRegions, bool isFromFileSystemWatcher)
     {
         SyntaxTree? tree = null;
@@ -51,10 +34,8 @@ public partial class SourceCodeIndexerRoslyn
             if (isFromFileSystemWatcher)
             {
                 lines = (
-#if ASYNC
     await
-#endif
-                File.ReadAllLinesAsync(pathFile)).ToList();
+                FileAsync.ReadAllLinesAsync(pathFile)).ToList();
             }
             else
             {
@@ -73,10 +54,8 @@ public partial class SourceCodeIndexerRoslyn
                     else
                     {
                         lines = (
-#if ASYNC
                         await
-#endif
-                        File.ReadAllLinesAsync(pathFile)).ToList();
+                        FileAsync.ReadAllLinesAsync(pathFile)).ToList();
                     }
                 }
             }
@@ -178,12 +157,6 @@ public partial class SourceCodeIndexerRoslyn
         return new ProcessFileBoolResult();
     }
 
-    /// <summary>
-    /// Gets the line indices between the given sorted indices, used for reconstructing empty lines.
-    /// </summary>
-    /// <param name="indices">List of line indices to find gaps between.</param>
-    /// <param name="isFromZeroIndex">Whether to include index 0 as the starting point.</param>
-    /// <returns>List of line indices that fall between the provided indices.</returns>
     private List<int> GetLinesBetween(List<int> indices, bool isFromZeroIndex)
     {
         List<int> list = new List<int>();
