@@ -1,35 +1,18 @@
 namespace SunamoRoslyn._public;
 
-/// <summary>
-/// Represents a collection of <see cref="ABRoslyn"/> name-value pairs.
-/// </summary>
 public class ABCRoslyn : List<ABRoslyn>
 {
-    /// <summary>
-    /// An empty collection instance.
-    /// </summary>
     public static ABCRoslyn Empty = new();
 
-    /// <summary>
-    /// Initializes a new empty instance of the <see cref="ABCRoslyn"/> class.
-    /// </summary>
     public ABCRoslyn()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ABCRoslyn"/> class with specified capacity, filled with nulls.
-    /// </summary>
-    /// <param name="capacity">The number of null elements to add.</param>
     public ABCRoslyn(int capacity) : base(capacity)
     {
         for (var i = 0; i < capacity; i++) Add(null!);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ABCRoslyn"/> class from interleaved name-value pairs or existing collections.
-    /// </summary>
-    /// <param name="setsNameValue">The name-value pairs or collections to add.</param>
     public ABCRoslyn(params object[] setsNameValue)
     {
         if (setsNameValue.Length == 0) return;
@@ -75,24 +58,13 @@ public class ABCRoslyn : List<ABRoslyn>
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ABCRoslyn"/> class from an array of <see cref="ABRoslyn"/> elements.
-    /// </summary>
-    /// <param name="collection">The elements to add.</param>
     public ABCRoslyn(params ABRoslyn[] collection)
     {
         AddRange(collection);
     }
 
-    /// <summary>
-    /// Gets the number of elements in this collection.
-    /// </summary>
     public int Length => Count;
 
-    /// <summary>
-    /// Returns a comma-separated string representation of all elements.
-    /// </summary>
-    /// <returns>A comma-separated string of all elements.</returns>
     public override string ToString()
     {
         var stringBuilder = new StringBuilder();
@@ -100,20 +72,12 @@ public class ABCRoslyn : List<ABRoslyn>
         return stringBuilder.ToString();
     }
 
-    /// <summary>
-    /// Returns only the value components as an object array.
-    /// Must be array due to SQL, see https://stackoverflow.com/questions/9149919/no-mapping-exists-from-object-type-system-collections-generic-list-when-executin
-    /// </summary>
-    /// <returns>An array of value components.</returns>
+    // Must be array due to SQL, see https://stackoverflow.com/questions/9149919/no-mapping-exists-from-object-type-system-collections-generic-list-when-executin
     public object[] OnlyBs()
     {
         return OnlyBsList().ToArray();
     }
 
-    /// <summary>
-    /// Returns only the value components as a list.
-    /// </summary>
-    /// <returns>A list of value components.</returns>
     public List<object> OnlyBsList()
     {
         var result = new List<object>(Count);
@@ -121,10 +85,6 @@ public class ABCRoslyn : List<ABRoslyn>
         return result;
     }
 
-    /// <summary>
-    /// Returns only the name components as a list.
-    /// </summary>
-    /// <returns>A list of name components.</returns>
     public List<string> OnlyAs()
     {
         var result = new List<string>(Count);
@@ -132,11 +92,6 @@ public class ABCRoslyn : List<ABRoslyn>
         return result;
     }
 
-    /// <summary>
-    /// Returns only the value components from a given list.
-    /// </summary>
-    /// <param name="list">The list of <see cref="ABRoslyn"/> elements.</param>
-    /// <returns>A list of value components.</returns>
     public static List<object> OnlyBs(List<ABRoslyn> list)
     {
         return list.Select(element => element.B).ToList();

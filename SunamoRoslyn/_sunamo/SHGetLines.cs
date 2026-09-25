@@ -1,15 +1,7 @@
 namespace SunamoRoslyn._sunamo;
 
-/// <summary>
-/// String helper for splitting text into lines.
-/// </summary>
 internal class SHGetLines
 {
-    /// <summary>
-    /// Splits the text into lines handling all newline formats.
-    /// </summary>
-    /// <param name="text">The text to split into lines.</param>
-    /// <returns>List of lines.</returns>
     internal static List<string> GetLines(string text)
     {
         var parts = text.Split(new[] { "\r\n", "\n\r" }, StringSplitOptions.None).ToList();

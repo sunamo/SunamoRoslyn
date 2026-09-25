@@ -1,20 +1,7 @@
 namespace SunamoRoslyn._sunamo;
 
-/// <summary>
-/// Helper methods for dictionary operations.
-/// </summary>
 internal class DictionaryHelper
 {
-    /// <summary>
-    /// Adds a value to the list associated with the key, creating the list if needed.
-    /// </summary>
-    /// <typeparam name="TKey">The key type.</typeparam>
-    /// <typeparam name="TValue">The value type.</typeparam>
-    /// <param name="dict">The dictionary to add to.</param>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value to add.</param>
-    /// <param name="isAvoidingDuplicateValues">Whether to skip duplicate values.</param>
-    /// <param name="stringDict">Optional parallel string dictionary.</param>
     internal static void AddOrCreate<TKey, TValue>(IDictionary<TKey, List<TValue>> dict, TKey key, TValue value,
         bool isAvoidingDuplicateValues = false, Dictionary<TKey, List<string>>? stringDict = null)
         where TKey : notnull
@@ -22,23 +9,11 @@ internal class DictionaryHelper
         AddOrCreate<TKey, TValue, object>(dict, key, value, isAvoidingDuplicateValues, stringDict);
     }
 
-    /// <summary>
-    /// Adds a value to the list associated with the key, creating the list if needed. Supports collection keys.
-    /// </summary>
-    /// <typeparam name="TKey">The key type.</typeparam>
-    /// <typeparam name="TValue">The value type.</typeparam>
-    /// <typeparam name="TCollection">The collection element type for key comparison.</typeparam>
-    /// <param name="dict">The dictionary to add to.</param>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value to add.</param>
-    /// <param name="isAvoidingDuplicateValues">Whether to skip duplicate values.</param>
-    /// <param name="stringDict">Optional parallel string dictionary.</param>
     internal static void AddOrCreate<TKey, TValue, TCollection>(IDictionary<TKey, List<TValue>> dict, TKey key, TValue value,
     bool isAvoidingDuplicateValues = false, Dictionary<TKey, List<string>>? stringDict = null)
         where TKey : notnull
     {
-        var isComparingWithString = false;
-        if (stringDict != null) isComparingWithString = true;
+        var isComparingWithString = stringDict != null;
 
         if (key is IList && typeof(TCollection) != typeof(Object))
         {

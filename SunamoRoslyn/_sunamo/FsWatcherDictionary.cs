@@ -1,20 +1,11 @@
 namespace SunamoRoslyn._sunamo;
 
-/// <summary>
-/// Dictionary implementation for file system watcher operations. Must be internal due to SourceCodeIndexerRoslyn usage.
-/// </summary>
-/// <typeparam name="T">The key type.</typeparam>
-/// <typeparam name="U">The value type.</typeparam>
+// Dictionary implementation for file system watcher operations. Must be internal due to SourceCodeIndexerRoslyn usage.
 internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
     where T : notnull
 {
     private readonly Dictionary<T, U> dictionary = new();
 
-    /// <summary>
-    /// Gets or sets the value associated with the specified key.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <returns>The value or default if not found.</returns>
     internal U? this[T key]
     {
         get
@@ -25,31 +16,11 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
         set => dictionary[key] = value!;
     }
 
-    /// <summary>
-    /// Gets the collection of keys.
-    /// </summary>
     internal ICollection<T> Keys => dictionary.Keys;
-
-    /// <summary>
-    /// Gets the collection of values.
-    /// </summary>
     internal ICollection<U> Values => dictionary.Values;
-
-    /// <summary>
-    /// Gets the number of elements.
-    /// </summary>
     internal int Count => dictionary.Count;
-
-    /// <summary>
-    /// Gets whether the dictionary is read-only.
-    /// </summary>
     internal bool IsReadOnly => false;
 
-    /// <summary>
-    /// Adds a key-value pair, ignoring if key already exists.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
     internal void Add(T key, U value)
     {
         lock (dictionary)
@@ -58,51 +29,23 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
         }
     }
 
-    /// <summary>
-    /// Adds a key-value pair from a KeyValuePair.
-    /// </summary>
-    /// <param name="keyValuePair">The key-value pair to add.</param>
     internal void Add(KeyValuePair<T, U> keyValuePair)
     {
         Add(keyValuePair.Key, keyValuePair.Value);
     }
 
-    /// <summary>
-    /// Clears all entries from the dictionary.
-    /// </summary>
     internal void Clear()
     {
         dictionary.Clear();
     }
 
-    /// <summary>
-    /// Checks if the dictionary contains a specific key-value pair.
-    /// </summary>
-    /// <param name="keyValuePair">The key-value pair to check.</param>
-    /// <returns>True if found.</returns>
-    internal bool Contains(KeyValuePair<T, U> keyValuePair)
-    {
-        return dictionary.Contains(keyValuePair);
-    }
+    internal bool Contains(KeyValuePair<T, U> keyValuePair) => dictionary.Contains(keyValuePair);
 
-    /// <summary>
-    /// Checks if the dictionary contains the specified key.
-    /// </summary>
-    /// <param name="key">The key to check.</param>
-    /// <returns>True if the key exists.</returns>
-    internal bool ContainsKey(T key)
-    {
-        return dictionary.ContainsKey(key);
-    }
+    internal bool ContainsKey(T key) => dictionary.ContainsKey(key);
 
-    /// <summary>
-    /// Copies the dictionary entries to an array.
-    /// </summary>
-    /// <param name="array">The destination array.</param>
-    /// <param name="arrayIndex">The starting index in the array.</param>
     internal void CopyTo(KeyValuePair<T, U>[] array, int arrayIndex)
     {
-        if (array == null)
+        if (array is null)
             throw new ArgumentNullException(nameof(array));
         if (arrayIndex < 0)
             throw new ArgumentOutOfRangeException(nameof(arrayIndex));
@@ -112,46 +55,13 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
         ((ICollection<KeyValuePair<T, U>>)dictionary).CopyTo(array, arrayIndex);
     }
 
-    /// <summary>
-    /// Returns an enumerator that iterates through the dictionary.
-    /// </summary>
-    /// <returns>The enumerator.</returns>
-    internal IEnumerator<KeyValuePair<T, U>> GetEnumerator()
-    {
-        return dictionary.GetEnumerator();
-    }
+    internal IEnumerator<KeyValuePair<T, U>> GetEnumerator() => dictionary.GetEnumerator();
 
-    /// <summary>
-    /// Removes the element with the specified key.
-    /// </summary>
-    /// <param name="key">The key to remove.</param>
-    /// <returns>True if the element was removed.</returns>
-    internal bool Remove(T key)
-    {
-        return dictionary.Remove(key);
-    }
+    internal bool Remove(T key) => dictionary.Remove(key);
 
-    /// <summary>
-    /// Removes the specified key-value pair.
-    /// </summary>
-    /// <param name="keyValuePair">The key-value pair to remove.</param>
-    /// <returns>True if the element was removed.</returns>
-    internal bool Remove(KeyValuePair<T, U> keyValuePair)
-    {
-        return dictionary.Remove(keyValuePair.Key);
-    }
+    internal bool Remove(KeyValuePair<T, U> keyValuePair) => dictionary.Remove(keyValuePair.Key);
 
-    /// <summary>
-    /// Tries to get the value associated with the specified key.
-    /// </summary>
-    /// <param name="key">The key to look up.</param>
-    /// <param name="value">The found value.</param>
-    /// <returns>True if the key was found.</returns>
-    internal bool TryGetValue(T key, out U value)
-    {
-        var result = dictionary.TryGetValue(key, out value!);
-        return result;
-    }
+    internal bool TryGetValue(T key, out U value) => dictionary.TryGetValue(key, out value!);
 
     U IDictionary<T, U>.this[T key]
     {
@@ -175,8 +85,5 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
     bool ICollection<KeyValuePair<T, U>>.Remove(KeyValuePair<T, U> item) => Remove(item);
     bool IDictionary<T, U>.TryGetValue(T key, out U value) => TryGetValue(key, out value);
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return dictionary.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => dictionary.GetEnumerator();
 }

@@ -1,4 +1,4 @@
-global using System.Collections.Generic;
+﻿global using System.Collections.Generic;
 global using System.Reflection;
 global using System;
 global using System.Linq;
@@ -16,7 +16,9 @@ global using Microsoft.CodeAnalysis.CSharp.Syntax;
 global using Microsoft.CodeAnalysis.CSharp;
 global using Microsoft.CodeAnalysis.Diagnostics;
 global using Microsoft.CodeAnalysis.Formatting;
+#if !NETSTANDARD2_0
 global using Microsoft.CodeAnalysis.MSBuild;
+#endif
 global using Microsoft.CodeAnalysis.Rename;
 global using Microsoft.CodeAnalysis;
 global using System.Collections.Immutable;
