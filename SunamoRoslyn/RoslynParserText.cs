@@ -1,7 +1,16 @@
 namespace SunamoRoslyn;
 
+/// <summary>
+/// Parses C# source code using text and indexer-based approaches without Roslyn syntax classes.
+/// RoslynParser handles parsing with Roslyn classes.
+/// </summary>
 public class RoslynParserText
 {
+    /// <summary>
+    /// Adds page event handler methods from the given files to the string builder.
+    /// </summary>
+    /// <param name="stringBuilder">The string builder to append method names to.</param>
+    /// <param name="files">The list of C# file paths to process.</param>
     private static
         async Task AddPageMethodsAsync
         (StringBuilder stringBuilder, List<string> files)
@@ -25,6 +34,10 @@ public class RoslynParserText
         }
     }
 
+    /// <summary>
+    /// Finds page event handler methods in all project folders under the given root path.
+    /// </summary>
+    /// <param name="rootPath">The root path containing project folders to scan.</param>
     public
         async Task FindPageMethodAsync
         (string rootPath)

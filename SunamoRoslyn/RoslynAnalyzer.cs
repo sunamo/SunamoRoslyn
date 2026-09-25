@@ -1,9 +1,15 @@
 namespace SunamoRoslyn;
 
+/// <summary>
+/// A Roslyn diagnostic analyzer that reports named types containing lowercase letters in their names.
+/// </summary>
 #pragma warning disable RS1036, RS1038, RS1041
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class RoslynAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// The unique identifier for diagnostics produced by this analyzer.
+    /// </summary>
     public const string DiagnosticId = "Roslyn";
 
     // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
@@ -17,8 +23,15 @@ public class RoslynAnalyzer : DiagnosticAnalyzer
     private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 #pragma warning restore RS2008
 
+    /// <summary>
+    /// Gets the set of diagnostic descriptors supported by this analyzer.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
 
+    /// <summary>
+    /// Initializes the analyzer by registering analysis actions.
+    /// </summary>
+    /// <param name="context">The analysis context to register actions on.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

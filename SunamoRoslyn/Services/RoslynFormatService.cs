@@ -1,7 +1,16 @@
 namespace SunamoRoslyn.Services;
 
+/// <summary>
+/// Provides methods for formatting C# source code using Roslyn.
+/// </summary>
 internal class RoslynFormatService
 {
+    /// <summary>
+    /// Formats C# source code by decoding HTML and parsing it into a syntax tree.
+    /// Currently returns null as the formatting via Roslyn.Services is not available on NuGet.
+    /// </summary>
+    /// <param name="format">The C# source code to format, possibly HTML-encoded.</param>
+    /// <returns>Currently returns null.</returns>
     public static string? Format3(string format)
     {
         // Decode from HTML -
@@ -15,10 +24,14 @@ internal class RoslynFormatService
         //root.Format(FormattingOptions.GetDefaultOptions()).GetFormattedRoot().GetText().ToString();
         return null;
     }
-
-    // Format2 removes empty lines, Format keeps empty lines.
-    // Code must be compilable. When it is not (e.g. missing semicolons, private in variables),
-    // returns input without changes.
+    /// <summary>
+    /// Formats C# source code and removes empty lines.
+    /// Code must be compilable. When it is not (e.g. missing semicolons, private in variables),
+    /// returns input without changes.
+    /// Format2 removes empty lines, Format keeps empty lines.
+    /// </summary>
+    /// <param name="format">The C# source code to format, possibly HTML-encoded.</param>
+    /// <returns>The formatted source code with empty lines removed.</returns>
     public static string Format2(string format)
     {
         // Decode from HTML -
@@ -36,10 +49,14 @@ internal class RoslynFormatService
         var formattedText = formattedNode.ToFullString();
         return FinalizeFormat(formattedText);
     }
-
-    // Format2 removes empty lines, Format keeps empty lines.
-    // Code must be compilable. When it is not (e.g. missing semicolons, private in variables),
-    // returns input without changes.
+    /// <summary>
+    /// Formats C# source code and keeps empty lines.
+    /// Code must be compilable. When it is not (e.g. missing semicolons, private in variables),
+    /// returns input without changes.
+    /// Format2 removes empty lines, Format keeps empty lines.
+    /// </summary>
+    /// <param name="format">The C# source code to format, possibly HTML-encoded.</param>
+    /// <returns>The formatted source code with empty lines preserved.</returns>
     public static string Format(string format)
     {
         // Decode from HTML -
@@ -119,6 +136,11 @@ internal class RoslynFormatService
         return FinalizeFormat(formattedText);
     }
 
+    /// <summary>
+    /// Finalizes the formatting by adjusting indentation and inserting empty lines before comments.
+    /// </summary>
+    /// <param name="text">The formatted source code text to finalize.</param>
+    /// <returns>The finalized source code with proper indentation and spacing.</returns>
     static string FinalizeFormat(string text)
     {
         var lines = SHGetLines.GetLines(text);
