@@ -37,8 +37,7 @@ internal class DictionaryHelper
     bool isAvoidingDuplicateValues = false, Dictionary<TKey, List<string>>? stringDict = null)
         where TKey : notnull
     {
-        var isComparingWithString = false;
-        if (stringDict != null) isComparingWithString = true;
+        var isComparingWithString = stringDict != null;
 
         if (key is IList && typeof(TCollection) != typeof(Object))
         {

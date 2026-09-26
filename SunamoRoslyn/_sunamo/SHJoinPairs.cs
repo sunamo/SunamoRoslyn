@@ -14,8 +14,8 @@ internal class SHJoinPairs
     /// <returns>The joined string.</returns>
     internal static string JoinPairs(string firstDelimiter, string secondDelimiter, params string[] parts)
     {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < parts.Length; i++)
+        var stringBuilder = new StringBuilder();
+        for (var i = 0; i < parts.Length; i++)
         {
             stringBuilder.Append(parts[i++] + firstDelimiter);
             stringBuilder.Append(parts[i] + secondDelimiter);

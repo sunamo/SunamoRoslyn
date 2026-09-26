@@ -56,6 +56,6 @@ public class ABRoslyn
     /// <returns>A string in the format "Name:Value".</returns>
     public override string ToString()
     {
-        return A + ":" + B;
+        return $"{A}:{B}";
     }
 }

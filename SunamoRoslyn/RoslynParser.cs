@@ -22,7 +22,7 @@ public class RoslynParser
         {
             Console.WriteLine(ex.Message);
         }
-        var text = syntaxTree?.GetText().ToString();
+        var _ = syntaxTree?.GetText().ToString();
         return syntaxTree != null;
     }
 
@@ -48,11 +48,7 @@ public class RoslynParser
     /// <param name="folderTo">The destination folder for output files.</param>
     /// <returns>Always returns null; files are written to the destination folder.</returns>
     public
-#if ASYNC
 async Task<List<string>?>
-#else
-List<string>?
-#endif
 GetCodeOfElementsClass(string folderFrom, string folderTo)
     {
         FS.WithEndSlash(ref folderFrom);
@@ -61,10 +57,8 @@ GetCodeOfElementsClass(string folderFrom, string folderTo)
         foreach (var file in files)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(
-#if ASYNC
 await
-#endif
-File.ReadAllTextAsync(file));
+FileAsync.ReadAllTextAsync(file));
             List<string> result = new List<string>();
             SyntaxNode? syntaxNode;
             var classDeclaration = RoslynHelper.GetClass(tree.GetRoot(), out syntaxNode);
@@ -87,7 +81,7 @@ File.ReadAllTextAsync(file));
             root = root.TrackNodes(syntaxNode);
             var data = syntaxNode.SyntaxTree.ToString();
             var fileTo = file.Replace(folderFrom, folderTo);
-            await File.WriteAllTextAsync(fileTo, data);
+            await FileAsync.WriteAllTextAsync(fileTo, data);
         }
         return null;
     }

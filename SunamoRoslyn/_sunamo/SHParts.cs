@@ -13,12 +13,11 @@ internal class SHParts
     /// <returns>The text up to the separator.</returns>
     internal static string RemoveAfterFirst(string text, string separator)
     {
-        int index = text.IndexOf(separator);
+        var index = text.IndexOf(separator);
         if (index == -1 || index == text.Length - 1)
         {
             return text;
         }
-        string result = text.Remove(index);
-        return result;
+        return text.Remove(index);
     }
 }

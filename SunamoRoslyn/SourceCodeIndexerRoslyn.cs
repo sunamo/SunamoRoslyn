@@ -52,17 +52,11 @@ public partial class SourceCodeIndexerRoslyn
     /// <param name="isRemovingRegions">Whether to remove region directives during processing.</param>
     /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
     public
-#if ASYNC
         async Task
-#else
-    void
-#endif
     ProcessFile(string pathFile, NamespaceCodeElementsType namespaceCodeElementsType, ClassCodeElementsType classCodeElementsType, bool isRemovingRegions, bool isFromFileSystemWatcher)
     {
         ProcessFileBoolResult result =
-#if ASYNC
          await
-#endif
         ProcessFileBool(pathFile, namespaceCodeElementsType, classCodeElementsType, isRemovingRegions, isFromFileSystemWatcher);
         SyntaxTree? syntaxTree = result.Tree;
         CompilationUnitSyntax? root = result.Root;
@@ -225,16 +219,10 @@ public partial class SourceCodeIndexerRoslyn
     /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
     /// <param name="isRemovingRegions">Whether to remove region directives during processing.</param>
     public
-#if ASYNC
         async Task
-#else
-    void
-#endif
     ProcessAllCodeElementsInFiles(string file, bool isFromFileSystemWatcher, bool isRemovingRegions = false)
     {
-#if ASYNC
         await
-#endif
         ProcessFile(file, allNamespaceCodeElements, allClassCodeElements, isRemovingRegions, isFromFileSystemWatcher);
     }
 

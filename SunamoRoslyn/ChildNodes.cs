@@ -68,9 +68,9 @@ public class ChildNodes
     /// <returns>The namespace declaration syntax node, or null if not found.</returns>
     public static NamespaceDeclarationSyntax? Namespace(SyntaxNode syntaxNode)
     {
-        if (syntaxNode is NamespaceDeclarationSyntax)
+        if (syntaxNode is NamespaceDeclarationSyntax ns)
         {
-            return (NamespaceDeclarationSyntax)syntaxNode;
+            return ns;
         }
         return syntaxNode.ChildNodes().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
     }
@@ -82,9 +82,9 @@ public class ChildNodes
     /// <returns>The class declaration syntax node, or null if not found.</returns>
     public static ClassDeclarationSyntax? Class(SyntaxNode syntaxNode)
     {
-        if (syntaxNode is ClassDeclarationSyntax)
+        if (syntaxNode is ClassDeclarationSyntax cls)
         {
-            return (ClassDeclarationSyntax)syntaxNode;
+            return cls;
         }
         return syntaxNode.ChildNodes().OfType<ClassDeclarationSyntax>().FirstOrDefault();
     }

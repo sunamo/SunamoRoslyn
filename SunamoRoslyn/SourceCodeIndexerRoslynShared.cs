@@ -11,16 +11,10 @@ public partial class SourceCodeIndexerRoslyn
     /// <param name="file">Full path to the source file.</param>
     /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
     public
-#if ASYNC
             async Task ProcessFileAsync
-#else
-    void ProcessFile
-#endif
     (string file, bool isFromFileSystemWatcher)
     {
-#if ASYNC
         await
-#endif
         ProcessFile(file, NamespaceCodeElementsType.All, ClassCodeElementsType.All, false, isFromFileSystemWatcher);
     }
 

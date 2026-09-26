@@ -18,7 +18,7 @@ public class CodeElement<T>
     /// </summary>
     public string Name
     {
-        get { return name; }
+        get => name;
         set
         {
             name = value;

@@ -16,11 +16,7 @@ public partial class SourceCodeIndexerRoslyn
     /// <param name="isFromFileSystemWatcher">Whether the call originates from a file system watcher event.</param>
     /// <returns>Result indicating whether the file was indexed and providing the syntax tree.</returns>
     private
-#if ASYNC
         async Task<ProcessFileBoolResult> ProcessFileBool
-#else
-    ProcessFileBoolResult ProcessFileBool
-#endif
     (string pathFile, NamespaceCodeElementsType namespaceCodeElementsType, ClassCodeElementsType classCodeElementsType, bool isRemovingRegions, bool isFromFileSystemWatcher)
     {
         SyntaxTree? tree = null;
@@ -51,10 +47,8 @@ public partial class SourceCodeIndexerRoslyn
             if (isFromFileSystemWatcher)
             {
                 lines = (
-#if ASYNC
     await
-#endif
-                File.ReadAllLinesAsync(pathFile)).ToList();
+                FileAsync.ReadAllLinesAsync(pathFile)).ToList();
             }
             else
             {
@@ -73,10 +67,8 @@ public partial class SourceCodeIndexerRoslyn
                     else
                     {
                         lines = (
-#if ASYNC
                         await
-#endif
-                        File.ReadAllLinesAsync(pathFile)).ToList();
+                        FileAsync.ReadAllLinesAsync(pathFile)).ToList();
                     }
                 }
             }

@@ -12,7 +12,5 @@ internal class SHSplit
     /// <param name="delimiters">The delimiter strings.</param>
     /// <returns>List of split parts.</returns>
     internal static List<string> SplitNone(string text, params string[] delimiters)
-    {
-        return text.Split(delimiters, StringSplitOptions.None).ToList();
-    }
+        => text.Split(delimiters, StringSplitOptions.None).ToList();
 }

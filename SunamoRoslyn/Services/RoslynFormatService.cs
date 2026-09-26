@@ -38,7 +38,7 @@ internal class RoslynFormatService
         format = WebUtility.HtmlDecode(format);
         // Replace all <br> with empty
         format = Regex.Replace(format, RegexHelper.BrTagCaseInsensitiveRegex.ToString(), string.Empty);
-        var workspace = MSBuildWorkspace.Create();
+        var workspace = new AdhocWorkspace();
         // Create SyntaxTree
         SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);
         var root = firstTree.GetRoot();
@@ -63,7 +63,7 @@ internal class RoslynFormatService
         format = WebUtility.HtmlDecode(format);
         // Replace all <br> with empty
         format = Regex.Replace(format, RegexHelper.BrTagCaseInsensitiveRegex.ToString(), string.Empty);
-        var workspace = MSBuildWorkspace.Create();
+        var workspace = new AdhocWorkspace();
         StringBuilder stringBuilder = new StringBuilder();
         // Create SyntaxTree
         SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);

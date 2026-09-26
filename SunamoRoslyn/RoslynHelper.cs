@@ -117,12 +117,9 @@ public partial class RoslynHelper
     /// <param name="slnPath">The file path to the solution (.sln) file.</param>
     /// <param name="isSkippingUnrecognizedProjects">Whether to skip projects that cannot be recognized by MSBuild.</param>
     /// <returns>A list of all projects in the solution.</returns>
+#if !NETSTANDARD2_0
     public static
-#if ASYNC
         async Task<List<Project>>
-#else
-    List<Project>
-#endif
     GetAllProjectsInSolution(string slnPath, bool isSkippingUnrecognizedProjects = false)
     {
         var formattingOptions = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
@@ -130,13 +127,10 @@ public partial class RoslynHelper
         msWorkspace.SkipUnrecognizedProjects = isSkippingUnrecognizedProjects;
         msWorkspace.LoadMetadataForReferencedProjects = false;
         var solution =
-#if ASYNC
             await msWorkspace.OpenSolutionAsync(slnPath);
-#else
-        msWorkspace.OpenSolutionAsync(slnPath).Result;
-#endif
         return solution.Projects.ToList();
     }
+#endif
 
     /// <summary>
     /// Wraps the given code snippet inside a dummy class declaration.

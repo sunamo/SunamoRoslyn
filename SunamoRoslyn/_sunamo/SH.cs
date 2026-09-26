@@ -11,10 +11,7 @@ internal class SH
     /// <param name="text">The text to wrap.</param>
     /// <param name="wrapper">The wrapper text.</param>
     /// <returns>The wrapped string.</returns>
-    internal static string WrapWith(string text, string wrapper)
-    {
-        return wrapper + text + wrapper;
-    }
+    internal static string WrapWith(string text, string wrapper) => wrapper + text + wrapper;
 
     /// <summary>
     /// Wraps a string value with the specified character.
@@ -79,7 +76,7 @@ internal class SH
         {
             return text.ToUpper();
         }
-        string remainder = text.Substring(1);
+        var remainder = text.Substring(1);
         return text[0].ToString().ToUpper() + remainder;
     }
     #endregion
@@ -101,10 +98,7 @@ internal class SH
         else
         {
             before = text.Substring(0, position);
-            if (text.Length > position + 1)
-                after = text.Substring(position + 1);
-            else
-                after = string.Empty;
+            after = text.Length > position + 1 ? text.Substring(position + 1) : string.Empty;
         }
     }
 
@@ -115,9 +109,7 @@ internal class SH
     /// <param name="delimiters">The delimiter characters.</param>
     /// <returns>List of split parts.</returns>
     internal static List<string> SplitChar(string text, params char[] delimiters)
-    {
-        return text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).ToList();
-    }
+        => text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).ToList();
 
     /// <summary>
     /// Checks if the input contains the term using the specified search strategy.
@@ -170,7 +162,7 @@ internal class SH
                 return true;
             }
 
-            bool isContainingAll = true;
+            var isContainingAll = true;
             foreach (var item in termParts)
             {
                 if (!inputParts.Contains(item))
@@ -204,11 +196,10 @@ internal class SH
     internal static void IndentAsPreviousLine(List<string> lines)
     {
         var previousIndent = string.Empty;
-        string? currentLine = null;
         var stringBuilder = new StringBuilder();
         for (var i = 0; i < lines.Count - 1; i++)
         {
-            currentLine = lines[i];
+            var currentLine = lines[i];
             if (currentLine.Length > 0)
             {
                 if (!char.IsWhiteSpace(currentLine[0]))
