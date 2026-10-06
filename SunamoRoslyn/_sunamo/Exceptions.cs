@@ -1,30 +1,12 @@
 namespace SunamoRoslyn._sunamo;
 
-/// <summary>
-/// Exception message formatting utilities.
-/// </summary>
 internal class Exceptions
 {
-    /// <summary>
-    /// Creates a custom exception message.
-    /// </summary>
-    /// <param name="before">Prefix text for the message.</param>
-    /// <param name="message">The exception message.</param>
-    /// <returns>The formatted exception message.</returns>
     internal static string? Custom(string before, string message)
     {
         return CheckBefore(before) + message;
     }
 
-    /// <summary>
-    /// Returns a message if two collections have different counts.
-    /// </summary>
-    /// <param name="before">Prefix text for the message.</param>
-    /// <param name="firstName">Name of the first collection.</param>
-    /// <param name="firstCount">Count of the first collection.</param>
-    /// <param name="secondName">Name of the second collection.</param>
-    /// <param name="secondCount">Count of the second collection.</param>
-    /// <returns>The error message or null if counts match.</returns>
     internal static string? DifferentCountInLists(string before, string firstName, int firstCount, string secondName, int secondCount)
     {
         if (firstCount != secondCount)
@@ -34,22 +16,11 @@ internal class Exceptions
         return null;
     }
 
-    /// <summary>
-    /// Returns a not-implemented-method error message.
-    /// </summary>
-    /// <param name="before">Prefix text for the message.</param>
-    /// <returns>The error message.</returns>
     internal static string? NotImplementedMethod(string before)
     {
         return CheckBefore(before) + "Not implemented method.";
     }
 
-    /// <summary>
-    /// Extracts the type and method name from a stack trace line.
-    /// </summary>
-    /// <param name="stackTraceLine">The stack trace line to parse.</param>
-    /// <param name="typeName">Output: the extracted type name.</param>
-    /// <param name="methodName">Output: the extracted method name.</param>
     internal static void TypeAndMethodName(string stackTraceLine, out string typeName, out string methodName)
     {
         var afterAtPart = stackTraceLine.Split("at ")[1].Trim();
@@ -60,11 +31,6 @@ internal class Exceptions
         typeName = string.Join(".", parts);
     }
 
-    /// <summary>
-    /// Gets the place of exception from the current stack trace.
-    /// </summary>
-    /// <param name="isFillAlsoFirstTwo">Whether to fill also first two fields.</param>
-    /// <returns>Tuple of type name, method name, and full stack trace.</returns>
     internal static Tuple<string, string, string> PlaceOfException(bool isFillAlsoFirstTwo = true)
     {
         StackTrace stackTrace = new();
@@ -95,11 +61,6 @@ internal class Exceptions
         return new Tuple<string, string, string>(typeName, methodName, string.Join(Environment.NewLine, lines));
     }
 
-    /// <summary>
-    /// Gets the name of the calling method at the specified depth.
-    /// </summary>
-    /// <param name="depth">Stack frame depth.</param>
-    /// <returns>The calling method name.</returns>
     internal static string CallingMethod(int depth = 1)
     {
         StackTrace stackTrace = new();
@@ -112,12 +73,6 @@ internal class Exceptions
         return methodName;
     }
 
-    /// <summary>
-    /// Returns a not-implemented-case error message.
-    /// </summary>
-    /// <param name="before">Prefix text for the message.</param>
-    /// <param name="notImplementedName">The case that is not implemented.</param>
-    /// <returns>The error message.</returns>
     internal static string? NotImplementedCase(string before, object notImplementedName)
     {
         var forText = string.Empty;
@@ -133,11 +88,6 @@ internal class Exceptions
         ".";
     }
 
-    /// <summary>
-    /// Formats the before prefix with a colon separator.
-    /// </summary>
-    /// <param name="before">The prefix to format.</param>
-    /// <returns>The formatted prefix or empty string.</returns>
     internal static string CheckBefore(string before)
     {
         return string.IsNullOrWhiteSpace(before) ? string.Empty : before + ": ";

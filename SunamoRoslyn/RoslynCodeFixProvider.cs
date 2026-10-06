@@ -1,34 +1,20 @@
 namespace SunamoRoslyn;
 
-/// <summary>
-/// Provides a code fix that converts type names to uppercase for diagnostics reported by <see cref="RoslynAnalyzer"/>.
-/// </summary>
 public class RoslynCodeFixProvider : CodeFixProvider
 {
     private const string title = "Make uppercase";
 
-    /// <summary>
-    /// Gets the diagnostic IDs that this provider can fix.
-    /// </summary>
     public sealed override ImmutableArray<string> FixableDiagnosticIds
     {
         get { return ImmutableArray.Create(RoslynAnalyzer.DiagnosticId); }
     }
 
-    /// <summary>
-    /// Gets the fix all provider for batch fixing.
-    /// </summary>
-    /// <returns>The batch fix all provider.</returns>
     public sealed override FixAllProvider GetFixAllProvider()
     {
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
         return WellKnownFixAllProviders.BatchFixer;
     }
 
-    /// <summary>
-    /// Registers code fixes for the given diagnostics in the context.
-    /// </summary>
-    /// <param name="context">The code fix context containing diagnostics to fix.</param>
     public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
@@ -49,13 +35,6 @@ public class RoslynCodeFixProvider : CodeFixProvider
             diagnostic);
     }
 
-    /// <summary>
-    /// Renames a type declaration to uppercase in the entire solution.
-    /// </summary>
-    /// <param name="document">The document containing the type declaration.</param>
-    /// <param name="typeDeclaration">The type declaration syntax node to rename.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A new solution with the type name uppercased.</returns>
     private async Task<Solution> MakeUppercaseAsync(Document document, TypeDeclarationSyntax typeDeclaration, CancellationToken cancellationToken)
     {
         // Compute new uppercase name.

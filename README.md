@@ -1,5 +1,10 @@
 # SunamoRoslyn
 
+## Short description
+
+Knihovna pro práci s platformou Roslyn: analýza, parsování, formátování a úprava kódu C#. Obsahuje Runner a testy.
+
+
 Work with Roslyn platform - provides utilities for C# code analysis, parsing, formatting, and manipulation using Microsoft Roslyn.
 
 ## Overview
