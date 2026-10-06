@@ -1,28 +1,13 @@
 namespace SunamoRoslyn._sunamo;
 
-/// <summary>
-/// Helper methods for enum operations.
-/// </summary>
 internal class EnumHelper
 {
-    /// <summary>
-    /// Gets all enum values excluding Nope and None.
-    /// </summary>
-    /// <typeparam name="T">The enum type.</typeparam>
-    /// <returns>List of enum values.</returns>
     internal static List<T> GetValues<T>()
       where T : struct
     {
         return GetValues<T>(false, true);
     }
 
-    /// <summary>
-    /// Gets enum values with optional inclusion of Nope/Shared.
-    /// </summary>
-    /// <typeparam name="T">The enum type.</typeparam>
-    /// <param name="isIncludingNope">Whether to include the Nope value.</param>
-    /// <param name="isIncludingShared">Whether to include the Shared value.</param>
-    /// <returns>List of enum values.</returns>
     internal static List<T> GetValues<T>(bool isIncludingNope, bool isIncludingShared)
         where T : struct
     {
@@ -64,12 +49,6 @@ internal class EnumHelper
         return values;
     }
 
-    /// <summary>
-    /// Converts enum values to a dictionary with lowercase string representations.
-    /// </summary>
-    /// <typeparam name="T">The enum type.</typeparam>
-    /// <param name="enumType">The type of the enum.</param>
-    /// <returns>Dictionary mapping enum values to their lowercase names.</returns>
     internal static Dictionary<T, string> EnumToString<T>(Type enumType)
         where T : notnull
     {

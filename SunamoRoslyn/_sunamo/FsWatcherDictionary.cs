@@ -1,20 +1,11 @@
 namespace SunamoRoslyn._sunamo;
 
-/// <summary>
-/// Dictionary implementation for file system watcher operations. Must be internal due to SourceCodeIndexerRoslyn usage.
-/// </summary>
-/// <typeparam name="T">The key type.</typeparam>
-/// <typeparam name="U">The value type.</typeparam>
+// Dictionary implementation for file system watcher operations. Must be internal due to SourceCodeIndexerRoslyn usage.
 internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
     where T : notnull
 {
     private readonly Dictionary<T, U> dictionary = new();
 
-    /// <summary>
-    /// Gets or sets the value associated with the specified key.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <returns>The value or default if not found.</returns>
     internal U? this[T key]
     {
         get
@@ -25,31 +16,11 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
         set => dictionary[key] = value!;
     }
 
-    /// <summary>
-    /// Gets the collection of keys.
-    /// </summary>
     internal ICollection<T> Keys => dictionary.Keys;
-
-    /// <summary>
-    /// Gets the collection of values.
-    /// </summary>
     internal ICollection<U> Values => dictionary.Values;
-
-    /// <summary>
-    /// Gets the number of elements.
-    /// </summary>
     internal int Count => dictionary.Count;
-
-    /// <summary>
-    /// Gets whether the dictionary is read-only.
-    /// </summary>
     internal bool IsReadOnly => false;
 
-    /// <summary>
-    /// Adds a key-value pair, ignoring if key already exists.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
     internal void Add(T key, U value)
     {
         lock (dictionary)
@@ -58,18 +29,11 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
         }
     }
 
-    /// <summary>
-    /// Adds a key-value pair from a KeyValuePair.
-    /// </summary>
-    /// <param name="keyValuePair">The key-value pair to add.</param>
     internal void Add(KeyValuePair<T, U> keyValuePair)
     {
         Add(keyValuePair.Key, keyValuePair.Value);
     }
 
-    /// <summary>
-    /// Clears all entries from the dictionary.
-    /// </summary>
     internal void Clear()
     {
         dictionary.Clear();
@@ -89,11 +53,6 @@ internal class FsWatcherDictionary<T, U> : IDictionary<T, U>
     /// <returns>True if the key exists.</returns>
     internal bool ContainsKey(T key) => dictionary.ContainsKey(key);
 
-    /// <summary>
-    /// Copies the dictionary entries to an array.
-    /// </summary>
-    /// <param name="array">The destination array.</param>
-    /// <param name="arrayIndex">The starting index in the array.</param>
     internal void CopyTo(KeyValuePair<T, U>[] array, int arrayIndex)
     {
         if (array is null)
