@@ -44,7 +44,7 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="10.0.2" />
     <PackageReference Include="System.Text.Json" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" Pack="True" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="all" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants);DEBUG2;DEBUG;TRACE;ASYNC</DefineConstants>
