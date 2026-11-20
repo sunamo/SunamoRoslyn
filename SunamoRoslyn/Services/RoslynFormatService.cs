@@ -12,7 +12,6 @@ internal class RoslynFormatService
         SyntaxTree firstTree = CSharpSyntaxTree.ParseText(format);
         var root = firstTree.GetRoot();
         // Format() is in Roslyn.Services which is not actually on nuget
-        //root.Format(FormattingOptions.GetDefaultOptions()).GetFormattedRoot().GetText().ToString();
         return null;
     }
 
@@ -31,7 +30,6 @@ internal class RoslynFormatService
         var root = firstTree.GetRoot();
         var formattedNode = Microsoft.CodeAnalysis.Formatting.Formatter.Format(root, workspace);
         // Insert space between all tokens, replace all newlines by spaces
-        //formattedNode = root.NormalizeWhitespace();
         // With ToFullString and ToString is output the same - good but without new lines
         var formattedText = formattedNode.ToFullString();
         return FinalizeFormat(formattedText);
@@ -64,12 +62,7 @@ internal class RoslynFormatService
         List<SyntaxNode> syntaxNodes2 = new List<SyntaxNode>();
         // Process all incomplete members
         #region If its only code fragment, almost everything will be here IncompleteMember and on end will be delete from code
-        //foreach (var item in syntaxNodes.Where(d => d.Kind() == SyntaxKind.IncompleteMember))
-        //{
-        //    var node3 = item.AsNode();
         //    // insert output of AsNode
-        //    syntaxNodes2.Add(node3);
-        //}
         #endregion
         #endregion
         // Again get ChildNodesAndTokens, dont know why because should be immutable
@@ -111,18 +104,15 @@ internal class RoslynFormatService
         // Only for debugging
         var nodesAndTokens = targetNode!.ChildNodesAndTokens();
         // Dont get to OptionSet - abstract. DocumentOptionSet - sealed, no static member, no ctor.
-        //OptionSet os = new DocumentOptionSet()
         var formattedNode = Microsoft.CodeAnalysis.Formatting.Formatter.Format(targetNode, workspace);
         stringBuilder.AppendLine(formattedNode.ToFullString().Trim());
         string formattedText = stringBuilder.ToString();
-        //var formattedResult2 = RoslynServicesHelper.Format(formattedText);
         return FinalizeFormat(formattedText);
     }
 
     static string FinalizeFormat(string text)
     {
         var lines = SHGetLines.GetLines(text);
-        //SH.MultiWhitespaceLineToSingle(lines);
         SH.IndentAsPreviousLine(lines);
         // Important, otherwise is every line delimited by empty
         CA.RemoveStringsEmptyTrimBefore(lines);
@@ -142,7 +132,6 @@ internal class RoslynFormatService
             }
         }
         var joinedLines = string.Join(Environment.NewLine, lines);
-        //joinedLines = joinedLines.Replace(CsKeywords.ns, Environment.NewLine + CsKeywords.ns);
         return joinedLines;
     }
 }
