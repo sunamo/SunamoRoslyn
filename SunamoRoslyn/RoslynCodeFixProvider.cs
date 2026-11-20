@@ -1,20 +1,36 @@
 namespace SunamoRoslyn;
 
+/// <summary>
+/// Represents the roslyn code fix provider type.
+/// </summary>
 public class RoslynCodeFixProvider : CodeFixProvider
 {
     private const string title = "Make uppercase";
 
+    /// <summary>
+    /// The fixable diagnostic ids.
+    /// </summary>
     public sealed override ImmutableArray<string> FixableDiagnosticIds
     {
         get { return ImmutableArray.Create(RoslynAnalyzer.DiagnosticId); }
     }
 
+    /// <summary>
+    /// Get fix all provider.
+    /// </summary>
+    /// <param name="RoslynAnalyzer.DiagnosticId">The roslyn analyzer diagnostic id.</param>
+    /// <returns>The get fix all provider result.</returns>
     public sealed override FixAllProvider GetFixAllProvider()
     {
         // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
         return WellKnownFixAllProviders.BatchFixer;
     }
 
+    /// <summary>
+    /// Register code fixes async.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>The register code fixes async result.</returns>
     public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);

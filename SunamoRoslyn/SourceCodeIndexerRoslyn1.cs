@@ -4,6 +4,14 @@ using static CsFileFilterRoslyn;
 
 public partial class SourceCodeIndexerRoslyn
 {
+    /// <summary>
+    /// Search in content.
+    /// </summary>
+    /// <param name="loadExtensions">The load extensions.</param>
+    /// <param name="term">The term.</param>
+    /// <param name="includeEmpty">The include empty.</param>
+    /// <param name="inComments">The in comments.</param>
+    /// <returns>The search in content result.</returns>
     public Dictionary<string, List<FoundedCodeElement>> SearchInContent(List<string> loadExtensions, string term, bool includeEmpty, bool? inComments)
     {
         Dictionary<string, List<FoundedCodeElement>> result = new Dictionary<string, List<FoundedCodeElement>>();
@@ -67,6 +75,15 @@ public partial class SourceCodeIndexerRoslyn
         return result;
     }
 
+    /// <summary>
+    /// Find namespace element.
+    /// </summary>
+    /// <param name="loadExtensions">The load extensions.</param>
+    /// <param name="text">The text.</param>
+    /// <param name="type">The type.</param>
+    /// <param name="classType">The class type.</param>
+    /// <param name="searchStrategy">The search strategy.</param>
+    /// <returns>The find namespace element result.</returns>
     public CodeElements FindNamespaceElement(List<string> loadExtensions, string text, NamespaceCodeElementsType type, ClassCodeElementsType classType, SearchStrategyRoslyn searchStrategy = SearchStrategyRoslyn.FixedSpace)
     {
         bool makeChecking = type != NamespaceCodeElementsType.All;

@@ -1,9 +1,15 @@
 namespace SunamoRoslyn;
 
 #pragma warning disable RS1036, RS1038, RS1041
+/// <summary>
+/// Represents the roslyn analyzer type.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class RoslynAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// The diagnostic id constant.
+    /// </summary>
     public const string DiagnosticId = "Roslyn";
 
     // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
@@ -17,8 +23,16 @@ public class RoslynAnalyzer : DiagnosticAnalyzer
     private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 #pragma warning restore RS2008
 
+    /// <summary>
+    /// Gets the supported diagnostics.
+    /// </summary>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
 
+    /// <summary>
+    /// Initialize.
+    /// </summary>
+    /// <param name="Rule">The rule.</param>
+    /// <returns>The initialize result.</returns>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

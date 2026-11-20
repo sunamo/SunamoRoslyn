@@ -4,6 +4,9 @@ namespace SunamoRoslyn;
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
+    /// <summary>
+    /// Represents the resources type.
+    /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -13,10 +16,16 @@ namespace SunamoRoslyn;
 
         private static global::System.Globalization.CultureInfo resourceCulture;
 
+        /// <summary>
+        /// Initializes a new instance of the resources class.
+        /// </summary>
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public Resources() {
         }
 
+        /// <summary>
+        /// Gets the resource manager.
+        /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
@@ -28,6 +37,9 @@ namespace SunamoRoslyn;
             }
         }
 
+        /// <summary>
+        /// Gets the culture.
+        /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Globalization.CultureInfo Culture {
             get {
@@ -38,18 +50,27 @@ namespace SunamoRoslyn;
             }
         }
 
+        /// <summary>
+        /// Gets the analyzer description.
+        /// </summary>
         public static string AnalyzerDescription {
             get {
                 return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
             }
         }
 
+        /// <summary>
+        /// Gets the analyzer message format.
+        /// </summary>
         public static string AnalyzerMessageFormat {
             get {
                 return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
             }
         }
 
+        /// <summary>
+        /// Gets the analyzer title.
+        /// </summary>
         public static string AnalyzerTitle {
             get {
                 return ResourceManager.GetString("AnalyzerTitle", resourceCulture);

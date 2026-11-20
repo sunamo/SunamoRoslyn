@@ -63,7 +63,6 @@ public partial class RoslynHelper
 
             CA.Prepend("/// ", usedIn);
             var doc = @"
-/// <summary>
 " + string.Join(Environment.NewLine, usedIn) + @"
 /// </summary>
 ";

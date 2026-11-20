@@ -1,7 +1,15 @@
 namespace SunamoRoslyn.Services;
 
+/// <summary>
+/// Represents the roslyn comment service type.
+/// </summary>
 public class RoslynCommentService
 {
+    /// <summary>
+    /// Remove comments.
+    /// </summary>
+    /// <param name="code">The code.</param>
+    /// <returns>The remove comments result.</returns>
     public string RemoveComments(string code)
     {
         SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
@@ -12,8 +20,16 @@ public class RoslynCommentService
     }
 }
 
+/// <summary>
+/// Represents the comment remover type.
+/// </summary>
 public class CommentRemover : CSharpSyntaxRewriter
 {
+    /// <summary>
+    /// Visit trivia.
+    /// </summary>
+    /// <param name="trivia">The trivia.</param>
+    /// <returns>The visit trivia result.</returns>
     public override SyntaxTrivia VisitTrivia(SyntaxTrivia trivia)
     {
         if (trivia.IsKind(SyntaxKind.SingleLineCommentTrivia)
