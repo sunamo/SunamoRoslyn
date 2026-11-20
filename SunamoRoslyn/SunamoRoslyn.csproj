@@ -15,7 +15,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedAllSources>true</EmbedAllSources>
-    <Optimize>false</Optimize>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
   <PropertyGroup>
     <DebugType>portable</DebugType>
@@ -25,7 +25,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <Authors>www.sunamo.cz</Authors>
-    <PackageReleaseNotes>y</PackageReleaseNotes>
     <Copyright>www.sunamo.cz</Copyright>
     <PackageTags>Roslyn, analyzers</PackageTags>
   </PropertyGroup>
@@ -57,5 +56,8 @@
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
   </ItemGroup>  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Collections.Immutable" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md" Pack="True" PackagePath="." />
   </ItemGroup>
 </Project>
