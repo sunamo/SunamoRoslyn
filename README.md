@@ -80,3 +80,19 @@ This package is part of the Sunamo package ecosystem. For more information about
 ## License
 
 MIT - See the repository root for license information.
+
+<!-- sunamo:test-coverage:start -->
+## Test coverage
+
+| Metric | Value |
+|---|---|
+| Method | static |
+| Test projects | 1 |
+| Public types referenced by tests | 1/35 (2.9 %) |
+| Public methods referenced by tests | 1/68 (1.5 %) |
+| Line coverage | n/a |
+| Branch coverage | n/a |
+| Generated (UTC) | 2026-11-22 21:24 |
+
+<!-- sunamo:test-coverage:data {"package":"SunamoRoslyn","container":"pinp","testProjects":1,"publicTypes":35,"typesReferencedByTests":1,"publicMethods":68,"methodsReferencedByTests":1,"lineRate":null,"branchRate":null,"method":"static","generatedUtc":"2026-11-22 21:24"} -->
+<!-- sunamo:test-coverage:end -->
