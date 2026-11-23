@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>net10.0;net9.0;net8.0;netstandard2.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-    <Version>26.5.18.4</Version>
+    <Version>26.11.23.1</Version>
     <Description>Work with Roslyn platform</Description>
     <PackageProjectUrl>https://sunamo.github.io/PlatformIndependentNuGetPackages/SunamoRoslyn/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/sunamo/SunamoRoslyn.git</RepositoryUrl>

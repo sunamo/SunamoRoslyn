@@ -1,6 +1,9 @@
 namespace SunamoRoslyn.Services;
 
-internal class RoslynFormatService
+/// <summary>
+/// Formats C# source code with Roslyn.
+/// </summary>
+public class RoslynFormatService
 {
     public static string? Format3(string format)
     {
